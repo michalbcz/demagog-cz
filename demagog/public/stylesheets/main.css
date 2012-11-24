@@ -10,7 +10,8 @@ body {
 
 .quote {
 	border: 1px solid #555;
-	padding: 0.5em; 
+	padding: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 .footer {
@@ -21,4 +22,8 @@ body {
 .url {
 	font-size: smaller;
 	color: #555;
+}
+
+.url {
+	margin-left: 0.5em;
 }
