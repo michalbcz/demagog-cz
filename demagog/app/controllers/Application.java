@@ -8,11 +8,20 @@ import play.mvc.*;
 
 import views.html.*;
 
-public class Application extends Controller {
+public class Application extends Controller {	
+	
+  public static Result index() {
+    return ok(index.render("Your new application is ready."));
+  }
   
-	public static Result index() {
-		return ok(index.render("Your new application is ready."));
-	} 
+  public static Result submit() {
+  	Form<Quote> submitForm = form(Quote.class);
+  	Quote quote = submitForm.bindFromRequest().get();
+
+  	quote.save();
+  	
+  	return ok(submitResponse.render(""));
+  }
   
 	public static Result showQuotes() {
 		List<Quote> quotes = Quote.findAll();

@@ -10,10 +10,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.logging.MorphiaLoggerFactory;
-import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import com.mongodb.Mongo;
-
 
 @Entity
 public class Quote {
@@ -33,6 +30,8 @@ public class Quote {
 	
 	public Date approvalDate;
 
+	public int voteCount;
+	
 	public Quote() {
 	}
 	
@@ -42,8 +41,6 @@ public class Quote {
 		this.author = author;
 		this.creationDate = new Date();
 	}
-
-
 
 	private static Datastore ds;
 	
@@ -75,6 +72,10 @@ public class Quote {
 		ds.delete(ds.createQuery(Quote.class));
 	}
 	
+	public int vote() {
+		return ++voteCount;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -89,50 +90,70 @@ public class Quote {
 		result = prime * result
 				+ ((quoteText == null) ? 0 : quoteText.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + voteCount;
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof Quote)) {
 			return false;
+		}
 		Quote other = (Quote) obj;
 		if (approvalDate == null) {
-			if (other.approvalDate != null)
+			if (other.approvalDate != null) {
 				return false;
-		} else if (!approvalDate.equals(other.approvalDate))
+			}
+		} else if (!approvalDate.equals(other.approvalDate)) {
 			return false;
-		if (approved != other.approved)
+		}
+		if (approved != other.approved) {
 			return false;
+		}
 		if (author == null) {
-			if (other.author != null)
+			if (other.author != null) {
 				return false;
-		} else if (!author.equals(other.author))
+			}
+		} else if (!author.equals(other.author)) {
 			return false;
+		}
 		if (creationDate == null) {
-			if (other.creationDate != null)
+			if (other.creationDate != null) {
 				return false;
-		} else if (!creationDate.equals(other.creationDate))
+			}
+		} else if (!creationDate.equals(other.creationDate)) {
 			return false;
+		}
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (quoteText == null) {
-			if (other.quoteText != null)
+			if (other.quoteText != null) {
 				return false;
-		} else if (!quoteText.equals(other.quoteText))
+			}
+		} else if (!quoteText.equals(other.quoteText)) {
 			return false;
+		}
 		if (url == null) {
-			if (other.url != null)
+			if (other.url != null) {
 				return false;
-		} else if (!url.equals(other.url))
+			}
+		} else if (!url.equals(other.url)) {
 			return false;
+		}
+		if (voteCount != other.voteCount) {
+			return false;
+		}
 		return true;
 	}
 	
