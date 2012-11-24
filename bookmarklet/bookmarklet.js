@@ -1,11 +1,7 @@
-﻿/* inject jquery */
-var jqueryScript = document.createElement("script");
-jqueryScript.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js";
-jqueryScript.type = "text/javascript";
-jqueryScript.onload = function() { Demagog.Bookmarklet.Events.onJqueryReady() };
-document.getElementsByTagName("head")[0].appendChild(jqueryScript);
-
-var Demagog.Bookmarklet = DemagogBookmarklet || {}
+﻿var Demagog = Demagog || {};
+Demagog.Bookmarklet = Demagog.Bookmaklet || {};
+Demagog.Bookmarklet.Events = Demagog.Bookmarklet.Events || {};
+Demagog.Bookmarklet.Util = Demagog.Bookmarklet.Util || {};
 
 Demagog.Bookmarklet.Events.onJqueryReady = function() {
 
@@ -13,12 +9,26 @@ Demagog.Bookmarklet.Events.onJqueryReady = function() {
 		Demagog.Bookmarklet.submitSelectedQuote();
 	});
 
-}
+};
 
-Demagog.Bookmarklet.submitSelectedQuote() {
+Demagog.Bookmarklet.submitSelectedQuote = function() {
+		var selectedText = Demagog.Bookmarklet.Util.getSelected();
+		Demagog.Bookmarklet.Util.postToUrl("http://localhost:9000/quote/save", {"url": window.location.href, "quoteText": selectedText });
+		alert("Saved to demagog");
+};
 
-
-}
+Demagog.Bookmarklet.Util.getSelected = function(){
+	var t = '';
+	if(window.getSelection) {
+		t = window.getSelection();
+	} else if(document.getSelection) {
+		t = document.getSelection();
+	} else if(document.selection) {
+		t = document.selection.createRange().text;
+	}
+	
+	return t;
+};
 
 Demagog.Bookmarklet.Util.postToUrl = function(path, params, method) {
     method = method || "post"; // Set method to post by default, if not specified.
@@ -42,4 +52,11 @@ Demagog.Bookmarklet.Util.postToUrl = function(path, params, method) {
 
     document.body.appendChild(form);
     form.submit();
-}
+};
+
+/* inject jquery */
+var jqueryScript = document.createElement("script");
+jqueryScript.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js";
+jqueryScript.type = "text/javascript";
+jqueryScript.onload = function() { Demagog.Bookmarklet.Events.onJqueryReady() };
+document.getElementsByTagName("head")[0].appendChild(jqueryScript);

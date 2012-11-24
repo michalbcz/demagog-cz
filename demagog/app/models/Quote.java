@@ -63,6 +63,10 @@ public class Quote {
 		ds.save(this);
 	}
 	
+	public static void approve(ObjectId id) {
+		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("approved", true));
+	}
+	
 	public static void upVote(ObjectId id) {
 		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).inc("voteCount"));
 	}
@@ -73,6 +77,10 @@ public class Quote {
 	
 	public static List<Quote> findAllWithApprovedState(boolean approved) {
 		return ds.find(Quote.class).field("approved").equal(approved).asList();
+	}
+	
+	public static void delete(ObjectId id) {
+		ds.delete(ds.createQuery(Quote.class).field("_id").equal(id));
 	}
 	
 	public static void deleteAll() {

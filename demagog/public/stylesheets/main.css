@@ -1,7 +1,10 @@
 body {
 	font-family: Arial;
 	background-color: #525252;
-	
+}
+
+img {
+	border: 0px;
 }
 
 #body {
