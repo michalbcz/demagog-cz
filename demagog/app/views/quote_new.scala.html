@@ -3,15 +3,15 @@
 @main("Nový citát") {
 	<div id="new_quote">
 		<form action="@{controllers.routes.Application.submitQuote()}" method="POST">
-			<label for="quoteText">Citát: </label>
-			<input type="text" name="quoteText" />
+			<div class="input-section">
+				<label for="quoteText">Citát: </label>
+				<textarea name="quoteText" id="quoteText"></textarea>
+			</div>
 			
-			<br/>
-			
-			<label for="url">Zdroj citátu: </label>
-			<input type="text" name="url" />
-			
-			<br/>
+			<div class="input-section">
+				<label for="url">Zdroj citátu: </label>
+				<input type="text" name="url" id="quoteUrl" />
+			</div>			
 			
 			<input type="submit" name="Odeslat" />
 		</form>
