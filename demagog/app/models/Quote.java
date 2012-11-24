@@ -54,6 +54,9 @@ public class Quote {
 		return ds.find(Quote.class).asList();
 	}
 	
+	public static void deleteAll() {
+		ds.delete(ds.createQuery(Quote.class));
+	}
 	
 	@Override
 	public int hashCode() {
