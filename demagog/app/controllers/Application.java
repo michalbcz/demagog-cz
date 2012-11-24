@@ -2,6 +2,8 @@ package controllers;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import models.Quote;
 import play.*;
 import play.data.Form;
@@ -35,6 +37,9 @@ public class Application extends Controller {
 	}
 	
 	public static Result upVote() {
+		String id = request().body().asFormUrlEncoded().get("id")[0];
+		
+		new ObjectId(id);
 		return redirect(controllers.routes.Application.showQuotes());
 	}
 }
