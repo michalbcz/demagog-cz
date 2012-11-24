@@ -54,6 +54,10 @@ public class Quote {
 		return ds.find(Quote.class).asList();
 	}
 	
+	public static List<Quote> findAllWithApprovedState(boolean approved) {
+		return ds.find(Quote.class).field("approved").equal(approved).asList();
+	}
+	
 	public static void deleteAll() {
 		ds.delete(ds.createQuery(Quote.class));
 	}

@@ -23,4 +23,17 @@ public class QuoteTest {
 		assertThat(quotes.get(0)).isEqualTo(quote);
 	}
 	
+	@Test
+	public void findApprovedTest() {
+		Quote quote = new Quote();
+		quote.approved = true;
+		quote.creationDate = new Date();
+		
+		Quote.deleteAll();
+		quote.save();
+		
+		List<Quote> quotes = Quote.findAllWithApprovedState(true);
+		assertThat(quotes.get(0)).isEqualTo(quote);
+	}
+	
 }
