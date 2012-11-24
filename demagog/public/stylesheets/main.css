@@ -40,6 +40,12 @@ body {
 	height: 100%;
 }
 
+.vote-count {
+	font-size: 22px;
+	font-weight: bold;
+	color: #555;
+}
+
 .quote .actions input[type="submit"]{
 	width: 24px;
 	height: 24px;

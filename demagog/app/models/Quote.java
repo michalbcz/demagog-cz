@@ -3,13 +3,14 @@ package models;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.query.UpdateOperations;
 import com.mongodb.Mongo;
 
 @Entity
@@ -58,6 +59,10 @@ public class Quote {
 	
 	public void save() {
 		ds.save(this);
+	}
+	
+	public static void upVote(ObjectId id) {
+		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).inc("voteCount"));
 	}
 	
 	public static List<Quote> findAll() {
