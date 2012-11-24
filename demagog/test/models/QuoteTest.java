@@ -36,4 +36,20 @@ public class QuoteTest {
 		assertThat(quotes.get(0)).isEqualTo(quote);
 	}
 	
+	@Test
+	public void voteTest() {
+		final int voteCount = 12;
+		
+		Quote quote = new Quote();
+		for (int i = 0; i < voteCount; i++) {
+			quote.vote();
+		}
+		
+		Quote.deleteAll();
+		quote.save();
+		
+		List<Quote> quotes = Quote.findAll();
+		assertThat(quotes.get(0)).isEqualTo(quote);
+	}
+	
 }
