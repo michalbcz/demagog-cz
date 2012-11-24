@@ -13,7 +13,15 @@
 		<div class="quotes-container">
 		@for(quote <- quotes) {
 			<div class="quote">
-				&bdquo;@{quote.quoteText}&ldquo;
+				<div class="text">
+					&bdquo;@{quote.quoteText}&ldquo;
+				</div>
+				
+				<div class="actions">
+					<a href="@{controllers.routes.Application.upVote()}">
+						<img src="@routes.Assets.at("images/24x24/add.png")" />
+					</a>
+				</div>
 				
 				<div class="footer">
 					<span class="author">Autor: @{quote.author}</span>

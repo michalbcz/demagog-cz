@@ -12,9 +12,10 @@ body {
 	border: 1px solid #555;
 	padding: 0.5em;
 	margin-bottom: 0.5em;
+	position: relative;	
 }
 
-.footer {
+.quote .footer {
 	margin-top: 0.5em;
 }
 
@@ -26,4 +27,15 @@ body {
 
 .url {
 	margin-left: 0.5em;
+}
+
+.quote .text {
+	margin-right: 50px;
+}
+
+.quote .actions {
+	position: absolute;
+	top: 0.5em;
+	right: 0.5em;
+	height: 100%;
 }

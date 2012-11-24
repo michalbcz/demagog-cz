@@ -19,4 +19,8 @@ public class Application extends Controller {
 		
 		return ok(quotes_list.render(quotes));
 	}
+	
+	public static Result upVote() {
+		return redirect(controllers.routes.Application.showQuotes());
+	}
 }
