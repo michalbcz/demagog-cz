@@ -29,11 +29,22 @@ public class Quote {
 	
 	public Date creationDate;
 	
-	public boolean approved;
+	public boolean approved = false;
 	
 	public Date approvalDate;
 
+	public Quote() {
+	}
 	
+	public Quote(String quoteText, String url, String author) {
+		this.url = url;
+		this.quoteText = quoteText;
+		this.author = author;
+		this.creationDate = new Date();
+	}
+
+
+
 	private static Datastore ds;
 	
 	static {
