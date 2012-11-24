@@ -1,6 +1,7 @@
 import java.lang.reflect.Field;
 
 import models.Quote;
+import models.User;
 
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
@@ -47,6 +48,8 @@ public class Global extends GlobalSettings {
 				"Ale ten ekonomický mechanismus (převodu finančních prostředků státního podniku do státního rozpočtu, pozn.) tam neexistuje a to právě je předmětem teď novely zákona o státním podniku, který už je ve sněmovně a který má právě tento transfer zajistit.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Jiří Oliva").save();
+		
+		new User("test", "test").save();
 	}
 	
 }

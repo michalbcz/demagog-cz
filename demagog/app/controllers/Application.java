@@ -29,7 +29,7 @@ public class Application extends Controller {
 	public static Result showQuotes() {
 		List<Quote> quotes = Quote.findAll();
 
-		return ok(quotes_list.render(quotes));
+		return ok(quotes_list.render(quotes, false));
 	}
 	
 	public static Result upVote() {

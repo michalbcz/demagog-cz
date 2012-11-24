@@ -1,4 +1,4 @@
-@(quotes: List[Quote])
+@(quotes: List[Quote], admin: Boolean)
 
 @main("") {
 	<div class="quotes-container">
@@ -8,15 +8,11 @@
 				&bdquo;@{quote.quoteText}&ldquo;
 			</div>
 			
-			<div class="actions">
-				<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
-					<input type="hidden" name="id" value="@{quote.id}" />
-					<span class="vote-count">@{quote.voteCount}</span>
-					<a href="javascript:$('#@{quote.id}').submit(); void(0);">
-						<img src="@routes.Assets.at("images/24x24/add.png")" />
-					</a>
-				</form>
-			</div>
+			@if(admin) {
+				@adminForm(quote)
+			} else {
+				@userForm(quote)
+			}
 			
 			<div class="footer">
 				<span class="author">Autor: @{quote.author}</span>
@@ -24,5 +20,34 @@
 			</div>
 		</div>
 	}
+	</div>
+}
+
+@userForm(quote: Quote) = {
+	<div class="actions">
+		<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
+			<input type="hidden" name="id" value="@{quote.id}" />
+			<span class="vote-count">@{quote.voteCount}</span>
+			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+				<img src="@routes.Assets.at("images/24x24/add.png")" />
+			</a>
+		</form>
+	</div>
+}
+
+@adminForm(quote: Quote) = {
+	<div class="actions">
+		<form id="@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
+			<input type="hidden" name="id" value="@{quote.id}" />
+			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+				<img src="@routes.Assets.at("images/24x24/accept.png")" />
+			</a>
+		</form>
+		<form id="@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
+			<input type="hidden" name="id" value="@{quote.id}" />
+			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+				<img src="@routes.Assets.at("images/24x24/delete.png")" />
+			</a>
+		</form>
 	</div>
 }

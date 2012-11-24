@@ -12,9 +12,12 @@ POST	/quote/save					controllers.Application.submitQuote()
 # admin
 GET		/admin/						controllers.Admin.index()
 POST	/admin/login				controllers.Admin.login()
+GET		/admin/quotes				controllers.Admin.showQuotes()
+POST	/admin/approve				controllers.Admin.approve()
+POST	/admin/reject				controllers.Admin.reject()
 
 GET     /quotes                     controllers.Application.showQuotes()
-POST     /upVote                     controllers.Application.upVote()
+POST    /upVote                     controllers.Application.upVote()
 
 
 # Map static resources from the /public folder to the /assets URL path
