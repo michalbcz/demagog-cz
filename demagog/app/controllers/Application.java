@@ -35,7 +35,8 @@ public class Application extends Controller {
 	public static Result upVote() {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
 		
-		new ObjectId(id);
+		Quote.upVote(new ObjectId(id));
+		
 		return redirect(controllers.routes.Application.showQuotes());
 	}
 }
