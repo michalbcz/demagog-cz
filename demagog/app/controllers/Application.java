@@ -44,7 +44,7 @@ public class Application extends Controller {
 			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
 		}
 		
-		return ok(quotes_list.render(quotes, allreadyVoted));
+		return ok(quotes_list.render(quotes, false, allreadyVoted));
 	}
 	
 	public static Result upVote() {
