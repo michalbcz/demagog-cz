@@ -1,18 +1,38 @@
 body {
 	font-family: Arial;
+	background-color: #525252;
 	
 }
 
+#body {
+	width: 800px;
+	margin: 0 auto;
+}	
+
+#logo-container {	
+	width: 100%;
+	height: 60px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+	margin-bottom: 50px;
+	background-image: url('../images/logo.png');
+	background-repeat: no-repeat;
+}
+
+
 .quotes-container {
 	margin: 0 auto;
-	width: 800px;
+	width: 100%;
 }
 
 .quote {
+	background-color: #FFFFFF;
 	border: 1px solid #555;
 	padding: 0.5em;
 	margin-bottom: 0.5em;
 	position: relative;	
+	border-radius: 5px;
 }
 
 .quote .footer {
