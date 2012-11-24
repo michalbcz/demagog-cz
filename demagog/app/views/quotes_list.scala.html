@@ -1,4 +1,4 @@
-@(quotes: List[Quote])
+@(quotes: List[Quote])(allreadyVoted: List[String])
 
 @main("") {
 	<div class="quotes-container">
@@ -12,9 +12,13 @@
 				<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
 					<input type="hidden" name="id" value="@{quote.id}" />
 					<span class="vote-count">@{quote.voteCount}</span>
+					@if(!allreadyVoted.contains(quote.id)) {
 					<a href="javascript:$('#@{quote.id}').submit(); void(0);">
 						<img src="@routes.Assets.at("images/24x24/add.png")" />
 					</a>
+					} else {
+						<img src="@routes.Assets.at("images/24x24/add_disabled.png")" />
+					}
 				</form>
 			</div>
 			
