@@ -39,3 +39,9 @@ body {
 	right: 0.5em;
 	height: 100%;
 }
+
+.quote .actions input[type="submit"]{
+	width: 24px;
+	height: 24px;
+	background-image: url('../images/24x24/add.png');
+}

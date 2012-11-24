@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Application.showQuotes()
 
 # New quote
 GET 	/quote/save					controllers.Application.showNewQuoteForm()	
@@ -14,7 +14,7 @@ GET		/admin/						controllers.Admin.index()
 POST	/admin/login				controllers.Admin.login()
 
 GET     /quotes                     controllers.Application.showQuotes()
-GET     /upVote                     controllers.Application.upVote()
+POST     /upVote                     controllers.Application.upVote()
 
 
 # Map static resources from the /public folder to the /assets URL path
