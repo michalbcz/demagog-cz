@@ -1,0 +1,29 @@
+body {
+	font-family: Arial;
+	
+}
+
+.quotes-container {
+	margin: 0 auto;
+	width: 800px;
+}
+
+.quote {
+	border: 1px solid #555;
+	padding: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.footer {
+	margin-top: 0.5em;
+}
+
+.author,
+.url {
+	font-size: smaller;
+	color: #555;
+}
+
+.url {
+	margin-left: 0.5em;
+}

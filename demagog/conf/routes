@@ -10,5 +10,7 @@ POST	/submit						controllers.Application.submit()
 GET		/admin/						controllers.Admin.index()
 POST	/admin/login				controllers.Admin.login()
 
+GET     /quotes                     controllers.Application.showQuotes()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,8 +1,11 @@
 package controllers;
 
+import java.util.List;
+
 import models.Quote;
-import play.mvc.Controller;
-import play.mvc.Result;
+import play.*;
+import play.mvc.*;
+
 import views.html.*;
 import play.data.*;
 
@@ -20,6 +23,11 @@ public class Application extends Controller {
   	
   	return ok(submitResponse.render(""));
   }
-
+  
+	public static Result showQuotes() {
+		List<Quote> quotes = Quote.findAll();
+		
+		return ok(quotes_list.render(quotes));
+	}  
 
 }
