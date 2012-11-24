@@ -1,0 +1,14 @@
+
+<form action="@{controllers.routes.Application.submitQuote()}" action="POST">
+	<label for="quoteText">Citát: </label>
+	<input type="text" name="quoteText" />
+	
+	<br/>
+	
+	<label for="url">Zdroj citátu: </label>
+	<input type="text" name="url" />
+	
+	<br/>
+	
+	<input type="submit" name="Odeslat" />
+</form>
