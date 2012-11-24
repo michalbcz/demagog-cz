@@ -35,11 +35,14 @@ public class Quote {
 	public Quote() {
 	}
 	
-	public Quote(String quoteText, String url, String author) {
+	public Quote(String quoteText, String url, String author, boolean approved) {
 		this.url = url;
 		this.quoteText = quoteText;
 		this.author = author;
 		this.creationDate = new Date();
+		this.approved = approved;
+		if (approved)
+			approvalDate = new Date();
 	}
 
 	private static Datastore ds;
