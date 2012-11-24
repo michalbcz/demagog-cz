@@ -1,38 +1,28 @@
 @(quotes: List[Quote])
 
-<!DOCTYPE html>
-
-<html>
-    <head>
-        <title>Demagog.cz</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-		<div class="quotes-container">
-		@for(quote <- quotes) {
-			<div class="quote">
-				<div class="text">
-					&bdquo;@{quote.quoteText}&ldquo;
-				</div>
-				
-				<div class="actions">
-					<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
-						<input type="hidden" name="id" value="@{quote.id}" />
-						<span class="vote-count">@{quote.voteCount}</span>
-						<a href="javascript:$('#@{quote.id}').submit(); void(0);">
-							<img src="@routes.Assets.at("images/24x24/add.png")" />
-						</a>
-					</form>
-				</div>
-				
-				<div class="footer">
-					<span class="author">Autor: @{quote.author}</span>
-					<span class="url">Zdroj: <a href "@{quote.url}">@{quote.url}</a></span>
-				</div>
+@main() {
+	<div class="quotes-container">
+	@for(quote <- quotes) {
+		<div class="quote">
+			<div class="text">
+				&bdquo;@{quote.quoteText}&ldquo;
 			</div>
-		}
+			
+			<div class="actions">
+				<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
+					<input type="hidden" name="id" value="@{quote.id}" />
+					<span class="vote-count">@{quote.voteCount}</span>
+					<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+						<img src="@routes.Assets.at("images/24x24/add.png")" />
+					</a>
+				</form>
+			</div>
+			
+			<div class="footer">
+				<span class="author">Autor: @{quote.author}</span>
+				<span class="url">Zdroj: <a href "@{quote.url}">@{quote.url}</a></span>
+			</div>
 		</div>
-    </body>
-</html>
+	}
+	</div>
+}

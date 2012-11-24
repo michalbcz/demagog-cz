@@ -13,10 +13,6 @@ import views.html.*;
 
 public class Application extends Controller {	
 
-	public static Result index() {
-		return ok(index.render("Your new application is ready."));
-	}
-	
 	public static Result showNewQuoteForm() {
 		return ok(quote_new.render());
 	}
@@ -27,7 +23,7 @@ public class Application extends Controller {
 
 		quote.save();
 
-		return ok();
+		return ok("Saved");
 	}
 
 	public static Result showQuotes() {

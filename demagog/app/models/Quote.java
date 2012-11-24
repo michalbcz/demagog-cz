@@ -3,14 +3,13 @@ package models;
 import java.util.Date;
 import java.util.List;
 
-
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.query.UpdateOperations;
+import com.google.code.morphia.query.Query;
 import com.mongodb.Mongo;
 
 @Entity
@@ -79,6 +78,22 @@ public class Quote {
 	
 	public int vote() {
 		return ++voteCount;
+	}
+	
+	public static List<Quote> findAllSortedByVote(boolean onlyApproved) {
+		Query<Quote> query = ds.find(Quote.class);
+		if (onlyApproved) {
+			query = query.field("approved").equal(true);
+		}
+		return query.order("-voteCount").asList();
+	}
+	
+	public static List<Quote> findAllSortedByCreationDate(boolean onlyApproved) {
+		Query<Quote> query = ds.find(Quote.class);
+		if (onlyApproved) {
+			query = query.field("approved").equal(true);
+		}
+		return query.order("-creationDate").asList();
 	}
 	
 	@Override
