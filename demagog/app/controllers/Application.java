@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.Quote;
+import models.Quote.QuoteState;
 
 import org.bson.types.ObjectId;
 
@@ -29,6 +30,8 @@ public class Application extends Controller {
 	public static Result submitQuote() {
 		Form<Quote> quoteForm = form(Quote.class);
 		Quote quote = quoteForm.bindFromRequest().get();
+		
+		quote.quoteState = QuoteState.NEW;
 
 		quote.save();
 		
