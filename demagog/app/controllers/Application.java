@@ -12,6 +12,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
+import utils.QuoteState;
 import views.html.quote_new;
 import views.html.quotes_list;
 
@@ -27,6 +28,8 @@ public class Application extends Controller {
 	public static Result submitQuote() {
 		Form<Quote> quoteForm = form(Quote.class);
 		Quote quote = quoteForm.bindFromRequest().get();
+		
+		quote.quoteState = QuoteState.NEW;
 
 		quote.save();
 		
