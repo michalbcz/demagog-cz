@@ -81,7 +81,7 @@ public class Admin extends Controller {
 			
 		}
 		
-		return redirect(controllers.routes.Admin.index());
+		return redirect(controllers.routes.Admin.showApproveQuotes());
 	}
 
 	public static Result setChecked() {
