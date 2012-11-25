@@ -1,11 +1,18 @@
 @(quotes: List[Quote], admin: Boolean)(allreadyVoted: List[String])
 
 @main("") {
+	@if(admin) {
+		@header
+	}
 	<div class="quotes-container">
 	@for(quote <- quotes) {
 		<div class="quote">			
 			@if(admin) {
-				@adminFormApproval(quote)
+				@if(quote.quoteState == Quote.QuoteState.NEW) {
+					@adminFormApproval(quote)
+				} else {
+					@adminFormChecking(quote)
+				}
 			} else {
 				<div class="text">
 					&bdquo;@{quote.quoteText}&ldquo;
@@ -15,6 +22,14 @@
 			}		
 		</div>
 	}
+	</div>
+}
+
+@header = {
+	<div class="header">
+		<a href="@{controllers.routes.Admin.showApproveQuotes()}" class="header_item">New</a>
+		<a href="@{controllers.routes.Admin.showCheckQuotes()}" class="header_item">Approved</a>
+		<a href="@{controllers.routes.Admin.logout()}" class="header_logout">Logout</a>
 	</div>
 }
 
@@ -70,7 +85,7 @@
 	</div>
 	<form id="check_@{quote.id}" action="@{controllers.routes.Admin.setChecked()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />
-		<span class="vote-count">@{quote.voteCount}</span>
+		<span class="vote-count">Votes: @{quote.voteCount}</span>
 		<div class="actions">
 			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void();">
 				<img src="@routes.Assets.at("images/24x24/accept.png")" />

@@ -31,20 +31,20 @@ public class Admin extends Controller {
 	  		String sid = Admin.generateUUID();
 	  		user.updateSID(sid);
 	  		session("sid", sid);
-	  		return redirect(controllers.routes.Admin.showQuotes());
+	  		return redirect(controllers.routes.Admin.showApproveQuotes());
 	  	}
 	  	
 	  	return redirect(controllers.routes.Admin.index());
 		
 	}
 	
-	public static Result showQuotes() {
+	public static Result showQuotes(QuoteState state) {
 		String sid = session("sid");
 		
 		User user = User.findSID(sid);
 		
 		if (user != null) {
-			List<Quote> quotes = Quote.findAllWithApprovedState(QuoteState.NEW);
+			List<Quote> quotes = Quote.findAllWithApprovedState(state);
 			
 			return ok(quotes_list.render(quotes, true, null));
 		}
@@ -66,7 +66,7 @@ public class Admin extends Controller {
 			
 		}
 		
-		return redirect(controllers.routes.Admin.showQuotes());
+		return redirect(controllers.routes.Admin.showApproveQuotes());
 	}
 	
 	public static Result reject() {
@@ -81,17 +81,36 @@ public class Admin extends Controller {
 			
 		}
 		
-		return redirect(controllers.routes.Admin.showQuotes());
+		return redirect(controllers.routes.Admin.index());
 	}
 
 	public static Result setChecked() {
+		String sid = session("sid");
+		
+		User user = User.findSID(sid);
+		
+		if (user != null) {
+			String id = request().body().asFormUrlEncoded().get("id")[0];
+			
+			Quote.setChecked(new ObjectId(id));			
+			return redirect(controllers.routes.Admin.showCheckQuotes());
+		}
 
-		return redirect(controllers.routes.Admin.showQuotes());
+		return redirect(controllers.routes.Admin.index());
+	}
+
+	public static Result showApproveQuotes() {
+		return Admin.showQuotes(QuoteState.NEW);
 	}
 
 	public static Result showCheckQuotes() {
 
-		return redirect(controllers.routes.Admin.showQuotes());
+		return Admin.showQuotes(QuoteState.APPROVED);
+	}
+
+	public static Result logout() {
+		session().clear();
+		return redirect(controllers.routes.Admin.index());
 	}
 	
 	private static String generateUUID() {
