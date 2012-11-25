@@ -9,6 +9,8 @@ GET     /                           controllers.Application.showQuotes()
 GET 	/quote/save					controllers.Application.showNewQuoteForm()	
 POST	/quote/save					controllers.Application.submitQuote()
 
+GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
+
 # admin
 GET		/admin 						controllers.Admin.index()
 GET		/admin/						controllers.Admin.index()

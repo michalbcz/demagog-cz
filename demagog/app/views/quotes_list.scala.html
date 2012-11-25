@@ -9,6 +9,7 @@
 			} else {
 				<div class="text">
 					&bdquo;@{quote.quoteText}&ldquo;
+					<a href="@{controllers.routes.Application.showQuoteDetail(quote.id.toString())}" class="detail">Detail...</a>
 				</div>
 				@userForm(quote)
 			}		

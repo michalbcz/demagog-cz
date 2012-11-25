@@ -3,8 +3,8 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import models.Quote;
+import models.Quote.QuoteState;
 import models.User;
-import utils.QuoteState;
 
 import org.bson.types.ObjectId;
 
