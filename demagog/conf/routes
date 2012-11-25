@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.showQuotes()
+POST    /                           controllers.Application.showQuotesFilteredByAuthors()
 
 # New quote
 GET 	/quote/save					controllers.Application.showNewQuoteForm()	

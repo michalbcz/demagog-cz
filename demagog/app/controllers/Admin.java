@@ -1,11 +1,11 @@
 package controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import models.Quote;
 import models.Quote.QuoteState;
 import models.User;
-import java.util.UUID;
 
 import org.bson.types.ObjectId;
 
@@ -46,7 +46,7 @@ public class Admin extends Controller {
 		if (user != null) {
 			List<Quote> quotes = Quote.findAllWithApprovedState(state);
 			
-			return ok(quotes_list.render(quotes, true, null));
+			return ok(quotes_list.render(quotes, true, null, null, null));
 		}
 		
 		return redirect(controllers.routes.Admin.index());
@@ -81,7 +81,7 @@ public class Admin extends Controller {
 			
 		}
 		
-		return redirect(controllers.routes.Admin.index());
+		return redirect(controllers.routes.Admin.showApproveQuotes());
 	}
 
 	public static Result setChecked() {

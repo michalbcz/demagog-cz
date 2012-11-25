@@ -1,4 +1,4 @@
-@(quotes: List[Quote], admin: Boolean)(allreadyVoted: List[String])
+@(quotes: List[Quote], admin: Boolean, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
 
 @main() {
 	@if(admin) {
@@ -7,6 +7,24 @@
 	<div id="page-tip">
        <a href="@{controllers.routes.Application.submitQuote()}">Chci ověřit zda je výrok pravdivý!</a>              
     </div>
+    
+    @if(!admin) {
+		<div class="filter-container">
+			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotesFilteredByAuthors()}" method="POST">
+				<label for="quoteText">Filtrovat podle autora: </label>
+				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:$('#filterByAuthor').submit(); void(0);"> 
+					@for(authorName <- filterAuthorNames) {
+						@if(selectedFilterAuthorName.equals(authorName)) {
+							<option value="@{authorName}" selected>@{authorName}</option>
+						} else {
+							<option value="@{authorName}">@{authorName}</option>
+						}
+					}
+				</select>
+			</form>
+		</div>
+	}
+	
 	<div class="quotes-container">
 	@for(quote <- quotes) {
 		<div class="quote">			
@@ -49,7 +67,7 @@
 			<input type="hidden" name="id" value="@{quote.id}" />
 			<span class="vote-count">@{quote.voteCount}</span>
 			@if(!allreadyVoted.contains(quote.id)) {
-			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+			<a href="javascript:voteOnServer('@{quote.id}');">
 				<img src="@routes.Assets.at("images/24x24/add.png")" />
 			</a>
 			} else {
@@ -97,3 +115,20 @@
 	</form>
 	@footer(quote)
 }
+
+<script type="text/javascript">
+	function voteOnServer(quoteId) {
+		var $quoteForm = $("#" + quoteId);
+		var $authorFilter = $("#filterByAuthor select option:selected").val();
+	
+		$quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
+	
+		$quoteForm.submit();
+	}
+</script>
+
+<script type="text/javascript">
+	$(function () {
+	    $("#filterByAuthorSelect").selectbox();
+	});
+</script>
