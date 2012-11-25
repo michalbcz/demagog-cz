@@ -1,5 +1,4 @@
 ﻿/* 
-	TODO: udelat submit formulare jinak nas to hodi na demagog stranku 
 	TODO: misto alertu "Saved to demagog" ukazat modalni okno s textem a linkem na demagog
 */
 
@@ -18,7 +17,8 @@ Demagog.Bookmarklet.Events.onJqueryReady = function() {
 
 Demagog.Bookmarklet.submitSelectedQuote = function() {
 		var selectedText = Demagog.Bookmarklet.Util.getSelected();
-		Demagog.Bookmarklet.Util.postToUrlAsync("http://localhost:9000/quote/save", {"url": window.location.href, "quoteText": selectedText });
+		var sourceUrl = window.location.href;
+		Demagog.Bookmarklet.Util.postToUrlAsync(selectedText, sourceUrl);
 		alert("Saved to demagog");
 };
 
@@ -35,18 +35,43 @@ Demagog.Bookmarklet.Util.getSelected = function() {
 	return t;
 };
 
-Demagog.Bookmarklet.Util.postToUrlAsync = function(path, params) {
+Demagog.Bookmarklet.Util.generateGuid = function() {
+
+    var S4 = function ()
+    {
+        return Math.floor(
+                Math.random() * 0x10000 /* 65536 */
+            ).toString(16);
+    };
+
+    return (
+            S4() + S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + S4() + S4()
+        );
+
+}
+
+Demagog.Bookmarklet.Util.postToUrlAsync = function(selectedText, sourceUrl) {
 
 	var data = [];
-	data.push({name: "url", value: params.url});
-	data.push({name: "quoteText", value: params.quoteText});
-	
-	console.debug("Sending data", data, " to server: ", path);
+	data.push({name: "url", value: sourceUrl});
+	data.push({name: "quoteText", value: selectedText});
+	data.push({name: "token", value: "" + Demagog.Bookmarklet.Util.generateGuid()});
+		
+	var apiUrl = "http://localhost:9000/api/v1/quote/save"
+	console.debug("Sending data", data, " to server: ", apiUrl);
 
 	jQuery.ajax ({
-		url: path,
+		url: apiUrl,
+		contentType: 'application/json',
 		data: data,
-		type: 'POST'	
+		dataType: 'jsonp',		
+		success: function(data) {
+			console.log("Response:", data);
+		}
 	});
 
 }

@@ -11,6 +11,9 @@ POST	/quote/save					controllers.Application.submitQuote()
 
 GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
 
+# api
+GET    /api/v1/quote/save           controllers.Api.saveQuote()
+
 # admin
 GET		/admin 						controllers.Admin.index()
 GET		/admin/						controllers.Admin.index()
