@@ -71,6 +71,10 @@ public class Quote {
 	public void save() {
 		ds.save(this);
 	}
+
+	public static void setChecked(ObjectId id) {
+		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.CHECKED));
+	}
 	
 	public static void approve(ObjectId id, String text, String author) {
 		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.APPROVED).set("quoteText", text).set("author", author));
