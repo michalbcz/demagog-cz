@@ -86,7 +86,7 @@ img {
 	height: 10em;
 }
 
-#new_quote #quoteUrl {	
+#new_quote .input-section input {
 	width: 100%;
 }
 
