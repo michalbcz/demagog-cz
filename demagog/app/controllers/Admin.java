@@ -3,13 +3,16 @@ package controllers;
 import java.util.List;
 
 import models.Quote;
-import play.mvc.Controller;
-import play.mvc.Result;
-import views.html.*;
-import play.data.*;
+import models.Quote.QuoteState;
 import models.User;
 
 import org.bson.types.ObjectId;
+
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.loginForm;
+import views.html.quotes_list;
 
 public class Admin extends Controller {
 	
@@ -40,7 +43,7 @@ public class Admin extends Controller {
 		User user = User.findSID(sid);
 		
 		if (user != null) {
-			List<Quote> quotes = Quote.findAllWithApprovedState(false);
+			List<Quote> quotes = Quote.findAllWithApprovedState(QuoteState.NEW);
 			
 			return ok(quotes_list.render(quotes, true, null));
 		}
@@ -55,12 +58,14 @@ public class Admin extends Controller {
 		User user = User.findSID(sid);
 		
 		if (user != null) {
-			String id = request().body().asFormUrlEncoded().get("id")[0];
+			Form<Quote> quoteForm = form(Quote.class);
+			Quote quote = quoteForm.bindFromRequest().get();
 			
-			Quote.approve(new ObjectId(id));
+			System.out.println("id: " + quote.id);
+			System.out.println("text: " + quote.quoteText);
+			System.out.println("autor: " + quote.author);
 			
-			System.out.println("id: " + id);
-			
+			Quote.approve(quote.id, quote.quoteText, quote.author);			
 			
 		}
 		
@@ -79,6 +84,16 @@ public class Admin extends Controller {
 			
 		}
 		
+		return redirect(controllers.routes.Admin.showQuotes());
+	}
+
+	public static Result setChecked() {
+
+		return redirect(controllers.routes.Admin.showQuotes());
+	}
+
+	public static Result showCheckQuotes() {
+
 		return redirect(controllers.routes.Admin.showQuotes());
 	}
 	

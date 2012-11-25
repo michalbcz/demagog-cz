@@ -3,27 +3,26 @@
 @main("") {
 	<div class="quotes-container">
 	@for(quote <- quotes) {
-		<div class="quote">
-			<div class="text">
-				&bdquo;@{quote.quoteText}&ldquo;
-				@if(!admin) {
-					<a href="@{controllers.routes.Application.showQuoteDetail(quote.id.toString())}" class="detail">Detail...</a>
-				}
-			</div>
-			
+		<div class="quote">			
 			@if(admin) {
-				@adminForm(quote)
+				@adminFormApproval(quote)
 			} else {
+				<div class="text">
+					&bdquo;@{quote.quoteText}&ldquo;
+					<a href="@{controllers.routes.Application.showQuoteDetail(quote.id.toString())}" class="detail">Detail...</a>
+				</div>
 				@userForm(quote)
-			}
-			
-			<div class="footer">
-				<span class="author">Autor: @{quote.author}</span>
-				<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
-			</div>
+			}		
 		</div>
 	}
 	</div>
+}
+
+@footer(quote: Quote) = {
+	<div class="footer">
+		<span class="author">Autor: @{quote.author}</span>
+		<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
+	</div>	
 }
 
 @userForm(quote: Quote) = {
@@ -40,21 +39,42 @@
 			}
 		</form>
 	</div>
+	@footer(quote)
 }
 
-@adminForm(quote: Quote) = {
-	<div class="actions">
-		<form id="@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
-			<input type="hidden" name="id" value="@{quote.id}" />
-			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+@adminFormApproval(quote: Quote) = {
+	<form id="approve_@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
+		<input type="hidden" name="id" value="@{quote.id}" />
+		<textarea name="quoteText" cols="100" rows="7">@{quote.quoteText}</textarea>
+		<div class="actions">
+			<a class="imglink" href="javascript:$('#approve_@{quote.id}').submit(); void(0);">
+					<img src="@routes.Assets.at("images/24x24/accept.png")" />
+			</a><a class="imglink" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
+				<img src="@routes.Assets.at("images/24x24/delete.png")" />
+			</a>			
+		</div>
+		<div class="footer">
+			<span class="author">Autor: </span>
+			<input name="author" type="text" value="@{quote.author}" />
+			<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
+		</div>
+	</form>
+	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
+		<input type="hidden" name="id" value="@{quote.id}" />		
+	</form>
+}
+
+@adminFormChecking(quote: Quote) = {
+	<div class="text">
+		&bdquo;@{quote.quoteText}&ldquo;
+	</div>
+	<form id="check_@{quote.id}" action="@{controllers.routes.Admin.setChecked()}" method="POST">
+		<input type="hidden" name="id" value="@{quote.id}" />
+		<div class="actions">
+			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void();">
 				<img src="@routes.Assets.at("images/24x24/accept.png")" />
 			</a>
-		</form>
-		<form id="@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
-			<input type="hidden" name="id" value="@{quote.id}" />
-			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
-				<img src="@routes.Assets.at("images/24x24/delete.png")" />
-			</a>
-		</form>
-	</div>
+		</div>
+	</form>
+	@footer(quote)
 }

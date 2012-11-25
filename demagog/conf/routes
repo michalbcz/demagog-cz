@@ -12,11 +12,14 @@ POST	/quote/save					controllers.Application.submitQuote()
 GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
 
 # admin
+GET		/admin 						controllers.Admin.index()
 GET		/admin/						controllers.Admin.index()
 POST	/admin/login				controllers.Admin.login()
 GET		/admin/quotes				controllers.Admin.showQuotes()
 POST	/admin/approve				controllers.Admin.approve()
 POST	/admin/reject				controllers.Admin.reject()
+POST	/admin/check				controllers.Admin.setChecked()
+GET		/admin/checkquotes			controllers.Admin.showCheckQuotes()
 
 GET     /quotes                     controllers.Application.showQuotes()
 POST    /upVote                     controllers.Application.upVote()

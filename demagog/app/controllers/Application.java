@@ -30,6 +30,8 @@ public class Application extends Controller {
 		Quote quote = quoteForm.bindFromRequest().get();
 
 		quote.save();
+		
+		System.out.println("Text: " + quote.quoteText);
 
 		return ok("Saved");
 	}

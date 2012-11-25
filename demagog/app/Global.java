@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import models.Quote;
+import models.Quote.QuoteState;
 import models.User;
 
 import org.bson.types.ObjectId;
@@ -55,49 +56,49 @@ public class Global extends GlobalSettings {
 				"I po tomto daňovém balíčku, který byl tedy napodruhé prosazen, bude daňová zátěž o 2% daňové kvóty nižší, než byla za pana ministra Sobotky.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Miroslav Kalousek",
-				false).save();
+				QuoteState.NEW).save();
 
 		new Quote(
 				"My jsme zdědili deficit po Fischerově vládě ve výši 5,8% HDP.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Miroslav Kalousek",
-				false).save();
+				QuoteState.NEW).save();
 
 		new Quote(
 				"Každý správce programu (operačního programu, čerpajícího evropské fondy, pozn.), máme jich bohužel strašně moc, máme jich 24, má svého auditora, který provádí kontrolu, a to bývá většinou podřízený toho správce programu.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Jiří Paroubek",
-				false).save();
+				QuoteState.NEW).save();
 
 		new Quote(
 				"Ale ten ekonomický mechanismus (převodu finančních prostředků státního podniku do státního rozpočtu, pozn.) tam neexistuje a to právě je předmětem teď novely zákona o státním podniku, který už je ve sněmovně a který má právě tento transfer zajistit.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Jiří Oliva",
-				false).save();
+				QuoteState.NEW).save();
 		
 		new Quote(
 				"I po tomto daňovém balíčku, který byl tedy napodruhé prosazen, bude daňová zátěž o 2% daňové kvóty nižší, než byla za pana ministra Sobotky.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Miroslav Kalousek",
-				true).save();
+				QuoteState.APPROVED).save();
 
 		new Quote(
 				"My jsme zdědili deficit po Fischerově vládě ve výši 5,8% HDP.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Miroslav Kalousek",
-				true).save();
+				QuoteState.APPROVED).save();
 
 		new Quote(
 				"Každý správce programu (operačního programu, čerpajícího evropské fondy, pozn.), máme jich bohužel strašně moc, máme jich 24, má svého auditora, který provádí kontrolu, a to bývá většinou podřízený toho správce programu.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Jiří Paroubek",
-				true).save();
+				QuoteState.APPROVED).save();
 
 		new Quote(
 				"Ale ten ekonomický mechanismus (převodu finančních prostředků státního podniku do státního rozpočtu, pozn.) tam neexistuje a to právě je předmětem teď novely zákona o státním podniku, který už je ve sněmovně a který má právě tento transfer zajistit.",
 				"http://demagog.cz/diskusie/76/trvale-udrzitelna-krize-miroslav-kalousek", 
 				"Jiří Oliva",
-				true).save();
+				QuoteState.APPROVED).save();
 		
 		new User("test", "test").save();
 	}
