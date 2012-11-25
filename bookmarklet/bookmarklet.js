@@ -100,7 +100,7 @@ Demagog.Bookmarklet.Util.postToUrlAsync = function(selectedText, sourceUrl) {
 	data.push({name: "quoteText", value: selectedText});
 	data.push({name: "token", value: "" + Demagog.Bookmarklet.Util.generateGuid()});
 		
-	var apiUrl = "http://localhost:9000/api/v1/quote/save"
+	var apiUrl = "http://demagog.herokuapp.com/api/v1/quote/save"
 	console.debug("Sending data", data, " to server: ", apiUrl);
 
 	jQuery.ajax ({
