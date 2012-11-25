@@ -1,4 +1,9 @@
-﻿var Demagog = Demagog || {};
+﻿/* 
+	TODO: udelat submit formulare jinak nas to hodi na demagog stranku 
+	TODO: misto alertu "Saved to demagog" ukazat modalni okno s textem a linkem na demagog
+*/
+
+var Demagog = Demagog || {};
 Demagog.Bookmarklet = Demagog.Bookmaklet || {};
 Demagog.Bookmarklet.Events = Demagog.Bookmarklet.Events || {};
 Demagog.Bookmarklet.Util = Demagog.Bookmarklet.Util || {};
@@ -13,11 +18,11 @@ Demagog.Bookmarklet.Events.onJqueryReady = function() {
 
 Demagog.Bookmarklet.submitSelectedQuote = function() {
 		var selectedText = Demagog.Bookmarklet.Util.getSelected();
-		Demagog.Bookmarklet.Util.postToUrl("http://localhost:9000/quote/save", {"url": window.location.href, "quoteText": selectedText });
+		Demagog.Bookmarklet.Util.postToUrlAsync("http://localhost:9000/quote/save", {"url": window.location.href, "quoteText": selectedText });
 		alert("Saved to demagog");
 };
 
-Demagog.Bookmarklet.Util.getSelected = function(){
+Demagog.Bookmarklet.Util.getSelected = function() {
 	var t = '';
 	if(window.getSelection) {
 		t = window.getSelection();
@@ -29,6 +34,22 @@ Demagog.Bookmarklet.Util.getSelected = function(){
 	
 	return t;
 };
+
+Demagog.Bookmarklet.Util.postToUrlAsync = function(path, params) {
+
+	var data = [];
+	data.push({name: "url", value: params.url});
+	data.push({name: "quoteText", value: params.quoteText});
+	
+	console.debug("Sending data", data, " to server: ", path);
+
+	jQuery.ajax ({
+		url: path,
+		data: data,
+		type: 'POST'	
+	});
+
+}
 
 Demagog.Bookmarklet.Util.postToUrl = function(path, params, method) {
     method = method || "post"; // Set method to post by default, if not specified.
@@ -53,6 +74,27 @@ Demagog.Bookmarklet.Util.postToUrl = function(path, params, method) {
     document.body.appendChild(form);
     form.submit();
 };
+
+/*
+ *  Initialize console object used for logging in javascript code.
+ * 
+ * For case when console object is not present (old browsers) use dump implementation.
+ * 
+ */
+
+var console = console || {
+
+	info : function() {},
+	debug : function() {},
+	error : function() {},
+	warn : function() {}
+
+};
+
+console.info = console.info || function() {};
+console.error = console.error || function() {};
+console.warn = console.warn || function() {};
+console.debug = console.debug || function() {};
 
 /* inject jquery */
 var jqueryScript = document.createElement("script");
