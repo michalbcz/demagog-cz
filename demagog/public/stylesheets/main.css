@@ -98,3 +98,7 @@ img {
 	font-weight: bold;
 	color: #555;
 }
+
+#new_quote #buttons {
+	text-align: right;
+}
