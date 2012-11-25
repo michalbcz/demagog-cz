@@ -45,7 +45,7 @@
 @adminFormApproval(quote: Quote) = {
 	<form id="approve_@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />
-		<textarea name="quoteText" cols="100" rows="7">@{quote.quoteText}</textarea>
+		<textarea name="quoteText" class="admin_textarea">@{quote.quoteText}</textarea>
 		<div class="actions">
 			<a class="imglink" href="javascript:$('#approve_@{quote.id}').submit(); void(0);">
 					<img src="@routes.Assets.at("images/24x24/accept.png")" />
@@ -70,6 +70,7 @@
 	</div>
 	<form id="check_@{quote.id}" action="@{controllers.routes.Admin.setChecked()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />
+		<span class="vote-count">@{quote.voteCount}</span>
 		<div class="actions">
 			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void();">
 				<img src="@routes.Assets.at("images/24x24/accept.png")" />
