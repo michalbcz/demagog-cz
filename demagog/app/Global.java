@@ -1,13 +1,18 @@
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.util.Locale;
 
 import models.Quote;
 import models.User;
 
-import com.google.code.morphia.logging.MorphiaLoggerFactory;
-import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
+import org.bson.types.ObjectId;
 
 import play.Application;
 import play.GlobalSettings;
+import play.data.format.Formatters;
+
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 
 public class Global extends GlobalSettings {
 
@@ -23,7 +28,24 @@ public class Global extends GlobalSettings {
 		
 		MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
 		
+		initCustomFormatters();
+		
 		initDeveloperData();
+	}
+	
+	private void initCustomFormatters() {
+		Formatters.register(ObjectId.class, new Formatters.SimpleFormatter<ObjectId>() {
+
+			@Override
+			public ObjectId parse(String input, Locale l) throws ParseException {
+				return new ObjectId(input);
+			}
+
+			@Override
+			public String print(ObjectId id, Locale l) {
+				return id.toString();
+			}
+		});
 	}
 	
 	private void initDeveloperData() {
