@@ -43,7 +43,7 @@ public class Application extends Controller {
 	public static Result showQuotes() {
 		List<Quote> quotes = Quote.findAllSortedByVote(true);
 		
-		return ok(quotes_list.render(quotes, false, getAllreadyVotedIds()));
+		return ok(quotes_list.render(quotes, false, Quote.getAllAuthorNames(), Quote.AUTHOR_EMPTY_FILTER, getAllreadyVotedIds()));
 	}
 	
 	public static Result showQuoteDetail(String id) {
@@ -78,7 +78,19 @@ public class Application extends Controller {
 
 		response().setCookie(COOKIE_NAME, votes);
 		
-		return redirect(controllers.routes.Application.showQuotes());
+		return showQuotesFilteredByAuthors();
+	}
+	
+	public static Result showQuotesFilteredByAuthors() {
+		final String author = request().body().asFormUrlEncoded().get("author")[0];
+		final List<Quote> quotes;
+		if (author == null || Quote.AUTHOR_EMPTY_FILTER.equals(author)) {
+			quotes = Quote.findAllSortedByVote(true);
+		} else {
+			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, true);
+		}
+		
+		return ok(quotes_list.render(quotes, false, Quote.getAllAuthorNames(), author, getAllreadyVotedIds()));
 	}
 	
 	/**
@@ -88,7 +100,19 @@ public class Application extends Controller {
 	 */
 	private static List<String> getAllreadyVotedIds() {
 		List<String> allreadyVoted = new ArrayList<String>();
-		Cookie cookie = request().cookies().get(COOKIE_NAME);
+		
+		Cookie cookie = null;
+		
+		// first looak after the cookies from the response
+		for (Cookie responseCookie : response().cookies()) {
+			if (responseCookie.name().equals(COOKIE_NAME)) {
+				cookie = responseCookie;
+				break;
+			}
+		}
+		if (cookie == null) {
+			cookie = request().cookies().get(COOKIE_NAME);
+		}
 		if (cookie != null && cookie.value() != null) {
 			String votes = cookie.value();
 			

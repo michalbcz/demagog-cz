@@ -35,6 +35,11 @@ img {
 	background-repeat: no-repeat;
 }
 
+.filter-container {
+	margin: 15px auto;
+	font-weight:bold;
+	color: white; 
+}
 
 .quotes-container {
 	margin: 0 auto;

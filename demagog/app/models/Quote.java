@@ -1,7 +1,10 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.bson.types.ObjectId;
 
@@ -17,6 +20,8 @@ import com.mongodb.Mongo;
 @Entity
 public class Quote {
 	
+	public static final String AUTHOR_EMPTY_FILTER = "";
+
 	@Id
 	public ObjectId id;
 	
@@ -122,6 +127,26 @@ public class Quote {
 			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
 		return query.order("-creationDate").asList();
+	}
+	
+	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, boolean onlyApproved) {
+		Query<Quote> query = ds.find(Quote.class);
+		if (onlyApproved) {
+			query = query.field("quoteState").equal(QuoteState.APPROVED);
+		}
+		return query.filter("author", author).order("-voteCount").asList();
+	}
+
+	public static List<String> getAllAuthorNames() {
+		Set<String> names = new TreeSet<String>();
+		names.add(AUTHOR_EMPTY_FILTER);
+		
+		for (Quote quote : findAll()) {
+			if (quote.author != null) {
+				names.add(quote.author);
+			}
+		}
+		return new ArrayList<String>(names);
 	}
 	
 	@Override
