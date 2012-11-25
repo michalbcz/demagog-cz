@@ -58,7 +58,7 @@ public class Quote {
 	}
 
 	public static void setChecked(ObjectId id) {
-		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.CHECKED));
+		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.CHECKED));
 	}
 	
 	public static void approve(ObjectId id, String text, String author) {
