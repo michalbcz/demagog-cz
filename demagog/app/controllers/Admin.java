@@ -9,6 +9,7 @@ import utils.QuoteState;
 import views.html.*;
 import play.data.*;
 import models.User;
+import java.util.UUID;
 
 import org.bson.types.ObjectId;
 
@@ -59,10 +60,6 @@ public class Admin extends Controller {
 			Form<Quote> quoteForm = form(Quote.class);
 			Quote quote = quoteForm.bindFromRequest().get();
 			
-			System.out.println("id: " + quote.id);
-			System.out.println("text: " + quote.quoteText);
-			System.out.println("autor: " + quote.author);
-			
 			Quote.approve(quote.id, quote.quoteText, quote.author);			
 			
 		}
@@ -96,6 +93,6 @@ public class Admin extends Controller {
 	}
 	
 	private static String generateUUID() {
-		return "...";
+		return UUID.randomUUID().toString();
 	}
 }
