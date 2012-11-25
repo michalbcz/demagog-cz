@@ -115,3 +115,26 @@ img {
 #new_quote #buttons {
 	text-align: right;
 }
+
+#login-panel {
+	width: 300px;
+	margin: 0 auto;
+	background-color: #FFFFFF;
+	border-radius: 5px;
+	padding: 0.5em;
+}
+
+#login-panel .input-section {
+	margin-bottom: 0.5em;
+}
+
+
+#login-panel label {
+	font-weight: bold;
+	color: #555;
+}
+
+#login-panel input,
+#login-panel button {
+	width: 100%;
+}
