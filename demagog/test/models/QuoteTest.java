@@ -26,13 +26,13 @@ public class QuoteTest {
 	@Test
 	public void findApprovedTest() {
 		Quote quote = new Quote();
-		quote.approved = true;
+		quote.quoteState = Quote.QuoteState.APPROVED;
 		quote.creationDate = new Date();
 		
 		Quote.deleteAll();
 		quote.save();
 		
-		List<Quote> quotes = Quote.findAllWithApprovedState(true);
+		List<Quote> quotes = Quote.findAllWithApprovedState(Quote.QuoteState.APPROVED);
 		assertThat(quotes.get(0)).isEqualTo(quote);
 	}
 	
