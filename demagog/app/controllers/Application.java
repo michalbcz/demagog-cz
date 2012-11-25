@@ -9,6 +9,7 @@ import models.Quote.QuoteState;
 
 import org.bson.types.ObjectId;
 
+import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
@@ -46,7 +47,13 @@ public class Application extends Controller {
 	}
 	
 	public static Result showQuoteDetail(String id) {
-		Quote quote = Quote.findById(new ObjectId(id));
+		Quote quote;
+		try {
+			quote = Quote.findById(new ObjectId(id));
+		} catch (IllegalArgumentException e) {
+			Logger.warn("Nekdo zadal shitovy quote id.", e);
+			quote = null;
+		}
 		
 		if (quote == null) {
 			return notFound();			
