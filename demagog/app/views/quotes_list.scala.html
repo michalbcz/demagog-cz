@@ -1,9 +1,12 @@
 @(quotes: List[Quote], admin: Boolean)(allreadyVoted: List[String])
 
-@main("") {
+@main() {
 	@if(admin) {
 		@header
 	}
+	<div id="page-tip">
+       <a href="@{controllers.routes.Application.submitQuote()}">Chci ověřit zda je výrok pravdivý!</a>              
+    </div>
 	<div class="quotes-container">
 	@for(quote <- quotes) {
 		<div class="quote">			

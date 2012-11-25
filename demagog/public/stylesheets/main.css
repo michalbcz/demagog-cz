@@ -10,6 +10,18 @@ img {
 #body {
 	width: 800px;
 	margin: 0 auto;
+}
+
+#header {
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+#page-tip a {
+    text-decoration: none;
+    color: #FFFFFF; 
+    margin-bottom: 20px;
+    display: block;   
 }	
 
 #logo-container {	
@@ -18,7 +30,7 @@ img {
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 30px;
-	margin-bottom: 50px;
+	margin-bottom: 10px;
 	background-image: url('../images/logo.png');
 	background-repeat: no-repeat;
 }
