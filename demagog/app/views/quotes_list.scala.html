@@ -3,21 +3,15 @@
 @main("") {
 	<div class="quotes-container">
 	@for(quote <- quotes) {
-		<div class="quote">
-			<div class="text">
-				&bdquo;@{quote.quoteText}&ldquo;
-			</div>
-			
+		<div class="quote">			
 			@if(admin) {
 				@adminForm(quote)
 			} else {
+				<div class="text">
+					&bdquo;@{quote.quoteText}&ldquo;
+				</div>
 				@userForm(quote)
-			}
-			
-			<div class="footer">
-				<span class="author">Autor: @{quote.author}</span>
-				<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
-			</div>
+			}		
 		</div>
 	}
 	</div>
@@ -37,21 +31,30 @@
 			}
 		</form>
 	</div>
+	<div class="footer">
+		<span class="author">Autor: @{quote.author}</span>
+		<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
+	</div>
 }
 
 @adminForm(quote: Quote) = {
-	<div class="actions">
-		<form id="@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
-			<input type="hidden" name="id" value="@{quote.id}" />
-			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
-				<img src="@routes.Assets.at("images/24x24/accept.png")" />
-			</a>
-		</form>
-		<form id="@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
-			<input type="hidden" name="id" value="@{quote.id}" />
-			<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+	<form id="approve_@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
+		<input type="hidden" name="id" value="@{quote.id}" />
+		<textarea name="quoteText" cols="100" rows="7">@{quote.quoteText}</textarea>
+		<div class="actions">
+			<a href="javascript:$('#approve_@{quote.id}').submit(); void(0);">
+					<img src="@routes.Assets.at("images/24x24/accept.png")" />
+			</a><a href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
 				<img src="@routes.Assets.at("images/24x24/delete.png")" />
-			</a>
-		</form>
-	</div>
+			</a>			
+		</div>
+		<div class="footer">
+			<span class="author">Autor: </span>
+			<input name="author" type="text" value="@{quote.author}" />
+			<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
+		</div>
+	</form>
+	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
+		<input type="hidden" name="id" value="@{quote.id}" />		
+	</form>
 }

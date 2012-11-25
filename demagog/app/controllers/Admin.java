@@ -5,6 +5,7 @@ import java.util.List;
 import models.Quote;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.QuoteState;
 import views.html.*;
 import play.data.*;
 import models.User;
@@ -40,7 +41,7 @@ public class Admin extends Controller {
 		User user = User.findSID(sid);
 		
 		if (user != null) {
-			List<Quote> quotes = Quote.findAllWithApprovedState(false);
+			List<Quote> quotes = Quote.findAllWithApprovedState(QuoteState.NEW);
 			
 			return ok(quotes_list.render(quotes, true, null));
 		}
@@ -55,12 +56,14 @@ public class Admin extends Controller {
 		User user = User.findSID(sid);
 		
 		if (user != null) {
-			String id = request().body().asFormUrlEncoded().get("id")[0];
+			Form<Quote> quoteForm = form(Quote.class);
+			Quote quote = quoteForm.bindFromRequest().get();
 			
-			Quote.approve(new ObjectId(id));
+			System.out.println("id: " + quote.id);
+			System.out.println("text: " + quote.quoteText);
+			System.out.println("autor: " + quote.author);
 			
-			System.out.println("id: " + id);
-			
+			Quote.approve(quote.id, quote.quoteText, quote.author);			
 			
 		}
 		

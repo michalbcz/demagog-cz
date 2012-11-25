@@ -11,6 +11,9 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.mongodb.Mongo;
+import utils.QuoteState;
+
+
 
 @Entity
 public class Quote {
@@ -25,8 +28,8 @@ public class Quote {
 	public String author;
 	
 	public Date creationDate;
-	
-	public boolean approved = false;
+		
+	public QuoteState quoteState;
 	
 	public Date approvalDate;
 
@@ -35,13 +38,13 @@ public class Quote {
 	public Quote() {
 	}
 	
-	public Quote(String quoteText, String url, String author, boolean approved) {
+	public Quote(String quoteText, String url, String author, QuoteState state) {
 		this.url = url;
 		this.quoteText = quoteText;
 		this.author = author;
 		this.creationDate = new Date();
-		this.approved = approved;
-		if (approved)
+		this.quoteState = state;
+		if (state != QuoteState.NEW)
 			approvalDate = new Date();
 	}
 
@@ -63,8 +66,8 @@ public class Quote {
 		ds.save(this);
 	}
 	
-	public static void approve(ObjectId id) {
-		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("approved", true));
+	public static void approve(ObjectId id, String text, String author) {
+		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.APPROVED).set("quoteText", text).set("author", author));
 	}
 	
 	public static void upVote(ObjectId id) {
@@ -75,8 +78,8 @@ public class Quote {
 		return ds.find(Quote.class).asList();
 	}
 	
-	public static List<Quote> findAllWithApprovedState(boolean approved) {
-		return ds.find(Quote.class).field("approved").equal(approved).asList();
+	public static List<Quote> findAllWithApprovedState(QuoteState state) {
+		return ds.find(Quote.class).field("quoteState").equal(state).asList();
 	}
 	
 	public static void delete(ObjectId id) {
@@ -94,7 +97,7 @@ public class Quote {
 	public static List<Quote> findAllSortedByVote(boolean onlyApproved) {
 		Query<Quote> query = ds.find(Quote.class);
 		if (onlyApproved) {
-			query = query.field("approved").equal(true);
+			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
 		return query.order("-voteCount").asList();
 	}
@@ -102,7 +105,7 @@ public class Quote {
 	public static List<Quote> findAllSortedByCreationDate(boolean onlyApproved) {
 		Query<Quote> query = ds.find(Quote.class);
 		if (onlyApproved) {
-			query = query.field("approved").equal(true);
+			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
 		return query.order("-creationDate").asList();
 	}
@@ -113,7 +116,7 @@ public class Quote {
 		int result = 1;
 		result = prime * result
 				+ ((approvalDate == null) ? 0 : approvalDate.hashCode());
-		result = prime * result + (approved ? 1231 : 1237);
+		result = prime * result + (quoteState == QuoteState.NEW ? 1231 : 1237);
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result
 				+ ((creationDate == null) ? 0 : creationDate.hashCode());
@@ -144,7 +147,7 @@ public class Quote {
 		} else if (!approvalDate.equals(other.approvalDate)) {
 			return false;
 		}
-		if (approved != other.approved) {
+		if (quoteState != other.quoteState) {
 			return false;
 		}
 		if (author == null) {
