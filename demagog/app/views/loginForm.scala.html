@@ -1,6 +1,6 @@
 @main("Administrace") {
 	<div id="login-panel">
-		<form action="http://localhost:9000/admin/login" method="POST">
+		<form action=@{controllers.routes.Admin.login()} method="POST">
 			<div class="input-section">
 				<label for="username">Uživatelské jméno</label>
 				<input type="text" id="username" name="username">
