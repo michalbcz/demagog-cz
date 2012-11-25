@@ -84,6 +84,16 @@ public class Admin extends Controller {
 		
 		return redirect(controllers.routes.Admin.showQuotes());
 	}
+
+	public static Result setChecked() {
+
+		return redirect(controllers.routes.Admin.showQuotes());
+	}
+
+	public static Result showCheckQuotes() {
+
+		return redirect(controllers.routes.Admin.showQuotes());
+	}
 	
 	private static String generateUUID() {
 		return "...";
