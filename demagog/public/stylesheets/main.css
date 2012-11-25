@@ -75,6 +75,10 @@ img {
 	background-image: url('../images/24x24/add.png');
 }
 
+.quote .fb-like {
+	margin-top: 0.5em;
+}
+
 .imglink {
 	text-decoration: none;
 }
