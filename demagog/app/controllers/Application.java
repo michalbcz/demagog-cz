@@ -12,6 +12,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
+import views.html.quote_detail;
 import views.html.quote_new;
 import views.html.quotes_list;
 
@@ -37,16 +38,18 @@ public class Application extends Controller {
 
 	public static Result showQuotes() {
 		List<Quote> quotes = Quote.findAllSortedByVote(true);
-
-		List<String> allreadyVoted = new ArrayList<String>();
-		Cookie cookie = request().cookies().get(COOKIE_NAME);
-		if (cookie != null && cookie.value() != null) {
-			String votes = cookie.value();
-			
-			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
+		
+		return ok(quotes_list.render(quotes, false, getAllreadyVotedIds()));
+	}
+	
+	public static Result showQuoteDetail(String id) {
+		Quote quote = Quote.findById(new ObjectId(id));
+		
+		if (quote == null) {
+			return notFound();			
 		}
 		
-		return ok(quotes_list.render(quotes, false, allreadyVoted));
+		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
 	}
 	
 	public static Result upVote() {
@@ -67,4 +70,21 @@ public class Application extends Controller {
 		
 		return redirect(controllers.routes.Application.showQuotes());
 	}
+	
+	/**
+	 * Find ids of quotes user allready voted on. (from cookie)
+	 * 
+	 * @return
+	 */
+	private static List<String> getAllreadyVotedIds() {
+		List<String> allreadyVoted = new ArrayList<String>();
+		Cookie cookie = request().cookies().get(COOKIE_NAME);
+		if (cookie != null && cookie.value() != null) {
+			String votes = cookie.value();
+			
+			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
+		}
+
+		return allreadyVoted;
+	}	
 }

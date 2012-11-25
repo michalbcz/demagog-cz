@@ -3,15 +3,17 @@ package controllers;
 import java.util.List;
 
 import models.Quote;
-import play.mvc.Controller;
-import play.mvc.Result;
-import utils.QuoteState;
-import views.html.*;
-import play.data.*;
+import models.Quote.QuoteState;
 import models.User;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
+
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.loginForm;
+import views.html.quotes_list;
 
 public class Admin extends Controller {
 	

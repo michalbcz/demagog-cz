@@ -11,7 +11,6 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 import com.mongodb.Mongo;
-import utils.QuoteState;
 
 
 
@@ -34,6 +33,10 @@ public class Quote {
 	public Date approvalDate;
 
 	public int voteCount;
+	
+	public enum QuoteState {
+		NEW, APPROVED, CHECKED
+	}
 	
 	public Quote() {
 	}
@@ -72,6 +75,10 @@ public class Quote {
 	
 	public static void upVote(ObjectId id) {
 		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).inc("voteCount"));
+	}
+	
+	public static Quote findById(ObjectId id) {
+		return ds.find(Quote.class, "_id", id).get();
 	}
 	
 	public static List<Quote> findAll() {
