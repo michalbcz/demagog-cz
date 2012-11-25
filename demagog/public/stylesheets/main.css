@@ -89,19 +89,31 @@ img {
 }
 
 .header {
-	width: 100%
+	width: 100%;
 	height: 30px;
+	margin-bottom: 2px;
 }
 
 .header_item {
-	background-color: #E0E0E0;
+	float: left;
 	text-align: center;
 	text-decoration: none;
+	color: #FFFFFF;
+	border-style: solid;
+	border-color: #000000;
+	border-radius: 5px;
+	padding: 5px;
+	margin-right: 10px;
 }
 
 .header_logout {
-	position: relative;
 	float: right;
+	text-decoration: none;
+	color: #FFFFFF;
+	border-style: solid;
+	border-color: #000000;
+	border-radius: 5px;
+	padding: 5px;
 }
 
 #new_quote {
