@@ -20,6 +20,9 @@ public class Quote {
 	@Id
 	public ObjectId id;
 	
+	/**
+	 * Source url of given quote
+	 */
 	public String url;
 	
 	public String quoteText;
