@@ -1,4 +1,4 @@
-﻿/* 
+﻿/* 	
 	TODO: misto alertu "Saved to demagog" ukazat modalni okno s textem a linkem na demagog
 */
 
@@ -10,17 +10,56 @@ Demagog.Bookmarklet.Util = Demagog.Bookmarklet.Util || {};
 Demagog.Bookmarklet.Events.onJqueryReady = function() {
 
 	jQuery(document).ready(function() {
-		Demagog.Bookmarklet.submitSelectedQuote();
+	
+	
+		/* inject jquery ui css */
+		var style = document.createElement("link");
+		style.type = "text/css";
+		style.rel = "stylesheet";
+		style.href = "http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
+		document.getElementsByTagName("head")[0].appendChild(style);
+			
+		/* inject and load jQuery UI */
+	
+		var jqueryUiScript = document.createElement("script");
+		jqueryUiScript.src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js";
+		jqueryUiScript.type = "text/javascript";
+		jqueryUiScript.onload = function() { Demagog.Bookmarklet.Events.onJqueryUiReady() };
+		document.getElementsByTagName("head")[0].appendChild(jqueryUiScript);
+	
+		
 	});
 
 };
 
+Demagog.Bookmarklet.Events.onJqueryUiReady = function() {
+	Demagog.Bookmarklet.submitSelectedQuote();
+}
+
 Demagog.Bookmarklet.submitSelectedQuote = function() {
-		var selectedText = Demagog.Bookmarklet.Util.getSelected();
-		var sourceUrl = window.location.href;
-		Demagog.Bookmarklet.Util.postToUrlAsync(selectedText, sourceUrl);
-		alert("Saved to demagog");
+	var selectedText = Demagog.Bookmarklet.Util.getSelected();
+	var sourceUrl = window.location.href;
+	Demagog.Bookmarklet.Util.postToUrlAsync(selectedText, sourceUrl);
 };
+
+Demagog.Bookmarklet.openSuccessDialog = function(url) {
+	
+	console.debug("Opening success modal with url param: ", url);
+	
+	var dialogHtml = 
+			'<div id="demagogBookmarkletSuccessDialog" title="Demagog.cz" style="display: none;">' +
+				'<p>Úspěšně přidáno na demagog.cz!</p><br/>' +
+				'<p id="demagogQuoteDetailUrl"><a href="' + url + '">' + url + '</a></p><br/>' +
+				'<p>Výrok bude nejdřívě ověřen našim týmem potom se dostane do hlasování a ' +
+				'pokud bude mít hodně hlasů či bude zajímavý tak bude ověřen našimi experty.' +
+				'</p>'
+			'</div>';
+	
+	jQuery("div:first").append(dialogHtml);
+	
+	jQuery("#demagogBookmarkletSuccessDialog").dialog();
+	
+}
 
 Demagog.Bookmarklet.Util.getSelected = function() {
 	var t = '';
@@ -71,6 +110,7 @@ Demagog.Bookmarklet.Util.postToUrlAsync = function(selectedText, sourceUrl) {
 		dataType: 'jsonp',		
 		success: function(data) {
 			console.log("Response:", data);
+			Demagog.Bookmarklet.openSuccessDialog(data.quotePermalinkUrl);
 		}
 	});
 
@@ -107,7 +147,7 @@ Demagog.Bookmarklet.Util.postToUrl = function(path, params, method) {
  * 
  */
 
-var console = console || {
+console = console || {
 
 	info : function() {},
 	debug : function() {},
@@ -127,3 +167,4 @@ jqueryScript.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.mi
 jqueryScript.type = "text/javascript";
 jqueryScript.onload = function() { Demagog.Bookmarklet.Events.onJqueryReady() };
 document.getElementsByTagName("head")[0].appendChild(jqueryScript);
+

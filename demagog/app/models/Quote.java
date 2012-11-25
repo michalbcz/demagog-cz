@@ -8,12 +8,11 @@ import java.util.TreeSet;
 
 import org.bson.types.ObjectId;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Morphia;
+import utils.DBHolder;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
-import com.mongodb.Mongo;
 
 
 
@@ -59,54 +58,40 @@ public class Quote {
 			approvalDate = new Date();
 	}
 
-	private static Datastore ds;
-	
-	static {
-		Morphia morphia = new Morphia();  
-	    Mongo mongo;
-		try {
-			mongo = new Mongo("127.0.0.1", 27017);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to init MongoDB database connection.", e);
-		}  
-		
-	    ds = morphia.createDatastore(mongo, "demagog");	    
-	}
-	
 	public void save() {
-		ds.save(this);
+		DBHolder.ds.save(this);
 	}
 
 	public static void setChecked(ObjectId id) {
-		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.CHECKED));
+		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.CHECKED));
 	}
 	
 	public static void approve(ObjectId id, String text, String author) {
-		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.APPROVED).set("quoteText", text).set("author", author));
+		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.APPROVED).set("quoteText", text).set("author", author));
 	}
 	
 	public static void upVote(ObjectId id) {
-		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).inc("voteCount"));
+		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).inc("voteCount"));
 	}
 	
 	public static Quote findById(ObjectId id) {
-		return ds.find(Quote.class, "_id", id).get();
+		return DBHolder.ds.find(Quote.class, "_id", id).get();
 	}
 	
 	public static List<Quote> findAll() {
-		return ds.find(Quote.class).asList();
+		return DBHolder.ds.find(Quote.class).asList();
 	}
 	
 	public static List<Quote> findAllWithApprovedState(QuoteState state) {
-		return ds.find(Quote.class).field("quoteState").equal(state).asList();
+		return DBHolder.ds.find(Quote.class).field("quoteState").equal(state).asList();
 	}
 	
 	public static void delete(ObjectId id) {
-		ds.delete(ds.createQuery(Quote.class).field("_id").equal(id));
+		DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));
 	}
 	
 	public static void deleteAll() {
-		ds.delete(ds.createQuery(Quote.class));
+		DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class));
 	}
 	
 	public int vote() {
@@ -114,7 +99,7 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAllSortedByVote(boolean onlyApproved) {
-		Query<Quote> query = ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class);
 		if (onlyApproved) {
 			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
@@ -122,7 +107,7 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAllSortedByCreationDate(boolean onlyApproved) {
-		Query<Quote> query = ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class);
 		if (onlyApproved) {
 			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
