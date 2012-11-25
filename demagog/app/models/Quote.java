@@ -71,6 +71,10 @@ public class Quote {
 		ds.update(ds.createQuery(Quote.class).field("_id").equal(id), ds.createUpdateOperations(Quote.class).inc("voteCount"));
 	}
 	
+	public static Quote findById(ObjectId id) {
+		return ds.find(Quote.class, "_id", id).get();
+	}
+	
 	public static List<Quote> findAll() {
 		return ds.find(Quote.class).asList();
 	}

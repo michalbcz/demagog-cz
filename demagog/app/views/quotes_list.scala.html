@@ -6,6 +6,9 @@
 		<div class="quote">
 			<div class="text">
 				&bdquo;@{quote.quoteText}&ldquo;
+				@if(!admin) {
+					<a href="@{controllers.routes.Application.showQuoteDetail(quote.id.toString())}" class="detail">Detail...</a>
+				}
 			</div>
 			
 			@if(admin) {
