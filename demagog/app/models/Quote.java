@@ -115,7 +115,7 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, boolean onlyApproved) {
-		Query<Quote> query = ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class);
 		if (onlyApproved) {
 			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
