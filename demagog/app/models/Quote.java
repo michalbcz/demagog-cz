@@ -97,13 +97,21 @@ public class Quote {
 		return DBHolder.ds.find(Quote.class).field("deleted").equal(false).asList();
 	}
 	
-	public static List<Quote> findAllWithState(QuoteState state) {
+	public static List<Quote> findAllWithStateOrderedByCreationDate(QuoteState state) {
 		return DBHolder.ds.find(Quote.class)
                             .field("deleted").equal(false)
                             .field("quoteState").equal(state)
                             .order("-creationDate, _id")
                             .asList();
 	}
+
+    public static List<Quote> findAllWithStateOrderedByVoteCount(QuoteState state) {
+        return DBHolder.ds.find(Quote.class)
+                .field("deleted").equal(false)
+                .field("quoteState").equal(state)
+                .order("-voteCount, _id")
+                .asList();
+    }
 	
 	public static void delete(ObjectId id, boolean pernament) {
 		if (pernament) {

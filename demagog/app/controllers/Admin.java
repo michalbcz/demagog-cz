@@ -35,7 +35,7 @@ public class Admin extends Controller {
             String sid = Admin.generateUUID();
             user.updateSID(sid);
             session("sid", sid);
-            return redirect(controllers.routes.Admin.showApproveQuotes());
+            return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
         }
 
         flash("error", "Zadali jste špatné uživatelské jméno a nebo heslo.");
@@ -44,12 +44,8 @@ public class Admin extends Controller {
     }
 	
 	public static Result showQuotes(QuoteState state) {
-		String sid = session("sid");
-		
-		User user = User.findSID(sid);
-		
-		if (user != null) {
-			List<Quote> quotes = Quote.findAllWithState(state);
+		if (isUserLoggedIn()) {
+			List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
 			
 			return ok(quotes_list.render(quotes, true, null, null, null, null));
 		}
@@ -71,7 +67,7 @@ public class Admin extends Controller {
 			
 		}
 		
-		return redirect(controllers.routes.Admin.showApproveQuotes());
+		return redirect(controllers.routes.Admin.showApprovedQuotes());
 	}
 	
 	public static Result reject() {
@@ -86,7 +82,7 @@ public class Admin extends Controller {
 			
 		}
 		
-		return redirect(controllers.routes.Admin.showApproveQuotes());
+		return redirect(controllers.routes.Admin.showApprovedQuotes());
 	}
 
 	public static Result setChecked() {
@@ -98,7 +94,7 @@ public class Admin extends Controller {
 			String id = request().body().asFormUrlEncoded().get("id")[0];
 			
 			Quote.setChecked(new ObjectId(id));			
-			return redirect(controllers.routes.Admin.showCheckQuotes());
+			return redirect(controllers.routes.Admin.showApprovedQuotes());
 		}
 
 		return redirect(controllers.routes.Admin.index());
@@ -128,7 +124,7 @@ public class Admin extends Controller {
             //TODO: michalb : tohle nefunguje
         }
 
-        return redirect(routes.Admin.showApproveQuotes());
+        return redirect(routes.Admin.showApprovedQuotes());
 
     }
 
@@ -139,12 +135,22 @@ public class Admin extends Controller {
         return user != null;
     }
 
-	public static Result showApproveQuotes() {
-		return Admin.showQuotes(QuoteState.NEW);
+	public static Result showNewlyAddedQuotes() {
+        if (isUserLoggedIn()) {
+            List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(QuoteState.NEW);
+            return ok(quotes_list.render(quotes, true, null, null, null, null));
+        }
+
+        return redirect(controllers.routes.Admin.index());
 	}
 
-	public static Result showCheckQuotes() {
-		return Admin.showQuotes(QuoteState.APPROVED);
+	public static Result showApprovedQuotes() {
+        if(isUserLoggedIn()) {
+            List<Quote> quotes = Quote.findAllWithStateOrderedByVoteCount(QuoteState.APPROVED);
+            return ok(quotes_list.render(quotes, true, null, null, null, null));
+        }
+
+        return redirect(controllers.routes.Admin.index());
 	}
 
 	public static Result logout() {
