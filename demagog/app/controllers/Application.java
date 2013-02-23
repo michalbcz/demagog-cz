@@ -31,6 +31,7 @@ public class Application extends Controller {
 		Form<Quote> quoteForm = form(Quote.class);
 		Quote quote = quoteForm.bindFromRequest().get();
 		
+		quote.userIp = request().remoteAddress();
 		quote.quoteState = QuoteState.NEW;
 
 		quote.save();

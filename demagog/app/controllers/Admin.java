@@ -77,7 +77,7 @@ public class Admin extends Controller {
 		if (user != null) {
 			String id = request().body().asFormUrlEncoded().get("id")[0];
 			
-			Quote.delete(new ObjectId(id));
+			Quote.delete(new ObjectId(id), false);
 			
 		}
 		
