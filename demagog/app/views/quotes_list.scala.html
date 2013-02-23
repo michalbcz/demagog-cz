@@ -1,10 +1,7 @@
 @(quotes: List[Quote], admin: Boolean, content: models.QuotesListContent, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
 
-@main() {
-	@if(admin) {
-		@header
-	}
-    
+
+@main("", utils.MenuUtils.getMenuType(admin)) {
     @if(!admin && quotes.size() > 0) {
 		<div class="filter-container">
 			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
@@ -40,14 +37,6 @@
 			}		
 		</div>
 	}
-	</div>
-}
-
-@header = {
-	<div class="header">
-		<a href="@{controllers.routes.Admin.showApproveQuotes()}" class="header_item">Nově přidané</a>
-		<a href="@{controllers.routes.Admin.showCheckQuotes()}" class="header_item">V hlasování</a>
-		<a href="@{controllers.routes.Admin.logout()}" class="header_logout">Odhlásit se</a>
 	</div>
 }
 
