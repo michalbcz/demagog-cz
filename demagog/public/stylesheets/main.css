@@ -252,9 +252,17 @@ img {
 #login-panel label {
 	font-weight: bold;
 	color: #555;
+	margin-bottom: 3px;
+	display: inline-block;
 }
 
 #login-panel input,
 #login-panel button {
 	width: 100%;
+}
+
+input {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
