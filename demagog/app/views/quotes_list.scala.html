@@ -8,7 +8,7 @@
     @if(!admin) {
 		<div class="filter-container">
 			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotesFilteredByAuthors()}" method="POST">
-				<label for="quoteText">Filtrovat podle autora: </label>
+				<label for="quoteText">Filtrovat podle autora:</label>
 				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:$('#filterByAuthor').submit(); void(0);"> 
 					@for(authorName <- filterAuthorNames) {
 						@if(selectedFilterAuthorName.equals(authorName)) {
