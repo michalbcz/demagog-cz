@@ -100,7 +100,17 @@ public class Global extends GlobalSettings {
 				"Jiří Oliva",
 				QuoteState.APPROVED).save();
 		
-		new User("test", "test").save();
+		String defaultUsername = System.getProperty("demagog.defaultUser");
+		if (defaultUsername == null) {
+			throw new IllegalStateException("System property demagog.defaultUser must be set.");
+		}
+
+		String defaultPassword = System.getProperty("demagog.defaultPassword");
+		if (defaultPassword == null) {
+			throw new IllegalStateException("System property demagog.defaultPassword must be set.");
+		}
+		
+		new User(defaultUsername, defaultPassword).save();
 	}
 	
 }
