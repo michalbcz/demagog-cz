@@ -1,6 +1,9 @@
+html {
+    background: url("../images/background.jpg") repeat-x #9C9C9C;
+}
+
 body {
 	font-family: Arial;
-	background-color: #525252;
 }
 
 img {
@@ -8,13 +11,74 @@ img {
 }
 
 #body {
-	width: 800px;
+	width: 900px;
 	margin: 0 auto;
 }
 
 #header {
     height: 60px;
     margin-bottom: 20px;
+}
+
+#navigation {
+	background: #D3D1C6;
+	background: -moz-linear-gradient(top, #F2F2ED 50%, #D1CFC4 50%) !important;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.50, #F2F2ED), color-stop(0.50, #D1CFC4) );
+    border-bottom: 1px solid #BBBBBB;
+    clear: both;
+    height: 60px;
+    padding: 0 !important;
+    position: relative;
+    top: 0;
+}
+#navigation ul {
+	-moz-box-shadow: 0px 1px 10px rgba(0, 0, 0, .4);
+	-webkit-box-shadow: 0px 1px 10px rgba(0, 0, 0, .4);
+	box-shadow: 0px 1px 10px rgba(0, 0, 0, .4);
+	background: #AABD8E;
+	background: -moz-linear-gradient(top, #AABD8E 50%, #9FB185 50%) !important;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.50, #AABD8E), color-stop(0.50, #9FB185) );
+	border: 1px solid #888888;
+    left: -12px;
+    margin: 0 0 10px;
+    overflow: auto;
+    padding: 0 !important;
+    position: relative;
+    top: 9px;
+    width: 924px;
+}
+#navigation ul > li {
+    background-color: transparent;
+    display: block;
+    float: left;
+    padding: 0;
+}
+#navigation ul > li > a {
+    background: none repeat scroll 0 0 transparent;
+    border-left: 1px solid #C1D0AD;
+    border-right: 1px solid #AAAAAA;
+    color: #444444;
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin: 0 !important;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+#navigation ul > li > a:hover {
+    color: #000000 !important;
+}
+#navigation ul > li > a.selected {
+	background: #C1D0AD;
+	background: -moz-linear-gradient(top, #C1D0AD 50%, #A8BA8F 50%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.50, #C1D0AD), color-stop(0.50, #A8BA8F) );
+    color: #000000 !important;
+    font-weight: normal;
+}
+
+#content {
+	margin-top: 1em;
+	color: #FFFFFF;
 }
 
 #page-tip a {
@@ -24,7 +88,7 @@ img {
     display: block;   
 }	
 
-#logo-container {	
+#logo-container {
 	width: 100%;
 	height: 60px;
 	margin-left: auto;
@@ -35,10 +99,29 @@ img {
 	background-repeat: no-repeat;
 }
 
+.ui-panel {
+	margin: 15px 0;
+	background-color: #FFFFFF;
+	color: #212121;
+	border: 1px solid #555;
+	padding: 0.5em;
+	border-radius: 5px;
+	-moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+	-webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+	box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+}
+
 .filter-container {
-	margin: 15px auto;
+	margin-bottom: 0.5em;
 	font-weight:bold;
-	color: white; 
+	color: white;
+	text-align: right;
+	line-height: 30px;
+}
+.filter-container .sbHolder {
+	float: right;
+	text-align: left;
+	margin-left: 0.5em;
 }
 
 .quotes-container {
@@ -47,12 +130,7 @@ img {
 }
 
 .quote {
-	background-color: #FFFFFF;
-	border: 1px solid #555;
-	padding: 0.5em;
-	margin-bottom: 0.5em;
 	position: relative;	
-	border-radius: 5px;
 }
 
 .quote .footer {
@@ -83,6 +161,7 @@ img {
 	font-size: 22px;
 	font-weight: bold;
 	color: #555;
+	vertical-align: top;
 }
 
 .quote .actions input[type="submit"]{
@@ -93,6 +172,33 @@ img {
 
 .quote .fb-like {
 	margin-top: 0.5em;
+}
+
+.state.new {
+	background-color: #3A87AD;
+}
+
+.state.approved {
+	background-color: #468847;
+}
+
+.state.checked {
+	background-color: #F89406;
+}
+
+.state {
+	position: absolute;
+	right: 8px;
+	bottom: 8px;
+	background-color: #999999;
+    color: #FFFFFF;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 2px 4px;
+    border-radius: 3px 3px 3px 3px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .imglink {
@@ -108,34 +214,6 @@ img {
 	width: 100%;
 	height: 30px;
 	margin-bottom: 2px;
-}
-
-.header_item {
-	float: left;
-	text-align: center;
-	text-decoration: none;
-	color: #FFFFFF;
-	border-style: solid;
-	border-color: #000000;
-	border-radius: 5px;
-	padding: 5px;
-	margin-right: 10px;
-}
-
-.header_logout {
-	float: right;
-	text-decoration: none;
-	color: #FFFFFF;
-	border-style: solid;
-	border-color: #000000;
-	border-radius: 5px;
-	padding: 5px;
-}
-
-#new_quote {
-	background-color: #FFFFFF;
-	border-radius: 5px;
-	padding: 0.5em;
 }
 
 #new_quote #quoteText {	
@@ -163,9 +241,6 @@ img {
 #login-panel {
 	width: 300px;
 	margin: 0 auto;
-	background-color: #FFFFFF;
-	border-radius: 5px;
-	padding: 0.5em;
 }
 
 #login-panel .input-section {

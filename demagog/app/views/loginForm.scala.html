@@ -1,4 +1,4 @@
-@main("Administrace") {
+@main("Administrace", "menu-none") {
 
     @if(flash.get("error")) {
         <div class="error">
@@ -6,7 +6,7 @@
         </div>
     }
 
-	<div id="login-panel">
+	<div id="login-panel" class="ui-panel">
 		<form action=@{controllers.routes.Admin.login()} method="POST">
 			<div class="input-section">
 				<label for="username">Uživatelské jméno</label>
@@ -22,4 +22,5 @@
 			<script type="text/javascript">$('#login').button();</script>
 		</form>
 	</div>
+
 }

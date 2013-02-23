@@ -3,8 +3,10 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import models.Quote;
+import models.QuotesListContent;
 import models.Quote.QuoteState;
 
 import org.bson.types.ObjectId;
@@ -22,7 +24,7 @@ public class Application extends Controller {
 
 	private static final String COOKIE_NAME = "demagog.cz-votes";
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
-	
+
 	public static Result showNewQuoteForm() {
 		return ok(quote_new.render());
 	}
@@ -31,19 +33,46 @@ public class Application extends Controller {
 		Form<Quote> quoteForm = form(Quote.class);
 		Quote quote = quoteForm.bindFromRequest().get();
 		
+		quote.userIp = request().remoteAddress();
 		quote.quoteState = QuoteState.NEW;
 
 		quote.save();
-		
-		System.out.println("Text: " + quote.quoteText);
 
-		return ok("Saved");
+		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
 	}
 
-	public static Result showQuotes() {
-		List<Quote> quotes = Quote.findAllSortedByVote(true);
+	public static Result showApprovedQuotes() {
+		return showQuotes(QuotesListContent.APPROVED);
+	}
+	
+	public static Result showCheckedQuotes() {
+		return showQuotes(QuotesListContent.CHECKED);
+	}
+	
+	public static Result showQuotes(QuotesListContent content) {
+		Map<String, String[]> requestParams = request().body().asFormUrlEncoded();
+		String author;
+		if (requestParams == null) {
+			author = Quote.AUTHOR_EMPTY_FILTER;
+		} else {
+			author = requestParams.get("author")[0];
+		}
 		
-		return ok(quotes_list.render(quotes, false, Quote.getAllAuthorNames(), Quote.AUTHOR_EMPTY_FILTER, getAllreadyVotedIds()));
+		QuoteState state;
+		if (QuotesListContent.APPROVED.equals(content)) {
+			state = QuoteState.APPROVED;
+		} else {
+			state = QuoteState.CHECKED;
+		}
+		
+		final List<Quote> quotes;
+		if (author == null || Quote.AUTHOR_EMPTY_FILTER.equals(author)) {
+			quotes = Quote.findAllSortedByVote(state);
+		} else {
+			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
+		}
+		
+		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(), author, getAllreadyVotedIds()));
 	}
 	
 	public static Result showQuoteDetail(String id) {
@@ -62,7 +91,7 @@ public class Application extends Controller {
 		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
 	}
 	
-	public static Result upVote() {
+	public static Result upVote(QuotesListContent content) {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
 		
 		Quote.upVote(new ObjectId(id));
@@ -78,19 +107,7 @@ public class Application extends Controller {
 
 		response().setCookie(COOKIE_NAME, votes);
 		
-		return showQuotesFilteredByAuthors();
-	}
-	
-	public static Result showQuotesFilteredByAuthors() {
-		final String author = request().body().asFormUrlEncoded().get("author")[0];
-		final List<Quote> quotes;
-		if (author == null || Quote.AUTHOR_EMPTY_FILTER.equals(author)) {
-			quotes = Quote.findAllSortedByVote(true);
-		} else {
-			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, true);
-		}
-		
-		return ok(quotes_list.render(quotes, false, Quote.getAllAuthorNames(), author, getAllreadyVotedIds()));
+		return showQuotes(content);
 	}
 	
 	/**

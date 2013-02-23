@@ -1,6 +1,9 @@
 @(quote: Quote, allreadyVoted: List[String])
 
-    @main("") {
+@import utils.LabelProvider
+@import models.Quote.QuoteState
+
+@main("") {
 	<div id="fb-root"></div>
 	<script>(function(d, s, id) {
 	  var js, fjs = d.getElementsByTagName(s)[0];
@@ -10,43 +13,40 @@
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
 
-	<div class="quote">
+	<div class="ui-panel quote">
 		<div class="text">
 			&bdquo;@{quote.quoteText}&ldquo;
 		</div>
 		
 		<div class="actions">
-			<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
+			<form id="@{quote.id}" action="@{controllers.routes.Application.upVote(models.QuotesListContent.APPROVED)}" method="POST">
 				<input type="hidden" name="id" value="@{quote.id}" />
 				<span class="vote-count">@{quote.voteCount}</span>
 				
-				@if(!allreadyVoted.contains(quote.id)) {
-				<a href="javascript:$('#@{quote.id}').submit(); void(0);">
-					<img src="@routes.Assets.at("images/24x24/add.png")" />
-				</a>
+				@if(QuoteState.APPROVED == quote.quoteState && !allreadyVoted.contains(quote.id)) {
+					<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+						<img src="@routes.Assets.at("images/24x24/add.png")" />
+					</a>
 				} else {
 					<img src="@routes.Assets.at("images/24x24/add_disabled.png")" />
 				}
 			</form>
 		</div>
+		<span class="state @{quote.quoteState.toString().toLowerCase()}">
+			@{LabelProvider.getLabel(quote.quoteState)}
+		</span>
 		
 		<div class="footer">
-			<span class="author">
-                    Autor: @{quote.author}
-            </span>
-
-			<span class="url">
-                    Zdroj: <a href="@{quote.url}">@{quote.url}</a>
-            </span>
+			<span class="author">Autor: @{quote.author}</span>
+			<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
 
             @if(quote.demagogBacklinkUrl != null) {
 
                 <div class="demagogBacklinkUrl">
-                    Demagog: <a href="@{quote.demagogBacklinkUrl}">@{quote.demagogBacklinkUrl}</a>
+                        Demagog: <a href="@{quote.demagogBacklinkUrl}">@{quote.demagogBacklinkUrl}</a>
                 </div>
 
             }
-
 		</div>
 		<div class="fb-like" data-href="http://demagog.herokuapp.com" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
 	</div>

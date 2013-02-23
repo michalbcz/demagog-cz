@@ -16,8 +16,6 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 
-
-
 @Entity
 public class Quote {
 	
@@ -35,6 +33,8 @@ public class Quote {
 	
 	public String author;
 	
+	public String userIp;
+	
 	public Date creationDate;
 		
 	public QuoteState quoteState;
@@ -51,6 +51,8 @@ public class Quote {
     public String demagogBacklinkUrl;
 
 	public int voteCount;
+	
+	public boolean deleted;
 	
 	public enum QuoteState {
 		NEW, APPROVED, CHECKED
@@ -92,15 +94,23 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAll() {
-		return DBHolder.ds.find(Quote.class).asList();
+		return DBHolder.ds.find(Quote.class).field("deleted").equal(false).asList();
 	}
 	
 	public static List<Quote> findAllWithState(QuoteState state) {
-		return DBHolder.ds.find(Quote.class).field("quoteState").equal(state).order("-creationDate, _id").asList();
+		return DBHolder.ds.find(Quote.class)
+                            .field("deleted").equal(false)
+                            .field("quoteState").equal(state)
+                            .order("-creationDate, _id")
+                            .asList();
 	}
 	
-	public static void delete(ObjectId id) {
-		DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));
+	public static void delete(ObjectId id, boolean pernament) {
+		if (pernament) {
+			DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));
+		} else {
+			DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("deleted", true));
+		}
 	}
 	
 	public static void deleteAll() {
@@ -111,27 +121,23 @@ public class Quote {
 		return ++voteCount;
 	}
 	
-	public static List<Quote> findAllSortedByVote(boolean onlyApproved) {
-		Query<Quote> query = DBHolder.ds.find(Quote.class);
-		if (onlyApproved) {
-			query = query.field("quoteState").equal(QuoteState.APPROVED);
-		}
+	public static List<Quote> findAllSortedByVote(QuoteState state) {
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
+		query = query.field("quoteState").equal(state);
 		return query.order("-voteCount").asList();
 	}
 	
 	public static List<Quote> findAllSortedByCreationDate(boolean onlyApproved) {
-		Query<Quote> query = DBHolder.ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
 		if (onlyApproved) {
 			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
 		return query.order("-creationDate").asList();
 	}
 	
-	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, boolean onlyApproved) {
-		Query<Quote> query = DBHolder.ds.find(Quote.class);
-		if (onlyApproved) {
-			query = query.field("quoteState").equal(QuoteState.APPROVED);
-		}
+	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, QuoteState state) {
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
+		query = query.field("quoteState").equal(state);
 		return query.filter("author", author).order("-voteCount").asList();
 	}
 
@@ -154,6 +160,7 @@ public class Quote {
 
         Quote quote = (Quote) o;
 
+        if (deleted != quote.deleted) return false;
         if (voteCount != quote.voteCount) return false;
         if (approvalDate != null ? !approvalDate.equals(quote.approvalDate) : quote.approvalDate != null) return false;
         if (author != null ? !author.equals(quote.author) : quote.author != null) return false;
@@ -161,9 +168,12 @@ public class Quote {
         if (demagogBacklinkUrl != null ? !demagogBacklinkUrl.equals(quote.demagogBacklinkUrl) : quote.demagogBacklinkUrl != null)
             return false;
         if (id != null ? !id.equals(quote.id) : quote.id != null) return false;
+        if (lastUpdateDate != null ? !lastUpdateDate.equals(quote.lastUpdateDate) : quote.lastUpdateDate != null)
+            return false;
         if (quoteState != quote.quoteState) return false;
         if (quoteText != null ? !quoteText.equals(quote.quoteText) : quote.quoteText != null) return false;
         if (url != null ? !url.equals(quote.url) : quote.url != null) return false;
+        if (userIp != null ? !userIp.equals(quote.userIp) : quote.userIp != null) return false;
 
         return true;
     }
@@ -174,11 +184,14 @@ public class Quote {
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (quoteText != null ? quoteText.hashCode() : 0);
         result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (userIp != null ? userIp.hashCode() : 0);
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         result = 31 * result + (quoteState != null ? quoteState.hashCode() : 0);
         result = 31 * result + (approvalDate != null ? approvalDate.hashCode() : 0);
+        result = 31 * result + (lastUpdateDate != null ? lastUpdateDate.hashCode() : 0);
         result = 31 * result + (demagogBacklinkUrl != null ? demagogBacklinkUrl.hashCode() : 0);
         result = 31 * result + voteCount;
+        result = 31 * result + (deleted ? 1 : 0);
         return result;
     }
 }

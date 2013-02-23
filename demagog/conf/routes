@@ -3,8 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.showQuotes()
-POST    /                           controllers.Application.showQuotesFilteredByAuthors()
+GET     /                           controllers.Application.showApprovedQuotes()
+
+GET     /:content                   controllers.Application.showQuotes(content: models.QuotesListContent)
+POST    /:content                   controllers.Application.showQuotes(content: models.QuotesListContent)
 
 # New quote
 GET 	/quote/save					controllers.Application.showNewQuoteForm()	
@@ -22,14 +24,15 @@ POST	/admin/login				controllers.Admin.login()
 GET		/admin/quotes				controllers.Admin.showApproveQuotes()
 POST	/admin/approve				controllers.Admin.approve()
 POST	/admin/reject				controllers.Admin.reject()
-POST	/admin/check				controllers.Admin.setChecked()
 POST    /admin/update               controllers.Admin.updateQuote()
+POST	/admin/check				controllers.Admin.setChecked()
 GET		/admin/checkquotes			controllers.Admin.showCheckQuotes()
 GET		/admin/logout				controllers.Admin.logout()
 
-GET     /quotes                     controllers.Application.showQuotes()
-POST    /upVote                     controllers.Application.upVote()
+GET     /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
+POST    /upVote/:content            controllers.Application.upVote(content: models.QuotesListContent)
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+>>>>>>> 2f2cbe4877e26ab04c83beed27155a8d5761243f

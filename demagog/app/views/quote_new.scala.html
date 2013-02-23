@@ -2,25 +2,38 @@
 
 @main("Nový citát") {
 
+<!--
     <div id="page-tip">
         <a href="http://michal.bernhard.cz/bookmarklet-it/?url=https%3A%2F%2Fraw.github.com%2FRHoK-November-2012%2Fdemagog-cz%2Fmaster%2Fbookmarklet%2Fbookmarklet.js&name=ov%EC%F8it+v%FDrok+p%F8es+demagog.cz">Přidejte výrok rovnou z webu s naší speciální záložkou (bookmarkem) !</a>
     </div>
+-->
+	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
 
-	<div id="new_quote">
-		<form action="@{controllers.routes.Application.submitQuote()}" method="POST">
+	<h2>1. Bookmarklet</h2>
+	<div id="bookmarklet-instructions" class="ui-panel">
+		Co to je:<br>
+		<em>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em><br>
+		Jak se používá:<br>
+		<em>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em>
+		<div id="bookmarklet-dnd">Přetáhněte toto do horní lišty</div>
+	</div>
+		
+	<h2>2. Formulář</h2>
+	<div id="new_quote" class="ui-panel">
+		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
 			<div class="input-section">
 				<label for="quoteText">Citát: </label>
-				<textarea name="quoteText" id="quoteText"></textarea>
+				<textarea name="quoteText" class="validate[required]" id="quoteText"></textarea>
 			</div>
 			
 			<div class="input-section">
 				<label for="url">Zdroj citátu: </label>
-				<input type="text" name="url" />
+				<input type="text" class="validate[required]" name="url" />
 			</div>	
 			
 			<div class="input-section">
 				<label for="url">Autor citátu: </label>
-				<input type="text" name="author" />
+				<input type="text" class="validate[required]" name="author" />
 			</div>		
 			
 			<div id="buttons">
@@ -30,4 +43,16 @@
 			<script type="text/javascript">$('#submit').button();</script>
 		</form>
 	</div>
+	
+	<script src="@routes.Assets.at("javascripts/jquery.validationEngine-cz.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("javascripts/jquery.validationEngine.js")" type="text/javascript" charset="utf-8"></script>
+	
+	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/validationEngine.jquery.css")">
+	
+	<script>
+		jQuery(document).ready(function(){
+			// binds form submission and fields to the validation engine
+			jQuery("#newQuoteForm").validationEngine();
+		});
+	</script>
 }
