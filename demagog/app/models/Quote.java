@@ -14,8 +14,6 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 
-
-
 @Entity
 public class Quote {
 	
@@ -33,6 +31,8 @@ public class Quote {
 	
 	public String author;
 	
+	public String userIp;
+	
 	public Date creationDate;
 		
 	public QuoteState quoteState;
@@ -40,6 +40,8 @@ public class Quote {
 	public Date approvalDate;
 
 	public int voteCount;
+	
+	public boolean deleted;
 	
 	public enum QuoteState {
 		NEW, APPROVED, CHECKED
@@ -79,15 +81,19 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAll() {
-		return DBHolder.ds.find(Quote.class).asList();
+		return DBHolder.ds.find(Quote.class).field("deleted").equal(false).asList();
 	}
 	
 	public static List<Quote> findAllWithApprovedState(QuoteState state) {
-		return DBHolder.ds.find(Quote.class).field("quoteState").equal(state).asList();
+		return DBHolder.ds.find(Quote.class).field("deleted").equal(false).field("quoteState").equal(state).asList();
 	}
 	
-	public static void delete(ObjectId id) {
-		DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));
+	public static void delete(ObjectId id, boolean pernament) {
+		if (pernament) {
+			DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));
+		} else {
+			DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("deleted", true));
+		}
 	}
 	
 	public static void deleteAll() {
@@ -99,13 +105,13 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAllSortedByVote(QuoteState state) {
-		Query<Quote> query = DBHolder.ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
 		query = query.field("quoteState").equal(state);
 		return query.order("-voteCount").asList();
 	}
 	
 	public static List<Quote> findAllSortedByCreationDate(boolean onlyApproved) {
-		Query<Quote> query = DBHolder.ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
 		if (onlyApproved) {
 			query = query.field("quoteState").equal(QuoteState.APPROVED);
 		}
@@ -113,7 +119,7 @@ public class Quote {
 	}
 	
 	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, QuoteState state) {
-		Query<Quote> query = DBHolder.ds.find(Quote.class);
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
 		query = query.field("quoteState").equal(state);
 		return query.filter("author", author).order("-voteCount").asList();
 	}
@@ -136,11 +142,15 @@ public class Quote {
 		int result = 1;
 		result = prime * result
 				+ ((approvalDate == null) ? 0 : approvalDate.hashCode());
-		result = prime * result + (quoteState == QuoteState.NEW ? 1231 : 1237);
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result
+				+ ((userIp == null) ? 0 : userIp.hashCode());
+		result = prime * result
 				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((quoteState == null) ? 0 : quoteState.hashCode());
 		result = prime * result
 				+ ((quoteText == null) ? 0 : quoteText.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
@@ -167,14 +177,18 @@ public class Quote {
 		} else if (!approvalDate.equals(other.approvalDate)) {
 			return false;
 		}
-		if (quoteState != other.quoteState) {
-			return false;
-		}
 		if (author == null) {
 			if (other.author != null) {
 				return false;
 			}
 		} else if (!author.equals(other.author)) {
+			return false;
+		}
+		if (userIp == null) {
+			if (other.userIp != null) {
+				return false;
+			}
+		} else if (!userIp.equals(other.userIp)) {
 			return false;
 		}
 		if (creationDate == null) {
@@ -184,11 +198,17 @@ public class Quote {
 		} else if (!creationDate.equals(other.creationDate)) {
 			return false;
 		}
+		if (deleted != other.deleted) {
+			return false;
+		}
 		if (id == null) {
 			if (other.id != null) {
 				return false;
 			}
 		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		if (quoteState != other.quoteState) {
 			return false;
 		}
 		if (quoteText == null) {

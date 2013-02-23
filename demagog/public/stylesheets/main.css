@@ -100,11 +100,15 @@ img {
 }
 
 .ui-panel {
+	margin: 15px 0;
 	background-color: #FFFFFF;
 	color: #212121;
 	border: 1px solid #555;
 	padding: 0.5em;
 	border-radius: 5px;
+	-moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+	-webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+	box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
 }
 
 .filter-container {
@@ -126,7 +130,6 @@ img {
 }
 
 .quote {
-	margin-bottom: 0.5em;
 	position: relative;	
 }
 

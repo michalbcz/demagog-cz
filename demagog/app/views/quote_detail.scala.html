@@ -1,6 +1,7 @@
 @(quote: Quote, allreadyVoted: List[String])
 
 @import utils.LabelProvider
+@import models.Quote.QuoteState
 
 @main("") {
 	<div id="fb-root"></div>
@@ -12,7 +13,7 @@
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
 
-	<div class="ui-panel quote @{quote.quoteState.toString().toLowerCase()}">
+	<div class="ui-panel quote">
 		<div class="text">
 			&bdquo;@{quote.quoteText}&ldquo;
 		</div>
@@ -22,10 +23,10 @@
 				<input type="hidden" name="id" value="@{quote.id}" />
 				<span class="vote-count">@{quote.voteCount}</span>
 				
-				@if(!allreadyVoted.contains(quote.id)) {
-				<a href="javascript:$('#@{quote.id}').submit(); void(0);">
-					<img src="@routes.Assets.at("images/24x24/add.png")" />
-				</a>
+				@if(QuoteState.APPROVED == quote.quoteState && !allreadyVoted.contains(quote.id)) {
+					<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+						<img src="@routes.Assets.at("images/24x24/add.png")" />
+					</a>
 				} else {
 					<img src="@routes.Assets.at("images/24x24/add_disabled.png")" />
 				}

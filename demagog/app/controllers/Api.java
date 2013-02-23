@@ -30,6 +30,7 @@ public class Api extends Controller {
 		quote.quoteState = QuoteState.NEW;
 		quote.url = sourceUrl;
 		quote.quoteText = quoteText;
+		quote.userIp = request().remoteAddress();
 		
 		quote.save();
 		
