@@ -158,6 +158,33 @@ img {
 	margin-top: 0.5em;
 }
 
+.state.new {
+	background-color: #3A87AD;
+}
+
+.state.approved {
+	background-color: #468847;
+}
+
+.state.checked {
+	background-color: #F89406;
+}
+
+.state {
+	position: absolute;
+	right: 8px;
+	bottom: 8px;
+	background-color: #999999;
+    color: #FFFFFF;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 2px 4px;
+    border-radius: 3px 3px 3px 3px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
 .imglink {
 	text-decoration: none;
 }

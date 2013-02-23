@@ -1,5 +1,7 @@
 @(quote: Quote, allreadyVoted: List[String])
 
+@import utils.LabelProvider
+
 @main("") {
 	<div id="fb-root"></div>
 	<script>(function(d, s, id) {
@@ -10,7 +12,7 @@
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
 
-	<div class="quote">
+	<div class="quote @{quote.quoteState.toString().toLowerCase()}">
 		<div class="text">
 			&bdquo;@{quote.quoteText}&ldquo;
 		</div>
@@ -29,6 +31,9 @@
 				}
 			</form>
 		</div>
+		<span class="state @{quote.quoteState.toString().toLowerCase()}">
+			@{LabelProvider.getLabel(quote.quoteState)}
+		</span>
 		
 		<div class="footer">
 			<span class="author">Autor: @{quote.author}</span>
