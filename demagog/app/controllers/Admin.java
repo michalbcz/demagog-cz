@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.UpdateOperations;
 import models.Quote;
 import models.Quote.QuoteState;
 import models.User;
@@ -18,6 +16,9 @@ import play.mvc.Result;
 import utils.DBHolder;
 import views.html.loginForm;
 import views.html.quotes_list;
+
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.UpdateOperations;
 
 public class Admin extends Controller {
 	
@@ -132,7 +133,7 @@ public class Admin extends Controller {
 
     }
 
-    private static boolean isUserLoggedIn() {
+    public static boolean isUserLoggedIn() {
         String sid = session("sid");
         User user = User.findSID(sid);
 
@@ -149,7 +150,7 @@ public class Admin extends Controller {
 
 	public static Result logout() {
 		session().clear();
-		return redirect(controllers.routes.Admin.index());
+		return redirect(controllers.routes.Application.showApprovedQuotes());
 	}
 	
 	private static String generateUUID() {

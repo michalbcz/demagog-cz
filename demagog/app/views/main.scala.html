@@ -20,9 +20,15 @@
     <body>
     	<div id="body">
     	    <div id="header">
-    	        <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
-        		  <div id="logo-container"></div>
-        		</a>        		
+    	    @if(Admin.isUserLoggedIn()) {
+    	    	<a href="@{controllers.routes.Admin.showApproveQuotes()}">
+    	        	<div id="logo-container"></div>
+        		</a> 
+    	    } else {
+    	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
+    	        	<div id="logo-container"></div>
+        		</a> 
+        	}    		
             </div>
             
            	@if(menuType.equals("menu-main")) {
