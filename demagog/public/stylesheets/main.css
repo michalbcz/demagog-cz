@@ -137,8 +137,7 @@ img {
 	margin-top: 0.5em;
 }
 
-.author,
-.url {
+.footer {
 	font-size: smaller;
 	color: #555;
 }
@@ -269,6 +268,7 @@ img {
 #login-panel {
 	width: 300px;
 	margin: 0 auto;
+	margin-top: 100px;
 }
 
 #login-panel .input-section {
@@ -279,9 +279,23 @@ img {
 #login-panel label {
 	font-weight: bold;
 	color: #555;
+	margin-bottom: 3px;
+	display: inline-block;
 }
 
 #login-panel input,
 #login-panel button {
 	width: 100%;
+}
+
+.error {
+	text-align: center;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+input {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }

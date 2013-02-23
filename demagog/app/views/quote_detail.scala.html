@@ -39,6 +39,14 @@
 		<div class="footer">
 			<span class="author">Autor: @{quote.author}</span>
 			<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
+
+            @if(quote.demagogBacklinkUrl != null) {
+
+                <div class="demagogBacklinkUrl">
+                    <a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
+                </div>
+
+            }
 		</div>
 		<div class="fb-like" data-href="http://demagog.herokuapp.com" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
 	</div>

@@ -32,7 +32,7 @@ public class QuoteTest {
 		Quote.deleteAll();
 		quote.save();
 		
-		List<Quote> quotes = Quote.findAllWithApprovedState(Quote.QuoteState.APPROVED);
+		List<Quote> quotes = Quote.findAllWithState(Quote.QuoteState.APPROVED);
 		assertThat(quotes.get(0)).isEqualTo(quote);
 	}
 	
