@@ -239,6 +239,33 @@ img {
 	text-align: right;
 }
 
+#bookmarklet-instructions {
+	overflow: hidden;
+}
+
+#bookmarklet-help-label {
+	cursor: pointer;
+}
+
+#bookmarklet-help img {
+	margin-top: 0.5em;
+	max-width: 800px;
+}
+
+#bookmarklet-dnd {
+	float: right;
+	height: 70px;
+    line-height: 30px;
+}
+#bookmarklet-dnd-button {
+	padding: 0.5em 1em;
+	background-color: #2D2D2D;
+	border: 1px solid #515151;
+	color: #FFFFFF;
+	cursor: pointer;
+	text-decoration: none;
+}
+
 #login-panel {
 	width: 300px;
 	margin: 0 auto;
