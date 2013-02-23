@@ -98,11 +98,9 @@ public class Quote {
 		return ++voteCount;
 	}
 	
-	public static List<Quote> findAllSortedByVote(boolean onlyApproved) {
+	public static List<Quote> findAllSortedByVote(QuoteState state) {
 		Query<Quote> query = DBHolder.ds.find(Quote.class);
-		if (onlyApproved) {
-			query = query.field("quoteState").equal(QuoteState.APPROVED);
-		}
+		query = query.field("quoteState").equal(state);
 		return query.order("-voteCount").asList();
 	}
 	
@@ -114,11 +112,9 @@ public class Quote {
 		return query.order("-creationDate").asList();
 	}
 	
-	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, boolean onlyApproved) {
+	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, QuoteState state) {
 		Query<Quote> query = DBHolder.ds.find(Quote.class);
-		if (onlyApproved) {
-			query = query.field("quoteState").equal(QuoteState.APPROVED);
-		}
+		query = query.field("quoteState").equal(state);
 		return query.filter("author", author).order("-voteCount").asList();
 	}
 

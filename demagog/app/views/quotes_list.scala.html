@@ -1,13 +1,13 @@
-@(quotes: List[Quote], admin: Boolean, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
+@(quotes: List[Quote], admin: Boolean, content: models.QuotesListContent, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
 
 @main() {
 	@if(admin) {
 		@header
 	}
     
-    @if(!admin) {
+    @if(!admin && quotes.size() > 0) {
 		<div class="filter-container">
-			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotesFilteredByAuthors()}" method="POST">
+			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
 				<label for="quoteText">Filtrovat podle autora:</label>
 				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:$('#filterByAuthor').submit(); void(0);"> 
 					@for(authorName <- filterAuthorNames) {
@@ -60,7 +60,7 @@
 
 @userForm(quote: Quote) = {
 	<div class="actions">
-		<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
+		<form id="@{quote.id}" action="@{controllers.routes.Application.upVote(content)}" method="POST">
 			<input type="hidden" name="id" value="@{quote.id}" />
 			<span class="vote-count">@{quote.voteCount}</span>
 			@if(!allreadyVoted.contains(quote.id)) {

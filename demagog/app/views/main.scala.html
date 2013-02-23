@@ -20,7 +20,7 @@
     <body>
     	<div id="body">
     	    <div id="header">
-    	        <a href="@{controllers.routes.Application.showQuotes()}">
+    	        <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
         		  <div id="logo-container"></div>
         		</a>        		
             </div>
@@ -28,8 +28,8 @@
     	    	<ul>
     	    		<li>
     	    			<a href="@{controllers.routes.Application.submitQuote()}">Chci ověřit výrok</a>
-    	    			<a href="@{controllers.routes.Application.showQuotes()}">Hlasování</a>
-    	    			<a href="@{controllers.routes.Application.showQuotes()}">Ověřené citáty</a>
+    	    			<a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">Hlasování</a>
+    	    			<a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.CHECKED)}">Ověřené citáty</a>
     	    		</li>
     	    	</ul>
     	    </div>

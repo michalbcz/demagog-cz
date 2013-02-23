@@ -18,7 +18,7 @@
 		</div>
 		
 		<div class="actions">
-			<form id="@{quote.id}" action="@{controllers.routes.Application.upVote()}" method="POST">
+			<form id="@{quote.id}" action="@{controllers.routes.Application.upVote(models.QuotesListContent.APPROVED)}" method="POST">
 				<input type="hidden" name="id" value="@{quote.id}" />
 				<span class="vote-count">@{quote.voteCount}</span>
 				

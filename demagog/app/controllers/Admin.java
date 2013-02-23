@@ -46,7 +46,7 @@ public class Admin extends Controller {
 		if (user != null) {
 			List<Quote> quotes = Quote.findAllWithApprovedState(state);
 			
-			return ok(quotes_list.render(quotes, true, null, null, null));
+			return ok(quotes_list.render(quotes, true, null, null, null, null));
 		}
 		
 		return redirect(controllers.routes.Admin.index());
