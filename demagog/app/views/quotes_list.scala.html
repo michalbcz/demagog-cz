@@ -79,25 +79,40 @@
 }
 
 @adminFormApproval(quote: Quote) = {
-	<form id="approve_@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
+	<form id="update_@{quote.id}" action="@{controllers.routes.Admin.updateQuote()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />
 		<textarea name="quoteText" class="admin_textarea">@{quote.quoteText}</textarea>
 		<div class="actions">
 			<a class="imglink" href="javascript:$('#approve_@{quote.id}').submit(); void(0);">
 					<img src="@routes.Assets.at("images/24x24/accept.png")" />
-			</a><a class="imglink" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
+			</a>
+            <a class="imglink" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
 				<img src="@routes.Assets.at("images/24x24/delete.png")" />
-			</a>			
+			</a>
+            <div>
+                <a class="save_button" href="javascript:$('#update_@{quote.id}').submit(); void(0);">
+                    Uložit
+                </a>
+            </div>
 		</div>
 		<div class="footer">
 			<span class="author">Autor: </span>
 			<input name="author" type="text" value="@{quote.author}" />
+
 			<span class="url">Zdroj: <a href="@{quote.url}" target="_blank">@{quote.url}</a></span>
+
+            <div class="demagogBacklinkUrl">
+                <span class="label">Zpětný odkaz na demagog.cz: &nbsp;&nbsp;</span>
+                <input name="demagogBacklinkUrl" type="text" size="80" value="@{quote.demagogBacklinkUrl}" />
+            </div>
 		</div>
 	</form>
 	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />		
 	</form>
+    <form id="approve_@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
+        <input type="hidden" name="id" value="@{quote.id}" />
+    </form>
 }
 
 @adminFormChecking(quote: Quote) = {
@@ -122,7 +137,7 @@
 		var $authorFilter = $("#filterByAuthor select option:selected").val();
 	
 		$quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
-	
+
 		$quoteForm.submit();
 	}
 </script>

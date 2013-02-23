@@ -1,4 +1,11 @@
 @main("Administrace") {
+
+    @if(flash.get("error")) {
+        <div class="error">
+            @flash.get("error")
+        </div>
+    }
+
 	<div id="login-panel">
 		<form action=@{controllers.routes.Admin.login()} method="POST">
 			<div class="input-section">

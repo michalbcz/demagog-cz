@@ -23,6 +23,7 @@ GET		/admin/quotes				controllers.Admin.showApproveQuotes()
 POST	/admin/approve				controllers.Admin.approve()
 POST	/admin/reject				controllers.Admin.reject()
 POST	/admin/check				controllers.Admin.setChecked()
+POST    /admin/update               controllers.Admin.updateQuote()
 GET		/admin/checkquotes			controllers.Admin.showCheckQuotes()
 GET		/admin/logout				controllers.Admin.logout()
 

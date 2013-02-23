@@ -1,8 +1,11 @@
 package controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.UpdateOperations;
 import models.Quote;
 import models.Quote.QuoteState;
 import models.User;
@@ -12,6 +15,7 @@ import org.bson.types.ObjectId;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.DBHolder;
 import views.html.loginForm;
 import views.html.quotes_list;
 
@@ -33,7 +37,8 @@ public class Admin extends Controller {
 	  		session("sid", sid);
 	  		return redirect(controllers.routes.Admin.showApproveQuotes());
 	  	}
-	  	
+
+        flash("error", "Zadali jste špatné uživatelské jméno a nebo heslo.");
 	  	return redirect(controllers.routes.Admin.index());
 		
 	}
@@ -44,7 +49,7 @@ public class Admin extends Controller {
 		User user = User.findSID(sid);
 		
 		if (user != null) {
-			List<Quote> quotes = Quote.findAllWithApprovedState(state);
+			List<Quote> quotes = Quote.findAllWithState(state);
 			
 			return ok(quotes_list.render(quotes, true, null, null, null));
 		}
@@ -52,7 +57,7 @@ public class Admin extends Controller {
 		return redirect(controllers.routes.Admin.index());
 		
 	}
-	
+
 	public static Result approve() {
 		String sid = session("sid");
 		
@@ -104,7 +109,6 @@ public class Admin extends Controller {
 	}
 
 	public static Result showCheckQuotes() {
-
 		return Admin.showQuotes(QuoteState.APPROVED);
 	}
 
@@ -112,8 +116,43 @@ public class Admin extends Controller {
 		session().clear();
 		return redirect(controllers.routes.Admin.index());
 	}
-	
-	private static String generateUUID() {
+
+    public static Result updateQuote() {
+
+        if (isUserLoggedIn()) {
+
+            Form<Quote> form = form(Quote.class);
+            Quote quote = form.bindFromRequest().get();
+
+            Key key = new Key(Quote.class, quote.id);
+            UpdateOperations<Quote> updateOperations =
+                    DBHolder.ds.createUpdateOperations(Quote.class)
+                        .set("quoteText", quote.quoteText)
+                        .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
+                        .set("author", quote.author)
+                        .set("lastUpdateDate", new Date());
+
+            DBHolder.ds.update(key, updateOperations);
+
+        }
+        else {
+            flash("error", "Byli jste odhlášeni nebo nemáte práva na uložení výroku.");
+            //TODO: michalb : tohle nefunguje
+        }
+
+        return redirect(routes.Admin.showApproveQuotes());
+
+    }
+
+    private static boolean isUserLoggedIn() {
+        String sid = session("sid");
+        User user = User.findSID(sid);
+
+        return user != null;
+    }
+
+    private static String generateUUID() {
 		return UUID.randomUUID().toString();
 	}
+
 }

@@ -59,8 +59,7 @@ img {
 	margin-top: 0.5em;
 }
 
-.author,
-.url {
+.footer {
 	font-size: smaller;
 	color: #555;
 }

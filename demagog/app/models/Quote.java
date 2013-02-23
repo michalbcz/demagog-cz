@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
 
 import utils.DBHolder;
@@ -39,6 +41,15 @@ public class Quote {
 	
 	public Date approvalDate;
 
+    public Date lastUpdateDate;
+
+    /**
+     * When approved, processed by demagog.cz team and published on demagog.cz site
+     * we save link to that demagog.cz's article here.
+     * (like http://demagog.cz/diskusie/113/rekordni-nezamestnanost-ekonomicka-situace-cr)
+     */
+    public String demagogBacklinkUrl;
+
 	public int voteCount;
 	
 	public enum QuoteState {
@@ -54,8 +65,6 @@ public class Quote {
 		this.author = author;
 		this.creationDate = new Date();
 		this.quoteState = state;
-		if (state != QuoteState.NEW)
-			approvalDate = new Date();
 	}
 
 	public void save() {
@@ -67,7 +76,11 @@ public class Quote {
 	}
 	
 	public static void approve(ObjectId id, String text, String author) {
-		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.APPROVED).set("quoteText", text).set("author", author));
+		DBHolder.ds.update(
+                    DBHolder.ds.createQuery(Quote.class).field("_id").equal(id),
+                    DBHolder.ds.createUpdateOperations(Quote.class)
+                        .set("quoteState", QuoteState.APPROVED)
+                        .set("approvalDate", new Date()));
 	}
 	
 	public static void upVote(ObjectId id) {
@@ -82,8 +95,8 @@ public class Quote {
 		return DBHolder.ds.find(Quote.class).asList();
 	}
 	
-	public static List<Quote> findAllWithApprovedState(QuoteState state) {
-		return DBHolder.ds.find(Quote.class).field("quoteState").equal(state).asList();
+	public static List<Quote> findAllWithState(QuoteState state) {
+		return DBHolder.ds.find(Quote.class).field("quoteState").equal(state).order("-creationDate, _id").asList();
 	}
 	
 	public static void delete(ObjectId id) {
@@ -133,86 +146,39 @@ public class Quote {
 		}
 		return new ArrayList<String>(names);
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((approvalDate == null) ? 0 : approvalDate.hashCode());
-		result = prime * result + (quoteState == QuoteState.NEW ? 1231 : 1237);
-		result = prime * result + ((author == null) ? 0 : author.hashCode());
-		result = prime * result
-				+ ((creationDate == null) ? 0 : creationDate.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((quoteText == null) ? 0 : quoteText.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
-		result = prime * result + voteCount;
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Quote)) {
-			return false;
-		}
-		Quote other = (Quote) obj;
-		if (approvalDate == null) {
-			if (other.approvalDate != null) {
-				return false;
-			}
-		} else if (!approvalDate.equals(other.approvalDate)) {
-			return false;
-		}
-		if (quoteState != other.quoteState) {
-			return false;
-		}
-		if (author == null) {
-			if (other.author != null) {
-				return false;
-			}
-		} else if (!author.equals(other.author)) {
-			return false;
-		}
-		if (creationDate == null) {
-			if (other.creationDate != null) {
-				return false;
-			}
-		} else if (!creationDate.equals(other.creationDate)) {
-			return false;
-		}
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		if (quoteText == null) {
-			if (other.quoteText != null) {
-				return false;
-			}
-		} else if (!quoteText.equals(other.quoteText)) {
-			return false;
-		}
-		if (url == null) {
-			if (other.url != null) {
-				return false;
-			}
-		} else if (!url.equals(other.url)) {
-			return false;
-		}
-		if (voteCount != other.voteCount) {
-			return false;
-		}
-		return true;
-	}
-	
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Quote quote = (Quote) o;
+
+        if (voteCount != quote.voteCount) return false;
+        if (approvalDate != null ? !approvalDate.equals(quote.approvalDate) : quote.approvalDate != null) return false;
+        if (author != null ? !author.equals(quote.author) : quote.author != null) return false;
+        if (creationDate != null ? !creationDate.equals(quote.creationDate) : quote.creationDate != null) return false;
+        if (demagogBacklinkUrl != null ? !demagogBacklinkUrl.equals(quote.demagogBacklinkUrl) : quote.demagogBacklinkUrl != null)
+            return false;
+        if (id != null ? !id.equals(quote.id) : quote.id != null) return false;
+        if (quoteState != quote.quoteState) return false;
+        if (quoteText != null ? !quoteText.equals(quote.quoteText) : quote.quoteText != null) return false;
+        if (url != null ? !url.equals(quote.url) : quote.url != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (quoteText != null ? quoteText.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
+        result = 31 * result + (quoteState != null ? quoteState.hashCode() : 0);
+        result = 31 * result + (approvalDate != null ? approvalDate.hashCode() : 0);
+        result = 31 * result + (demagogBacklinkUrl != null ? demagogBacklinkUrl.hashCode() : 0);
+        result = 31 * result + voteCount;
+        return result;
+    }
 }
