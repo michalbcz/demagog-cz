@@ -1,5 +1,5 @@
-@main("Administrace") {
-	<div id="ui-panel login-panel">
+@main("Administrace", "menu-none") {
+	<div id="login-panel" class="ui-panel">
 		<form action=@{controllers.routes.Admin.login()} method="POST">
 			<div class="input-section">
 				<label for="username">Uživatelské jméno</label>

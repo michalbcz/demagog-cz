@@ -1,4 +1,4 @@
-@(title : String = "")(content : Html)
+@(title : String = "", menuType: String = "menu-main")(content : Html)
 
 <!DOCTYPE html>
 
@@ -24,6 +24,16 @@
         		  <div id="logo-container"></div>
         		</a>        		
             </div>
+            
+           	@if(menuType.equals("menu-main")) {
+           		@main_menu
+       	    } else {
+       	    	@if(menuType.equals("menu-admin")) {
+   	        		@admin_menu
+   	        	}
+            }
+            
+<!--            
     	    <div id="navigation">
     	    	<ul>
     	    		<li>
@@ -33,9 +43,30 @@
     	    		</li>
     	    	</ul>
     	    </div>
+-->    	    
     		<div id="content">    		    
 				@content
 			</div>
 		</div>
     </body>
 </html>
+
+@main_menu = {
+	<div id="navigation">
+    	<ul>
+    		<li><a href="@{controllers.routes.Application.submitQuote()}">Chci ověřit výrok</a></li>
+    	    <li><a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">Hlasování</a></li>
+    	    <li><a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.CHECKED)}">Ověřené citáty</a></li>
+    	</ul>
+	</div>
+}
+
+@admin_menu = {
+	<div id="navigation">
+    	<ul>
+			<li><a href="@{controllers.routes.Admin.showApproveQuotes()}">Nově přidané</a></li>
+			<li><a href="@{controllers.routes.Admin.showCheckQuotes()}">V hlasování</a></li>
+			<li><a href="@{controllers.routes.Admin.logout()}">Odhlásit se</a></li>
+    	</ul>
+	</div>
+}
