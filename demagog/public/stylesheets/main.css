@@ -241,7 +241,7 @@ img {
 #login-panel {
 	width: 300px;
 	margin: 0 auto;
-	margin-top: 120px;
+	margin-top: 100px;
 }
 
 #login-panel .input-section {
@@ -259,6 +259,12 @@ img {
 #login-panel input,
 #login-panel button {
 	width: 100%;
+}
+
+.error {
+	text-align: center;
+	margin: 0 auto;
+	margin-top: 30px;
 }
 
 input {
