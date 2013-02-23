@@ -24,7 +24,7 @@
 	
 	<div class="quotes-container">
 	@for(quote <- quotes) {
-		<div class="quote">			
+		<div class="ui-panel quote">			
 			@if(admin) {
 				@if(quote.quoteState == Quote.QuoteState.NEW) {
 					@adminFormApproval(quote)

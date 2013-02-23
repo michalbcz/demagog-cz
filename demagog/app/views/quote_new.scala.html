@@ -2,11 +2,24 @@
 
 @main("Nový citát") {
 
+<!--
     <div id="page-tip">
         <a href="http://michal.bernhard.cz/bookmarklet-it/?url=https%3A%2F%2Fraw.github.com%2FRHoK-November-2012%2Fdemagog-cz%2Fmaster%2Fbookmarklet%2Fbookmarklet.js&name=ov%EC%F8it+v%FDrok+p%F8es+demagog.cz">Přidejte výrok rovnou z webu s naší speciální záložkou (bookmarkem) !</a>
     </div>
+-->
+	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
 
-	<div id="new_quote">
+	<h2>1. Bookmarklet</h2>
+	<div id="bookmarklet-instructions" class="ui-panel">
+		Co to je:<br>
+		<em>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em><br>
+		Jak se používá:<br>
+		<em>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em>
+		<div id="bookmarklet-dnd">Přetáhněte toto do horní lišty</div>
+	</div>
+		
+	<h2>2. Formulář</h2>
+	<div id="new_quote" class="ui-panel">
 		<form action="@{controllers.routes.Application.submitQuote()}" method="POST">
 			<div class="input-section">
 				<label for="quoteText">Citát: </label>
