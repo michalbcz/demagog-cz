@@ -146,6 +146,7 @@ img {
 	font-size: 22px;
 	font-weight: bold;
 	color: #555;
+	vertical-align: top;
 }
 
 .quote .actions input[type="submit"]{
