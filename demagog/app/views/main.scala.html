@@ -22,6 +22,15 @@
         		  <div id="logo-container"></div>
         		</a>        		
             </div>
+    	    <div id="navigation">
+    	    	<ul>
+    	    		<li>
+    	    			<a href="@{controllers.routes.Application.submitQuote()}">Chci ověřit výrok</a>
+    	    			<a href="@{controllers.routes.Application.showQuotes()}">Hlasování</a>
+    	    			<a href="@{controllers.routes.Application.showQuotes()}">Ověřené citáty</a>
+    	    		</li>
+    	    	</ul>
+    	    </div>
     		<div id="content">    		    
 				@content
 			</div>

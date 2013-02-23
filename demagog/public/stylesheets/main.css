@@ -1,6 +1,9 @@
+html {
+    background: url("../images/background.jpg") repeat-x #9C9C9C;
+}
+
 body {
 	font-family: Arial;
-	background-color: #525252;
 }
 
 img {
@@ -8,13 +11,61 @@ img {
 }
 
 #body {
-	width: 800px;
+	width: 900px;
 	margin: 0 auto;
 }
 
 #header {
     height: 60px;
     margin-bottom: 20px;
+}
+
+#navigation {
+    background: -moz-linear-gradient(center top , #F2F2ED 50%, #D1CFC4 50%) repeat scroll 0 0 transparent !important;
+    border-bottom: 1px solid #BBBBBB;
+    clear: both;
+    height: 60px;
+    padding: 0 !important;
+    position: relative;
+    top: 0;
+}
+#navigation ul {
+    background: -moz-linear-gradient(center top , #AABD8E 50%, #9FB185 50%) repeat scroll 0 0 transparent !important;
+    border: 1px solid #888888;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+    left: -12px;
+    margin: 0 0 10px;
+    overflow: auto;
+    padding: 0 !important;
+    position: relative;
+    top: 9px;
+    width: 924px;
+}
+#navigation ul > li {
+    background-color: transparent;
+    display: block;
+    float: left;
+    padding: 0;
+}
+#navigation ul > li > a {
+    background: none repeat scroll 0 0 transparent;
+    border-left: 1px solid #C1D0AD;
+    border-right: 1px solid #AAAAAA;
+    color: #444444;
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin: 0 !important;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+#navigation ul > li > a:hover {
+    color: #000000 !important;
+}
+#navigation ul > li > a.selected {
+    background: -moz-linear-gradient(center top , #C1D0AD 50%, #A8BA8F 50%) repeat scroll 0 0 transparent;
+    color: #000000 !important;
+    font-weight: normal;
 }
 
 #page-tip a {
