@@ -1,21 +1,57 @@
 
 
 @main("Nový citát") {
-
-<!--
-    <div id="page-tip">
-        <a href="http://michal.bernhard.cz/bookmarklet-it/?url=https%3A%2F%2Fraw.github.com%2FRHoK-November-2012%2Fdemagog-cz%2Fmaster%2Fbookmarklet%2Fbookmarklet.js&name=ov%EC%F8it+v%FDrok+p%F8es+demagog.cz">Přidejte výrok rovnou z webu s naší speciální záložkou (bookmarkem) !</a>
-    </div>
--->
 	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
 
 	<h2>1. Bookmarklet</h2>
 	<div id="bookmarklet-instructions" class="ui-panel">
-		Co to je:<br>
-		<em>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em><br>
-		Jak se používá:<br>
-		<em>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em>
-		<div id="bookmarklet-dnd">Přetáhněte toto do horní lišty</div>
+		<div>
+			<b>Co to je:</b><br>
+			<em>Bookmarklet je nástroj, který si snadno přidáte mezi záložky ve vašem prohlížeči a pomocí kterého pak můžete snadno a rychle zadávat výroky k ověření do systému Demagog.cz</em><br>
+			<b>Jak se používá:</b><br>
+			<em>Následující odkaz si přetáhněte do lišty záložek ve vašem prohlížeči. Poté kdekoliv na kterékoliv stránce označte výrok, který chcete ověřit a klikněte na záložku bookmarkletu.</em>
+			<div id="bookmarklet-help-label">
+				Podrobný návod naleznete zde...
+			</div>
+			<div id="bookmarklet-help" style="display: none;">
+				<ol>
+					<li>
+						<b>Ověřte, že máte zapnutou lištu záložek</b>
+						<div style="font-size: smaller;">						
+							<b>Firefox:</b><br>
+							<em>Možnosti -> Lišta záložek</em> nebo <em>Zobrazení -> Nástrojové lišty -> Lišta záložek</em><br>
+							<b>Chrome:</b><br>
+							<em>Záložky -> Zobrazit lištu záložek</em><br>
+							<b>Internet Explorer 9:</b><br>
+							<em>Pravým tlačítkem klikněte na horní lištu -> Panel Oblíbené položky</em><br>
+							<b>Opera:</b><br>
+							<em>Zobrazit -> Lišty -> Lišta záložek</em><br>
+						</div>
+					</li>
+					<li>
+						<b>Přetáhněte bookmarklet do lišty záložek</b><br>
+						<img src="@routes.Assets.at("images/bookmarklet-help-1.png")" />
+					</li>
+					<li>
+						<b>Označte výrok, který chcete ověřit a klikněte na vytvořený bookmarklet</b><br>
+						<img src="@routes.Assets.at("images/bookmarklet-help-2.png")" />
+					</li>
+				</ol>
+			</div>
+		</div>
+		
+		<div id="bookmarklet-dnd">
+			<div>
+				Toto přetáhněte do horní lišty
+			</div>
+			<div>
+			<a href="javascript:var script = document.createElement('script');
+					 script.src = 'https://raw.github.com/RHoK-November-2012/demagog-cz/master/bookmarklet/bookmarklet.js';
+					 script.type = 'text/javascript';
+					 document.getElementsByTagName('head')[0].appendChild(script);
+					 void(0);" id="bookmarklet-dnd-button">Demagog.cz - ověřit výrok</a>
+			</div>
+		</div>
 	</div>
 		
 	<h2>2. Formulář</h2>
@@ -50,9 +86,13 @@
 	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/validationEngine.jquery.css")">
 	
 	<script>
-		jQuery(document).ready(function(){
+		$(function(){
 			// binds form submission and fields to the validation engine
-			jQuery("#newQuoteForm").validationEngine();
-		});
+			$("#newQuoteForm").validationEngine();
+			
+			$('#bookmarklet-help-label').click(function() {
+				$('#bookmarklet-help').slideToggle();
+			});
+		});		
 	</script>
 }
