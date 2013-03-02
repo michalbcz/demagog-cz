@@ -7,12 +7,14 @@ public class LabelProvider {
 	private LabelProvider() {}
 	
 	public static String getLabel(QuoteState state) {
-		if (state == null) {
-			return null;
-		};
+
+        if (state == null) {
+			throw new IllegalArgumentException("State cannot be null");
+		}
+
 		switch (state) {
 			case ANALYSIS_IN_PROGRESS:
-				return "Ověřen";
+				return "Ověřuje se";
 			
 			case APPROVED_FOR_VOTING:
 				return "V hlasování";
@@ -20,8 +22,12 @@ public class LabelProvider {
 			case NEW:
 				return "Nový";
 
-		default:
-			throw new IllegalArgumentException("Neznamy stav: " + state);
+            case CHECKED:
+                return "Ověřeno";
+
+		    default:
+			    throw new IllegalArgumentException("Neznamy stav: " + state);
 		}
+
 	}
 }
