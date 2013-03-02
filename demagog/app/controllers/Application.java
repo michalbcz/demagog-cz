@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.Quote;
-import models.QuotesListContent;
 import models.Quote.QuoteState;
+import models.QuotesListContent;
 
 import org.bson.types.ObjectId;
 
@@ -52,7 +52,7 @@ public class Application extends Controller {
 	public static Result showQuotes(QuotesListContent content) {
 		Map<String, String[]> requestParams = request().body().asFormUrlEncoded();
 		String author;
-		if (requestParams == null) {
+		if (requestParams == null || requestParams.get("author") == null || requestParams.get("author").length == 0) {
 			author = Quote.AUTHOR_EMPTY_FILTER;
 		} else {
 			author = requestParams.get("author")[0];
