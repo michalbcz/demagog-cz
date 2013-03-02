@@ -11,11 +11,11 @@ public class LabelProvider {
 			return null;
 		};
 		switch (state) {
-			case APPROVED:
-				return "Schválen";
-				
 			case CHECKED:
-				return "Schvaluje se";
+				return "Ověřen";
+			
+			case APPROVED:
+				return "V hlasování";
 				
 			case NEW:
 				return "Nový";

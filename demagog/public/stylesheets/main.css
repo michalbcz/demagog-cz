@@ -178,11 +178,11 @@ img {
 	background-color: #3A87AD;
 }
 
-.state.approved {
+.state.checked {
 	background-color: #468847;
 }
 
-.state.checked {
+.state.approved {
 	background-color: #F89406;
 }
 
