@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
 
 import utils.DBHolder;
@@ -149,11 +147,11 @@ public class Quote {
 		return query.filter("author", author).order("-voteCount").asList();
 	}
 
-	public static List<String> getAllAuthorNames() {
+	public static List<String> getAllAuthorNames(QuoteState state) {
 		Set<String> names = new TreeSet<String>();
 		names.add(AUTHOR_EMPTY_FILTER);
 		
-		for (Quote quote : findAll()) {
+		for (Quote quote : findAllWithStateOrderedByCreationDate(state)) {
 			if (quote.author != null) {
 				names.add(quote.author);
 			}

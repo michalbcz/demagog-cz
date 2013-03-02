@@ -72,7 +72,7 @@ public class Application extends Controller {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 		
-		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(), author, getAllreadyVotedIds()));
+		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAllreadyVotedIds()));
 	}
 	
 	public static Result showQuoteDetail(String id) {
