@@ -11,21 +11,24 @@ POST	/quote/save					controllers.Application.submitQuote()
 
 GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
 
-# api
+# Api
 GET    /api/v1/quote/save           controllers.Api.saveQuote()
 
-# admin
-GET		/admin 						controllers.Admin.index()
-GET		/admin/						controllers.Admin.index()
-POST	/admin/login				controllers.Admin.login()
+# Admin
 GET		/admin/quotes				controllers.Admin.showNewlyAddedQuotes()
 POST	/admin/approve				controllers.Admin.approve()
 POST	/admin/reject				controllers.Admin.reject()
 POST    /admin/update               controllers.Admin.updateQuote()
 POST	/admin/check				controllers.Admin.setChecked()
 GET		/admin/checkquotes			controllers.Admin.showApprovedQuotes()
-GET		/admin/logout				controllers.Admin.logout()
 
+# Authentication
+GET		/admin 						controllers.Admin.login()
+GET     /admin/login                controllers.Admin.login()
+POST    /admin/login                controllers.Admin.authenticate()
+GET     /admin/logout               controllers.Admin.logout()
+
+# Quotes
 GET     /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
 POST    /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
 POST    /upVote/:content            controllers.Application.upVote(content: models.QuotesListContent)
