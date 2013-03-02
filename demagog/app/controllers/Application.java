@@ -60,9 +60,9 @@ public class Application extends Controller {
 		
 		QuoteState state;
 		if (QuotesListContent.APPROVED.equals(content)) {
-			state = QuoteState.APPROVED;
+			state = QuoteState.APPROVED_FOR_VOTING;
 		} else {
-			state = QuoteState.CHECKED;
+			state = QuoteState.ANALYSIS_IN_PROGRESS;
 		}
 		
 		final List<Quote> quotes;

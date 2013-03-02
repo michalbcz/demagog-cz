@@ -53,7 +53,7 @@
 		<form id="@{quote.id}" action="@{controllers.routes.Application.upVote(content)}" method="POST">
 			<input type="hidden" name="id" value="@{quote.id}" />
 			<span class="vote-count">@{quote.voteCount}</span>
-			@if(QuoteState.APPROVED == quote.quoteState && !allreadyVoted.contains(quote.id)) {
+			@if(QuoteState.APPROVED_FOR_VOTING == quote.quoteState && !allreadyVoted.contains(quote.id)) {
 				<a href="javascript:voteOnServer('@{quote.id}');">
 					<img src="@routes.Assets.at("images/24x24/add.png")" />
 				</a>

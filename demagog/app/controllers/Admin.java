@@ -80,7 +80,7 @@ public class Admin extends Controller {
                         .set("lastUpdateDate", new Date());
         
         if (request().body().asFormUrlEncoded().containsKey("approved")) {
-        	updateOperations.set("quoteState", QuoteState.APPROVED).set("approvalDate", new Date());
+        	updateOperations.set("quoteState", QuoteState.APPROVED_FOR_VOTING).set("approvalDate", new Date());
         }
 
         DBHolder.ds.update(new Key<Quote>(Quote.class, quote.id), updateOperations);
@@ -102,7 +102,7 @@ public class Admin extends Controller {
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showApprovedQuotes() {
-		return showQuotes(QuoteState.APPROVED);
+		return showQuotes(QuoteState.APPROVED_FOR_VOTING);
 	}
 	
 }
