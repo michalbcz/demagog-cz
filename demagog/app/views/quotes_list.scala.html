@@ -70,17 +70,15 @@
 		<input type="hidden" name="id" value="@{quote.id}" />
 		<textarea name="quoteText" class="admin_textarea">@{quote.quoteText}</textarea>
 		<div class="actions">
-			<a class="imglink" href="javascript:$('#approve_@{quote.id}').submit(); void(0);">
-					<img src="@routes.Assets.at("images/24x24/accept.png")" />
+			<a class="imglink" title="Uložit" href="javascript:$('#update_@{quote.id}').submit(); void(0);">
+				<img src="@routes.Assets.at("images/24x24/save.png")" />
 			</a>
-            <a class="imglink" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
+            <a class="imglink" title="Odstranit" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
 				<img src="@routes.Assets.at("images/24x24/delete.png")" />
 			</a>
-            <div>
-                <a class="save_button" href="javascript:$('#update_@{quote.id}').submit(); void(0);">
-                    Uložit
-                </a>
-            </div>
+		</div>
+		<div class="approval">
+			<label><span>Schválit citát k hlasování</span><input name="approved" type="checkbox" /></label>
 		</div>
 		<div class="footer">
 			<span class="author">Autor: </span>
@@ -97,9 +95,6 @@
 	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />		
 	</form>
-    <form id="approve_@{quote.id}" action="@{controllers.routes.Admin.approve()}" method="POST">
-        <input type="hidden" name="id" value="@{quote.id}" />
-    </form>
 }
 
 @adminFormChecking(quote: Quote) = {
