@@ -107,7 +107,7 @@ public class Application extends Controller {
 
 		response().setCookie(COOKIE_NAME, votes);
 		
-		return showQuotes(content);
+		return redirect(routes.Application.showQuotes(content));
 	}
 	
 	/**
