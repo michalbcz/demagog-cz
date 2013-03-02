@@ -16,7 +16,6 @@ GET    /api/v1/quote/save           controllers.Api.saveQuote()
 
 # Admin
 GET		/admin/quotes				controllers.Admin.showNewlyAddedQuotes()
-POST	/admin/approve				controllers.Admin.approve()
 POST	/admin/reject				controllers.Admin.reject()
 POST    /admin/update               controllers.Admin.updateQuote()
 POST	/admin/check				controllers.Admin.setChecked()

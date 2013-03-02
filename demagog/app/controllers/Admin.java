@@ -51,15 +51,6 @@ public class Admin extends Controller {
 	}
 	
 	@Authenticated(UserAuthenticator.class)
-	public static Result approve() {
-		Quote quote = form(Quote.class).bindFromRequest().get();
-		
-		Quote.approve(quote.id, quote.quoteText, quote.author);			
-		
-		return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
-	}
-	
-	@Authenticated(UserAuthenticator.class)
 	public static Result reject() {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
 			
@@ -80,13 +71,17 @@ public class Admin extends Controller {
 	@Authenticated(UserAuthenticator.class)
     public static Result updateQuote() {
         Quote quote = form(Quote.class).bindFromRequest().get();
-
-        UpdateOperations<Quote> updateOperations =
+		
+        final UpdateOperations<Quote> updateOperations =
                 DBHolder.ds.createUpdateOperations(Quote.class)
                         .set("quoteText", quote.quoteText)
                         .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
                         .set("author", quote.author)
                         .set("lastUpdateDate", new Date());
+        
+        if (request().body().asFormUrlEncoded().containsKey("approved")) {
+        	updateOperations.set("quoteState", QuoteState.APPROVED).set("approvalDate", new Date());
+        }
 
         DBHolder.ds.update(new Key<Quote>(Quote.class, quote.id), updateOperations);
 
