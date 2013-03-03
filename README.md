@@ -58,8 +58,42 @@ branch)
 + git pull (send it to remote)
         
 
+#### Deploy to Heroku
 
+We are hosting application on Heroku cloud. There are 2 applications:
 
-        
+1. **demagog-staging** - testing environment
++ **demagog-production** - production environment
 
+##### How to deploy app to Heroku
+1. Init new repository in /demagog subfolder with `git init`. This is, because Heroku expects that application 
+is in root of Git repo (so we create temporary nested repository for deployment).
++ Add Heroku remotes (staging and production)
+```
+    git remote add staging git@heroku.com:demagog-staging.git
+    git remote add production git@heroku.com:demagog-production.git
+```
++ Add and commit all files (except .gitignore and .target)
++ Push application to staging and then after testing to production environment
+```
+    git push staging master
+```
+then
+```
+    git push production master
+```
 
+##### How works environment separation
+
+Code in both environmens should be same. Environment configuration is selected in `Procfile` 
+by parameter 
+```
+    -Dconfig.resource=${DEMAGOG_ENVIRONMENT}.conf
+```
+
+`DEMAGOG_ENVIRONMENT` variable is defined  for each environment. This was done at application 
+creation by this command:
+```
+    heroku config:add DEMAGOG_ENVIRONMENT=staging --remote staging
+    heroku config:add DEMAGOG_ENVIRONMENT=production --remote production
+```
