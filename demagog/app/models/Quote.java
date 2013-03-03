@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
 
 import utils.DBHolder;
@@ -53,9 +51,34 @@ public class Quote {
 	public int voteCount;
 	
 	public boolean deleted;
-	
+
+    /**
+     * State transitions:
+     *    NEW -> APPROVED_FOR_VOTING -> ANALYSIS_IN_PROGRESS -> CHECKED
+     */
 	public enum QuoteState {
-		NEW, APPROVED, CHECKED
+
+        /**
+         * Waiting to be approved or cancelled (spam / low quality / out of topic ... etc.) by admin.
+         */
+        NEW,
+
+        /**
+         * In this state users can vote for the Quote and share it.
+         */
+        APPROVED_FOR_VOTING,
+
+        /**
+         * Means that the Quote is accepted by demagog.cz team to analysis. Sometime in future
+         * it is going to be published on demagog.cz
+         */
+        ANALYSIS_IN_PROGRESS,
+
+        /**
+         * Analysis of quote is done and published on demagog.cz
+         */
+        CHECKED
+
 	}
 	
 	public Quote() {
@@ -74,14 +97,14 @@ public class Quote {
 	}
 
 	public static void setChecked(ObjectId id) {
-		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.CHECKED));
+		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("quoteState", QuoteState.ANALYSIS_IN_PROGRESS));
 	}
 	
 	public static void approve(ObjectId id, String text, String author) {
 		DBHolder.ds.update(
-                    DBHolder.ds.createQuery(Quote.class).field("_id").equal(id),
-                    DBHolder.ds.createUpdateOperations(Quote.class)
-                        .set("quoteState", QuoteState.APPROVED)
+                DBHolder.ds.createQuery(Quote.class).field("_id").equal(id),
+                DBHolder.ds.createUpdateOperations(Quote.class)
+                        .set("quoteState", QuoteState.APPROVED_FOR_VOTING)
                         .set("approvalDate", new Date()));
 	}
 	
@@ -138,7 +161,7 @@ public class Quote {
 	public static List<Quote> findAllSortedByCreationDate(boolean onlyApproved) {
 		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
 		if (onlyApproved) {
-			query = query.field("quoteState").equal(QuoteState.APPROVED);
+			query = query.field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
 		}
 		return query.order("-creationDate").asList();
 	}
@@ -149,11 +172,11 @@ public class Quote {
 		return query.filter("author", author).order("-voteCount").asList();
 	}
 
-	public static List<String> getAllAuthorNames() {
+	public static List<String> getAllAuthorNames(QuoteState state) {
 		Set<String> names = new TreeSet<String>();
 		names.add(AUTHOR_EMPTY_FILTER);
 		
-		for (Quote quote : findAll()) {
+		for (Quote quote : findAllWithStateOrderedByCreationDate(state)) {
 			if (quote.author != null) {
 				names.add(quote.author);
 			}

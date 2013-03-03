@@ -2,7 +2,6 @@ package controllers;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import models.Quote;
 import models.Quote.QuoteState;
@@ -10,9 +9,9 @@ import models.User;
 
 import org.bson.types.ObjectId;
 
-import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security.Authenticated;
 import utils.DBHolder;
 import views.html.loginForm;
 import views.html.quotes_list;
@@ -22,144 +21,88 @@ import com.google.code.morphia.query.UpdateOperations;
 
 public class Admin extends Controller {
 	
-	public static Result index() {
+	public static Result login() {
+		if (UserAuthenticator.isUserLoggedIn()) {
+			return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
+		}
 		return ok(loginForm.render());
 	}
+	
+	public static Result authenticate() {
+        final User formUser = form(User.class).bindFromRequest().get();
+        final User user = User.findByName(formUser.getUsername());
 
-    public static Result login() {
-        Form<User> loginForm = form(User.class);
-        User formUser = loginForm.bindFromRequest().get();
-
-        User user = User.findUser(formUser.username);
-
-        if (user != null && user.password.equals(formUser.password)) {
-            String sid = Admin.generateUUID();
-            user.updateSID(sid);
-            session("sid", sid);
-            return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
+        if (user == null) {
+        	flash("error", "Zadali jste špatné uživatelské jméno");
+        } else {
+        	if (formUser.getPassword().equals(user.getPassword())) {
+                session("userId", user.getId().toString());
+                return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
+            } else {
+            	flash("error", "Zadali jste špatné heslo");
+            }
         }
-
-        flash("error", "Zadali jste špatné uživatelské jméno a nebo heslo.");
-        return redirect(controllers.routes.Admin.index());
-
+        return redirect(controllers.routes.Admin.login());
     }
 	
-	public static Result showQuotes(QuoteState state) {
-		if (isUserLoggedIn()) {
-			List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
-			
-			return ok(quotes_list.render(quotes, true, null, null, null, null));
-		}
-		
-		return redirect(controllers.routes.Admin.index());
-		
-	}
-	
-	public static Result approve() {
-		String sid = session("sid");
-		
-		User user = User.findSID(sid);
-		
-		if (user != null) {
-			Form<Quote> quoteForm = form(Quote.class);
-			Quote quote = quoteForm.bindFromRequest().get();
-			
-			Quote.approve(quote.id, quote.quoteText, quote.author);			
-			
-		}
-		
-		return redirect(controllers.routes.Admin.showApprovedQuotes());
-	}
-	
-	public static Result reject() {
-		String sid = session("sid");
-		
-		User user = User.findSID(sid);
-		
-		if (user != null) {
-			String id = request().body().asFormUrlEncoded().get("id")[0];
-			
-			Quote.delete(new ObjectId(id), false);
-			
-		}
-		
-		return redirect(controllers.routes.Admin.showApprovedQuotes());
-	}
-
-	public static Result setChecked() {
-		String sid = session("sid");
-		
-		User user = User.findSID(sid);
-		
-		if (user != null) {
-			String id = request().body().asFormUrlEncoded().get("id")[0];
-			
-			Quote.setChecked(new ObjectId(id));			
-			return redirect(controllers.routes.Admin.showApprovedQuotes());
-		}
-
-		return redirect(controllers.routes.Admin.index());
-	}
-
-
-    public static Result updateQuote() {
-
-        if (isUserLoggedIn()) {
-
-            Form<Quote> form = form(Quote.class);
-            Quote quote = form.bindFromRequest().get();
-
-            Key key = new Key(Quote.class, quote.id);
-            UpdateOperations<Quote> updateOperations =
-                    DBHolder.ds.createUpdateOperations(Quote.class)
-                            .set("quoteText", quote.quoteText)
-                            .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
-                            .set("author", quote.author)
-                            .set("lastUpdateDate", new Date());
-
-            DBHolder.ds.update(key, updateOperations);
-
-        }
-        else {
-            flash("error", "Byli jste odhlášeni nebo nemáte práva na uložení výroku.");
-            //TODO: michalb : tohle nefunguje
-        }
-
-        return redirect(routes.Admin.showApprovedQuotes());
-
-    }
-
-    public static boolean isUserLoggedIn() {
-        String sid = session("sid");
-        User user = User.findSID(sid);
-
-        return user != null;
-    }
-
-	public static Result showNewlyAddedQuotes() {
-        if (isUserLoggedIn()) {
-            List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(QuoteState.NEW);
-            return ok(quotes_list.render(quotes, true, null, null, null, null));
-        }
-
-        return redirect(controllers.routes.Admin.index());
-	}
-
-	public static Result showApprovedQuotes() {
-        if(isUserLoggedIn()) {
-            List<Quote> quotes = Quote.findAllWithStateOrderedByVoteCount(QuoteState.APPROVED);
-            return ok(quotes_list.render(quotes, true, null, null, null, null));
-        }
-
-        return redirect(controllers.routes.Admin.index());
-	}
-
 	public static Result logout() {
 		session().clear();
 		return redirect(controllers.routes.Application.showApprovedQuotes());
 	}
 	
-	private static String generateUUID() {
-		return UUID.randomUUID().toString();
+	@Authenticated(UserAuthenticator.class)
+	public static Result reject() {
+		String id = request().body().asFormUrlEncoded().get("id")[0];
+			
+		Quote.delete(new ObjectId(id), false);
+			
+		return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
 	}
+
+	@Authenticated(UserAuthenticator.class)
+	public static Result setChecked() {
+		String id = request().body().asFormUrlEncoded().get("id")[0];
+		
+		Quote.setChecked(new ObjectId(id));	
+		
+		return redirect(controllers.routes.Admin.showApprovedQuotes());
+	}
+
+	@Authenticated(UserAuthenticator.class)
+    public static Result updateQuote() {
+        Quote quote = form(Quote.class).bindFromRequest().get();
+		
+        final UpdateOperations<Quote> updateOperations =
+                DBHolder.ds.createUpdateOperations(Quote.class)
+                        .set("quoteText", quote.quoteText)
+                        .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
+                        .set("author", quote.author)
+                        .set("lastUpdateDate", new Date());
+        
+        if (request().body().asFormUrlEncoded().containsKey("approved")) {
+        	updateOperations.set("quoteState", QuoteState.APPROVED_FOR_VOTING).set("approvalDate", new Date());
+        }
+
+        DBHolder.ds.update(new Key<Quote>(Quote.class, quote.id), updateOperations);
+
+        return redirect(routes.Admin.showNewlyAddedQuotes());
+    }
+
+	@Authenticated(UserAuthenticator.class)
+	public static Result showQuotes(QuoteState state) {
+		List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
+		
+		return ok(quotes_list.render(quotes, true, null, null, null, null));
+	}
+	
+	@Authenticated(UserAuthenticator.class)
+	public static Result showNewlyAddedQuotes() {
+		return showQuotes(QuoteState.NEW);
+	}
+
+	@Authenticated(UserAuthenticator.class)
+	public static Result showApprovedQuotes() {
+		return showQuotes(QuoteState.APPROVED_FOR_VOTING);
+	}
+	
 }

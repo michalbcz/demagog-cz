@@ -5,7 +5,7 @@ import PlayProject._
 object ApplicationBuild extends Build {
 
     val appName         = "demagog"
-    val appVersion      = "1.0-SNAPSHOT"
+    val appVersion      = "1.0.0"
 
     val appDependencies = Seq(
     	"com.google.code.morphia" % "morphia" % "0.99",

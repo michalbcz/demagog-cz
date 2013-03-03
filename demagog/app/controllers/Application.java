@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.Quote;
-import models.QuotesListContent;
 import models.Quote.QuoteState;
+import models.QuotesListContent;
 
 import org.bson.types.ObjectId;
 
@@ -52,7 +52,7 @@ public class Application extends Controller {
 	public static Result showQuotes(QuotesListContent content) {
 		Map<String, String[]> requestParams = request().body().asFormUrlEncoded();
 		String author;
-		if (requestParams == null) {
+		if (requestParams == null || requestParams.get("author") == null || requestParams.get("author").length == 0) {
 			author = Quote.AUTHOR_EMPTY_FILTER;
 		} else {
 			author = requestParams.get("author")[0];
@@ -60,9 +60,9 @@ public class Application extends Controller {
 		
 		QuoteState state;
 		if (QuotesListContent.APPROVED.equals(content)) {
-			state = QuoteState.APPROVED;
+			state = QuoteState.APPROVED_FOR_VOTING;
 		} else {
-			state = QuoteState.CHECKED;
+			state = QuoteState.ANALYSIS_IN_PROGRESS;
 		}
 		
 		final List<Quote> quotes;
@@ -72,7 +72,7 @@ public class Application extends Controller {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 		
-		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(), author, getAllreadyVotedIds()));
+		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAllreadyVotedIds()));
 	}
 	
 	public static Result showQuoteDetail(String id) {
@@ -107,7 +107,7 @@ public class Application extends Controller {
 
 		response().setCookie(COOKIE_NAME, votes);
 		
-		return showQuotes(content);
+		return redirect(routes.Application.showQuotes(content));
 	}
 	
 	/**
