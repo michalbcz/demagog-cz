@@ -20,7 +20,7 @@ import views.html.quote_detail;
 import views.html.quote_new;
 import views.html.quotes_list;
 
-public class Application extends Controller {	
+public class Application extends Controller {
 
 	private static final String COOKIE_NAME = "demagog.cz-votes";
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
@@ -32,7 +32,7 @@ public class Application extends Controller {
 	public static Result submitQuote() {
 		Form<Quote> quoteForm = form(Quote.class);
 		Quote quote = quoteForm.bindFromRequest().get();
-		
+
 		quote.userIp = request().remoteAddress();
 		quote.quoteState = QuoteState.NEW;
 
@@ -44,11 +44,11 @@ public class Application extends Controller {
 	public static Result showApprovedQuotes() {
 		return showQuotes(QuotesListContent.APPROVED);
 	}
-	
+
 	public static Result showCheckedQuotes() {
 		return showQuotes(QuotesListContent.CHECKED);
 	}
-	
+
 	public static Result showQuotes(QuotesListContent content) {
 		Map<String, String[]> requestParams = request().body().asFormUrlEncoded();
 		String author;
@@ -57,24 +57,24 @@ public class Application extends Controller {
 		} else {
 			author = requestParams.get("author")[0];
 		}
-		
+
 		QuoteState state;
 		if (QuotesListContent.APPROVED.equals(content)) {
 			state = QuoteState.APPROVED_FOR_VOTING;
 		} else {
-			state = QuoteState.ANALYSIS_IN_PROGRESS;
+			state = QuoteState.CHECKED_AND_PUBLISHED;
 		}
-		
+
 		final List<Quote> quotes;
 		if (author == null || Quote.AUTHOR_EMPTY_FILTER.equals(author)) {
 			quotes = Quote.findAllSortedByVote(state);
 		} else {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
-		
+
 		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAllreadyVotedIds()));
 	}
-	
+
 	public static Result showQuoteDetail(String id) {
 		Quote quote;
 		try {
@@ -83,17 +83,17 @@ public class Application extends Controller {
 			Logger.warn("Nekdo zadal shitovy quote id.", e);
 			quote = null;
 		}
-		
+
 		if (quote == null) {
-			return notFound();			
+			return notFound();
 		}
-		
+
 		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
 	}
-	
+
 	public static Result upVote(QuotesListContent content) {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
-		
+
 		Quote.upVote(new ObjectId(id));
 
 		Cookie cookie = request().cookies().get(COOKIE_NAME);
@@ -102,24 +102,24 @@ public class Application extends Controller {
 			votes = cookie.value();
 			votes += COOKIE_VALUE_SEPARATOR;
 		}
-		
+
 		votes += id;
 
 		response().setCookie(COOKIE_NAME, votes);
-		
+
 		return redirect(routes.Application.showQuotes(content));
 	}
-	
+
 	/**
 	 * Find ids of quotes user allready voted on. (from cookie)
-	 * 
+	 *
 	 * @return
 	 */
 	private static List<String> getAllreadyVotedIds() {
 		List<String> allreadyVoted = new ArrayList<String>();
-		
+
 		Cookie cookie = null;
-		
+
 		// first looak after the cookies from the response
 		for (Cookie responseCookie : response().cookies()) {
 			if (responseCookie.name().equals(COOKIE_NAME)) {
@@ -132,10 +132,10 @@ public class Application extends Controller {
 		}
 		if (cookie != null && cookie.value() != null) {
 			String votes = cookie.value();
-			
+
 			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
 		}
 
 		return allreadyVoted;
-	}	
+	}
 }

@@ -22,7 +22,7 @@ public class LabelProvider {
 			case NEW:
 				return "Nový";
 
-            case CHECKED:
+            case CHECKED_AND_PUBLISHED:
                 return "Ověřeno";
 
 		    default:

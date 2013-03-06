@@ -24,10 +24,10 @@
 	@for(quote <- quotes) {
 		<div class="ui-panel quote">			
 			@if(admin) {
-				@if(quote.quoteState == Quote.QuoteState.NEW) {
-					@adminFormApproval(quote)
-				} else {
+				@if(quote.quoteState == Quote.QuoteState.APPROVED_FOR_VOTING) {
 					@adminFormChecking(quote)
+				} else {
+					@adminFormApproval(quote)
 				}
 			} else {
 				<div class="text">
@@ -58,7 +58,7 @@
 					<img src="@routes.Assets.at("images/24x24/add.png")" />
 				</a>
 			} else {
-				<img src="@routes.Assets.at("images/24x24/add_disabled.png")" />
+				<img src="@routes.Assets.at("images/24x24/add_disabled.png")" title="Hlasování bylo ukončeno, nebo jste již hlasoval." />
 			}
 		</form>
 	</div>
@@ -78,7 +78,8 @@
 			</a>
 		</div>
 		<div class="approval">
-			<label><span>Schválit citát k hlasování</span><input name="approved" type="checkbox" /></label>
+			<label><span>Schválit citát k hlasování</span><input name="approved" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.NEW) "" else "checked") /></label><br>
+			<label><span>Citát je publikovaný na demagog.cz</span><input name="published" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.CHECKED_AND_PUBLISHED) "checked" else "") /></label>
 		</div>
 		<div class="footer">
 			<span class="author">Autor: </span>
