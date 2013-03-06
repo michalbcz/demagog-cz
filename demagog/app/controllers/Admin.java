@@ -20,14 +20,14 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.query.UpdateOperations;
 
 public class Admin extends Controller {
-	
+
 	public static Result login() {
 		if (UserAuthenticator.isUserLoggedIn()) {
 			return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
 		}
 		return ok(loginForm.render());
 	}
-	
+
 	public static Result authenticate() {
         final User formUser = form(User.class).bindFromRequest().get();
         final User user = User.findByName(formUser.getUsername());
@@ -44,57 +44,79 @@ public class Admin extends Controller {
         }
         return redirect(controllers.routes.Admin.login());
     }
-	
+
 	public static Result logout() {
 		session().clear();
 		return redirect(controllers.routes.Application.showApprovedQuotes());
 	}
-	
+
 	@Authenticated(UserAuthenticator.class)
 	public static Result reject() {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
-			
+
+        Quote oldQuote = Quote.findById(new ObjectId(id));
+
 		Quote.delete(new ObjectId(id), false);
-			
-		return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
+
+        return redirectByQuoteState(oldQuote.quoteState);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result setChecked() {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
-		
-		Quote.setChecked(new ObjectId(id));	
-		
+
+		Quote.setChecked(new ObjectId(id));
+
 		return redirect(controllers.routes.Admin.showApprovedQuotes());
 	}
 
 	@Authenticated(UserAuthenticator.class)
     public static Result updateQuote() {
         Quote quote = form(Quote.class).bindFromRequest().get();
-		
+
         final UpdateOperations<Quote> updateOperations =
                 DBHolder.ds.createUpdateOperations(Quote.class)
                         .set("quoteText", quote.quoteText)
                         .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
                         .set("author", quote.author)
                         .set("lastUpdateDate", new Date());
-        
-        if (request().body().asFormUrlEncoded().containsKey("approved")) {
+
+        Quote oldQuote = Quote.findById(quote.id);
+
+        if (request().body().asFormUrlEncoded().containsKey("published") && oldQuote.quoteState != QuoteState.CHECKED_AND_PUBLISHED) {
+        	updateOperations.set("quoteState", QuoteState.CHECKED_AND_PUBLISHED).set("publishedDate", new Date());
+        }
+        if (request().body().asFormUrlEncoded().containsKey("approved") && oldQuote.quoteState == QuoteState.NEW) {
         	updateOperations.set("quoteState", QuoteState.APPROVED_FOR_VOTING).set("approvalDate", new Date());
         }
 
         DBHolder.ds.update(new Key<Quote>(Quote.class, quote.id), updateOperations);
 
-        return redirect(routes.Admin.showNewlyAddedQuotes());
+        return redirectByQuoteState(oldQuote.quoteState);
     }
+
+	private static Result redirectByQuoteState(QuoteState quoteState) {
+        switch (quoteState) {
+			case NEW:
+		        return redirect(routes.Admin.showNewlyAddedQuotes());
+			case APPROVED_FOR_VOTING:
+		        return redirect(routes.Admin.showApprovedQuotes());
+			case ANALYSIS_IN_PROGRESS:
+		        return redirect(routes.Admin.showQuotesInAnalysis());
+			case CHECKED_AND_PUBLISHED:
+		        return redirect(routes.Admin.showPublishedQuotes());
+		    default:
+		    	throw new IllegalArgumentException();
+        }
+	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showQuotes(QuoteState state) {
 		List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
-		
+
 		return ok(quotes_list.render(quotes, true, null, null, null, null));
 	}
-	
+
 	@Authenticated(UserAuthenticator.class)
 	public static Result showNewlyAddedQuotes() {
 		return showQuotes(QuoteState.NEW);
@@ -104,5 +126,15 @@ public class Admin extends Controller {
 	public static Result showApprovedQuotes() {
 		return showQuotes(QuoteState.APPROVED_FOR_VOTING);
 	}
-	
+
+	@Authenticated(UserAuthenticator.class)
+	public static Result showQuotesInAnalysis() {
+		return showQuotes(QuoteState.ANALYSIS_IN_PROGRESS);
+	}
+
+	@Authenticated(UserAuthenticator.class)
+	public static Result showPublishedQuotes() {
+		return showQuotes(QuoteState.CHECKED_AND_PUBLISHED);
+	}
+
 }

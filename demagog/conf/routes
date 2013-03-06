@@ -20,9 +20,12 @@ POST	/admin/reject				controllers.Admin.reject()
 POST    /admin/update               controllers.Admin.updateQuote()
 POST	/admin/check				controllers.Admin.setChecked()
 GET		/admin/checkquotes			controllers.Admin.showApprovedQuotes()
+GET		/admin/inanalysis			controllers.Admin.showQuotesInAnalysis()
+GET		/admin/published			controllers.Admin.showPublishedQuotes()
 
 # Authentication
 GET		/admin 						controllers.Admin.login()
+GET		/admin/						controllers.Admin.login()
 GET     /admin/login                controllers.Admin.login()
 POST    /admin/login                controllers.Admin.authenticate()
 GET     /admin/logout               controllers.Admin.logout()

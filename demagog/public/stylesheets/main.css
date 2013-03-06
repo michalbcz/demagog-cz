@@ -187,12 +187,16 @@ img {
 	background-color: #3A87AD;
 }
 
-.state.checked {
-	background-color: #468847;
+.state.approved_for_voting {
+	background-color: #F89406;
 }
 
-.state.approved {
-	background-color: #F89406;
+.state.analysis_in_progress {
+	background-color: #EB726C;
+}
+
+.state.checked {
+	background-color: #468847;
 }
 
 .state {
@@ -251,13 +255,60 @@ img {
 	overflow: hidden;
 }
 
-#bookmarklet-help-label {
-	cursor: pointer;
+#bookmarklet-instructions p {
+	margin: 5px 0px 10px 0px;
+}
+
+#bookmarklet-instructions h4 {
+	margin-top: 3px;
+	margin-bottom: 8px;
 }
 
 #bookmarklet-help img {
-	margin-top: 0.5em;
+	margin: 20px 0px 20px 0px;
 	max-width: 800px;
+	-moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+	-webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+	box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
+}
+
+#bookmarklet-help li:FIRST-CHILD {
+	margin-top: 10px;
+}
+
+#browser-bookmark-help li {
+	height: 45px;
+	padding-left: 40px;
+  	vertical-align: middle;
+}
+
+#browser-bookmark-help span {
+	position: relative;
+	top: 6px;
+}
+
+li.firefox {
+	list-style-type: none;
+	background: url("../images/firefox.gif") no-repeat top left;
+}
+
+li.ie {
+	list-style-type: none;
+	background: url("../images/ie.gif") no-repeat top left;
+}
+
+li.chrome {
+	list-style-type: none;
+	background: url("../images/chrome.gif") no-repeat top left;
+}
+
+li.opera {
+	list-style-type: none;
+	background: url("../images/opera.gif") no-repeat top left;
+}
+
+#bookmarklet-help-label {
+	cursor: pointer;
 }
 
 #bookmarklet-dnd {
