@@ -1,5 +1,6 @@
 import models.Quote;
 import models.Quote.QuoteState;
+import models.User;
 import play.Application;
 
 /**
@@ -17,7 +18,12 @@ public class DevelopmentGlobal extends BaseGlobal {
 		initDeveloperData();
 	}
 
-	private void initDeveloperData() {
+    @Override
+    protected User createAdminUser() {
+        return new User("test", "test");
+    }
+
+    private void initDeveloperData() {
 		Quote.deleteAll();
 
 		new Quote(
