@@ -2,6 +2,7 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.Locale;
 
+import models.Quote;
 import models.User;
 
 import org.bson.types.ObjectId;
@@ -33,20 +34,25 @@ public class BaseGlobal extends GlobalSettings {
 	}
 
 	private void initAdminUser() {
-		String defaultUsername = System.getProperty("demagog.defaultUser");
-		if (defaultUsername == null) {
-			throw new IllegalStateException("System property demagog.defaultUser must be set.");
-		}
-
-		String defaultPassword = System.getProperty("demagog.defaultPassword");
-		if (defaultPassword == null) {
-			throw new IllegalStateException("System property demagog.defaultPassword must be set.");
-		}
-
-		new User(defaultUsername, defaultPassword).save();
+		createAdminUser().save();
 	}
 
-	private void initCustomFormatters() {
+    protected User createAdminUser() {
+
+        String defaultUsername = System.getProperty("demagog.defaultUser");
+        if (defaultUsername == null) {
+            throw new IllegalStateException("System property demagog.defaultUser must be set.");
+        }
+
+        String defaultPassword = System.getProperty("demagog.defaultPassword");
+        if (defaultPassword == null) {
+            throw new IllegalStateException("System property demagog.defaultPassword must be set.");
+        }
+
+        return new User(defaultUsername, defaultPassword);
+    }
+
+    private void initCustomFormatters() {
 		Formatters.register(ObjectId.class, new Formatters.SimpleFormatter<ObjectId>() {
 
 			@Override
