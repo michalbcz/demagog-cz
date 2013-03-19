@@ -3,7 +3,7 @@
 */
 
 var Demagog = Demagog || {};
-Demagog.Bookmarklet = Demagog.Bookmaklet || {};
+Demagog.Bookmarklet = Demagog.Bookmarklet || {};
 Demagog.Bookmarklet.Events = Demagog.Bookmarklet.Events || {};
 Demagog.Bookmarklet.Util = Demagog.Bookmarklet.Util || {};
 
@@ -100,7 +100,7 @@ Demagog.Bookmarklet.Util.postToUrlAsync = function(selectedText, sourceUrl) {
 	data.push({name: "quoteText", value: selectedText});
 	data.push({name: "token", value: "" + Demagog.Bookmarklet.Util.generateGuid()});
 		
-	var apiUrl = "http://demagog.herokuapp.com/api/v1/quote/save"
+	var apiUrl = Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl + "/api/v1/quote/save"
 	console.debug("Sending data", data, " to server: ", apiUrl);
 
 	jQuery.ajax ({
@@ -111,6 +111,9 @@ Demagog.Bookmarklet.Util.postToUrlAsync = function(selectedText, sourceUrl) {
 		success: function(data) {
 			console.log("Response:", data);
 			Demagog.Bookmarklet.openSuccessDialog(data.quotePermalinkUrl);
+		},
+		error: function(jqXhr, textStatus, errorThrown) {
+			console.error("Error '", textStatus, "' when posting quote to api. Error thrown: ", errorThrown);
 		}
 	});
 

@@ -41,8 +41,20 @@
 				Toto přetáhněte do horní lišty
 			</div>
 			<div>
-			<a href="javascript:var script = document.createElement('script');
-					 script.src = 'https://raw.github.com/RHoK-November-2012/demagog-cz/master/bookmarklet/bookmarklet.js';
+			<a href="javascript:
+			         var Demagog = Demagog || {};
+			         Demagog.Bookmarklet = Demagog.Bookmarklet || {};
+			         Demagog.Bookmarklet.Settings = Demagog.Bookmarklet.Settings || {};
+
+			         var re = new RegExp('(https{0,1})://(.*?)/');
+                     var matcher = re.exec(window.location.href);
+                     var baseUri = matcher[2];
+
+                     Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl = 'http://' + baseUri;
+
+			         var script = document.createElement('script');
+					 /*script.src = 'https://raw.github.com/RHoK-November-2012/demagog-cz/master/bookmarklet/bookmarklet.js';*/
+					 script.src = 'http://localhost:8080/bookmarklet.js';
 					 script.type = 'text/javascript';
 					 document.getElementsByTagName('head')[0].appendChild(script);
 					 void(0);" id="bookmarklet-dnd-button">Demagog.cz - ověřit výrok</a>
