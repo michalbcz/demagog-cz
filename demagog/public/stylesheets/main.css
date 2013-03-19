@@ -33,9 +33,19 @@ img {
     text-align: center;
 }
 
-#footer a, a:visited  {
+#footer a  {
     text-decoration: none;
     color: white;
+}
+
+#footer a:visited {
+    text-decoration: none;
+    color: white;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: rgb(0, 0, 238);
 }
 
 #navigation {
