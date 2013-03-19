@@ -1,4 +1,5 @@
 @(title : String = "", menuType: String = "menu-main")(content : Html)
+@import java.util.Date
 
 <!DOCTYPE html>
 
@@ -42,13 +43,23 @@
     		<div id="content">    		    
 				@content
 			</div>
+
+            <hr/>
+
+            <div id="footer">
+
+                <div id="footer-menu">
+                    <a href="http://www.demagog.cz">© Demagog.cz @{new Date().getYear() + 1900 /* as current year */}</a>
+                </div>
 			
-			<div id="logo-restart">
-				Realizace projektu byla podpořena programem ReStart Česko – 3. cena<br>
-				<a href="http://www.restartcesko.cz/" title="ReStart Česko" target="_blank">
-					<img width="400" alt="ReStart Česko" src="/assets/images/logo_restart.jpg" />
-				</a>
-			</div>
+                <div id="logo-restart">
+                    Realizace projektu byla podpořena programem ReStart Česko – 3. cena<br>
+                    <a href="http://www.restartcesko.cz/" title="ReStart Česko" target="_blank">
+                        <img width="400" alt="ReStart Česko" src="/assets/images/logo_restart.jpg" />
+                    </a>
+                </div>
+
+            </div>
 		</div>
 		
 		<script type="text/javascript">

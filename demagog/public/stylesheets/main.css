@@ -24,7 +24,18 @@ img {
 	font-size: 11px;
 	color: #fff;
 	margin-top: 3em;
-	text-align: right;
+	text-align: center;
+}
+
+#footer {
+    color: white;
+    font-size: 11px;
+    text-align: center;
+}
+
+#footer a, a:visited  {
+    text-decoration: none;
+    color: white;
 }
 
 #navigation {
