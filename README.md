@@ -19,15 +19,19 @@ It's a web platform which has this user flow :
 
 ### Getting started
 
-
-1. git clone git@github.com:michalbcz/demagog-cz.git # if you are svn refugee this is like 
-svn checkout of repository
-+ git checkout develop # switch to develop branch for more info see Repository section 
+1. `git clone git@github.com:michalbcz/demagog-cz.git` #if you are svn refugee this is like svn checkout of repository)
++ `git checkout develop` # switch to develop branch for more info see Repository section 
 below
-+ pull love not war
++ `play debug` # start play with remote debug enabled (you will see remote debugging ports in console out)
++ `run` # run app on localhost:9000, you can use run <port> to change port
++ `open your browser and go to http://localhost:9000` - you should see application from standard user point of view
++ `go to http://localhost:9000/admin to see administration interface. Default
+username/password in development is test/test.` On production you have to set pair of system properties -Ddemagog.defaultUsername=<username> -Ddemagog.defaultPassword=<password>
++ `make your great contribution`
++ `git commit -am "i add this new cool feature"` # -a param add all changed files to git index so you don't need to do git add before. But use it wisely :)
++ `git pull` # love not war
 
-#### Repository
-
+### Git Repository
 
 We are using **git flow layout** (read readme of https://github.com/nvie/gitflow and blog post 
 http://nvie.com/posts/a-successful-git-branching-model/).

@@ -20,6 +20,13 @@ img {
     margin-bottom: 20px;
 }
 
+#logo-restart {
+	font-size: 11px;
+	color: #fff;
+	margin-top: 3em;
+	text-align: right;
+}
+
 #navigation {
 	background: #D3D1C6;
 	background: -moz-linear-gradient(top, #F2F2ED 50%, #D1CFC4 50%) !important;
