@@ -6,7 +6,7 @@
 GET     /                           controllers.Application.showApprovedQuotes()
 
 # New quote
-GET 	/quote/save					controllers.Application.showNewQuoteForm()	
+GET 	/quote/add				    controllers.Application.showNewQuoteForm()
 POST	/quote/save					controllers.Application.submitQuote()
 
 GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
