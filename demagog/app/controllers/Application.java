@@ -107,8 +107,27 @@ public class Application extends Controller {
 
 		response().setCookie(COOKIE_NAME, votes);
 
-		return redirect(routes.Application.showQuotes(content));
+		return showQuotes(content);
 	}
+
+    public static Result upVoteAjax(QuotesListContent content) {
+        String id = request().body().asFormUrlEncoded().get("id")[0];
+
+        Quote.upVote(new ObjectId(id));
+
+        Cookie cookie = request().cookies().get(COOKIE_NAME);
+        String votes = "";
+        if (cookie != null && cookie.value() != null) {
+            votes = cookie.value();
+            votes += COOKIE_VALUE_SEPARATOR;
+        }
+
+        votes += id;
+
+        response().setCookie(COOKIE_NAME, votes);
+
+        return ok();
+    }
 
 	/**
 	 * Find ids of quotes user allready voted on. (from cookie)
