@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.google.code.morphia.Key;
 import org.bson.types.ObjectId;
 
 import utils.DBHolder;
@@ -94,8 +95,8 @@ public class Quote {
 		this.quoteState = state;
 	}
 
-	public void save() {
-		DBHolder.ds.save(this);
+	public Key save() {
+		return DBHolder.ds.save(this);
 	}
 
 	public static void setChecked(ObjectId id) {

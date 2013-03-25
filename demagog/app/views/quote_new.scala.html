@@ -1,4 +1,4 @@
-
+@import tags._
 
 @main("Nový citát") {
 	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
@@ -64,6 +64,13 @@
 		
 	<h2>2. Formulář</h2>
 	<div id="new_quote" class="ui-panel">
+
+        @if(flash.get("error")) {
+            <div id="formErrors">
+                @flash.get("error")
+            </div>
+        }
+
 		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
 			<div class="input-section">
 				<label for="quoteText">Citát: </label>
@@ -72,15 +79,24 @@
 			
 			<div class="input-section">
 				<label for="url">Zdroj citátu: </label>
-				<input type="text" class="validate[required]" name="url" />
+				<input type="text" class="validate[required]" id="url" name="url" />
 			</div>	
 			
 			<div class="input-section">
-				<label for="url">Autor citátu: </label>
-				<input type="text" class="validate[required]" name="author" />
-			</div>		
-			
-			<div id="buttons">
+				<label for="author">Autor citátu: </label>
+				<input type="text" class="validate[required]" id="author" name="author" />
+			</div>
+
+            <div class="input-section">
+                <label>Jste robot?</label>
+                <div>
+                    @recaptcha()
+                </div>
+
+            </div>
+
+
+            <div id="buttons">
 				<input type="submit" id="submit" value="Odeslat" />
 			</div>
 			

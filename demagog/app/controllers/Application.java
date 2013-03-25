@@ -1,24 +1,25 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.google.code.morphia.Key;
 import models.Quote;
 import models.Quote.QuoteState;
 import models.QuotesListContent;
-
+import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.bson.types.ObjectId;
-
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
+import utils.ReCaptchaService;
 import views.html.quote_detail;
 import views.html.quote_new;
 import views.html.quotes_list;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class Application extends Controller {
 
@@ -29,17 +30,42 @@ public class Application extends Controller {
 		return ok(quote_new.render());
 	}
 
-	public static Result submitQuote() {
+   	public static Result submitQuote() {
 		Form<Quote> quoteForm = form(Quote.class);
 		Quote quote = quoteForm.bindFromRequest().get();
 
-		quote.userIp = request().remoteAddress();
+        if (quoteForm.hasErrors()) {
+            flash().put("error", "Ve formuláři jsou chyby opravte je.");
+            return ok(quote_new.render());
+        }
+
+        String remoteAddress = request().remoteAddress();
+        quote.userIp = remoteAddress;
 		quote.quoteState = QuoteState.NEW;
 
-		quote.save();
+        Map<String, String[]> formBody = request().body().asFormUrlEncoded();
+        String reCaptchaChallengeField = formBody.get("recaptcha_challenge_field")[0];
+        String reCaptchaResponseField = formBody.get("recaptcha_response_field")[0];
 
-		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
+        ReCaptchaService recaptchaService = ReCaptchaService.get();
+        ReCaptchaResponse reCaptchaResponse =
+                        recaptchaService.checkAnswer(remoteAddress, reCaptchaChallengeField, reCaptchaResponseField);
+
+
+        if (!reCaptchaResponse.isValid()) {
+            quoteForm.reject("recaptcha.error", "recaptcha.failed");
+            flash().put("error", "Zadali jste špatně captchu, zkuste to znovu.");
+        }
+
+        if (quoteForm.hasErrors()) {
+            return redirect(routes.Application.showNewQuoteForm());
+        } else {
+            Key savedQuoteKey = quote.save();
+            return redirect(routes.Application.showQuoteDetail(savedQuoteKey.getId().toString()));
+        }
+
 	}
+
 
 	public static Result showApprovedQuotes() {
 		return showQuotes(QuotesListContent.APPROVED);

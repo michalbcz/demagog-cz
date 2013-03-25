@@ -1,0 +1,20 @@
+@*********************
+* Usage:
+*
+*       @recaptcha() // results in html snippet for recaptcha
+*
+*********************@
+@()
+@import play.api.Configuration
+@import java.util.Properties
+
+@rawRecaptcha = @{
+    val reCaptchaService = utils.ReCaptchaService.get()
+    val properties = new Properties()
+    properties.setProperty("theme", "clean")
+    properties.setProperty("lang", "de")
+    reCaptchaService.createRecaptchaHtml(null, properties)
+}
+
+@Html(rawRecaptcha)
+
