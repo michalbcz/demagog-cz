@@ -5,6 +5,7 @@ import java.util.List;
 
 import models.Quote;
 import models.Quote.QuoteState;
+import models.QuotesListContent;
 import models.User;
 
 import org.bson.types.ObjectId;
@@ -114,7 +115,9 @@ public class Admin extends Controller {
 	public static Result showQuotes(QuoteState state) {
 		List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
 
-		return ok(quotes_list.render(quotes, true, null, null, null, null));
+        // FIXME Michal Bernhard 26.03 : when instead of third parameter 'QuotesListContent.CHECKED' is null it
+        // doesn't work, dunnno why
+		return ok(quotes_list.render(quotes, true, QuotesListContent.CHECKED, null, null, null));
 	}
 
 	@Authenticated(UserAuthenticator.class)
