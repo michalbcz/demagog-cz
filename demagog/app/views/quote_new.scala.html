@@ -73,31 +73,31 @@
 
 		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
 			<div class="input-section">
-				<label for="quoteText">Citát: </label>
-				<textarea name="quoteText" class="validate[required]" id="quoteText"></textarea>
+				<label for="quoteText">Citát</label>
+				<textarea tabindex="1" name="quoteText" class="validate[required]" placeholder="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;" id="quoteText"></textarea>
 			</div>
 			
 			<div class="input-section">
-				<label for="url">Zdroj citátu: </label>
-				<input type="text" class="validate[required]" id="url" name="url" />
+				<label for="url">Zdroj citátu</label>
+				<input tabindex="2" type="text" placeholder="url, kde jste na citát narazili - např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" class="validate[required]" id="url" name="url" />
 			</div>	
 			
 			<div class="input-section">
-				<label for="author">Autor citátu: </label>
-				<input type="text" class="validate[required]" id="author" name="author" />
+				<label for="author">Autor citátu</label>
+				<input type="text" tabindex="3" placeholder="např. Jiří Paroubek" class="validate[required]" id="author" name="author" />
 			</div>
 
             <div class="input-section">
-                <label>Jste robot?</label>
+                <label>Prosím opište text</label>
                 <div>
-                    @recaptcha()
+                    @recaptcha(tabindex = "4")
                 </div>
 
             </div>
 
 
             <div id="buttons">
-				<input type="submit" id="submit" value="Odeslat" />
+				<input type="submit" id="submit" tabindex="5" value="Odeslat" />
 			</div>
 			
 			<script type="text/javascript">$('#submit').button();</script>
