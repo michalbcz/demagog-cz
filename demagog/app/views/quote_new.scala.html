@@ -70,25 +70,29 @@
 	</div>
 		
 	<h2>2. Formulář</h2>
-	<div id="new_quote" class="ui-panel">
+	<div id="new-quote" class="ui-panel">
 
         @if(flash.get("error") != null) {
-            <div id="formErrors">
-                @flash.get("error")
+            <div id="form-errors" class="alert alert-error">
+                <strong>Chyba!</strong> @flash.get("error")
             </div>
 
             <script type="text/javascript">
-               jQuery(document).ready(function() {
-                   $("#new_quote").scrollToMe();
+               jQuery(document).ready(function($) {
+
+                    /* when there are some errors on form we scroll to that form otherwise user would see
+                       "about bookmarklet" part of the page and must scroll down to form with erros which
+                       is contra intuitive */
+                    $("#new-quote").scrollToMe();
                });
             </script>
         }
 
-		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
+		<form action="@{controllers.routes.Application.submitQuote()}" id="new-quote-form" method="POST">
 			<div class="input-section">
-				<label for="quoteText">Citát</label>
-				<textarea id="quoteText"
-                          name="quoteText"
+				<label for="quote-text">Citát</label>
+				<textarea id="quote-text"
+                          name="quote-text"
                           class="validate[required]"
                           placeholder="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;"
                           tabindex="1">@quote.quoteText</textarea>
@@ -118,8 +122,7 @@
             <div id="buttons">
 				<input type="submit" id="submit" tabindex="5" value="Odeslat" />
 			</div>
-			
-			<script type="text/javascript">$('#submit').button();</script>
+
 		</form>
 	</div>
 	
@@ -131,7 +134,7 @@
 	<script>
 		$(function(){
 			// binds form submission and fields to the validation engine
-			$("#newQuoteForm").validationEngine();
+			$("#new-quote-form").validationEngine();
 			
 			$('#bookmarklet-help-label').click(function() {
 				$('#bookmarklet-help').slideToggle();
