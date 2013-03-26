@@ -8,9 +8,11 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.bson.types.ObjectId;
 import play.Logger;
 import play.data.Form;
+import play.libs.F;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
+import scala.Option;
 import utils.ReCaptchaService;
 import views.html.quote_detail;
 import views.html.quote_new;
@@ -27,8 +29,12 @@ public class Application extends Controller {
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
 
 	public static Result showNewQuoteForm() {
-		return ok(quote_new.render());
+		return ok(quote_new.render(new Quote()));
 	}
+
+    public static Result showNewQuoteForm(Quote quote) {
+        return ok(quote_new.render(quote));
+    }
 
    	public static Result submitQuote() {
 		Form<Quote> quoteForm = form(Quote.class);
@@ -36,7 +42,7 @@ public class Application extends Controller {
 
         if (quoteForm.hasErrors()) {
             flash().put("error", "Ve formuláři jsou chyby opravte je.");
-            return ok(quote_new.render());
+            return ok(quote_new.render(quote));
         }
 
         String remoteAddress = request().remoteAddress();
@@ -58,7 +64,7 @@ public class Application extends Controller {
         }
 
         if (quoteForm.hasErrors()) {
-            return redirect(routes.Application.showNewQuoteForm());
+            return ok(quote_new.render(quote));
         } else {
             Key savedQuoteKey = quote.save();
             return redirect(routes.Application.showQuoteDetail(savedQuoteKey.getId().toString()));

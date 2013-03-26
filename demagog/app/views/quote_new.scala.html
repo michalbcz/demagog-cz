@@ -1,4 +1,11 @@
+@(quote : Quote)
 @import tags._
+
+@value(value : String) = @{
+    if (value != null) {
+        "value = '" + value + "'"
+    }
+}
 
 @main("Nový citát") {
 	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
@@ -74,17 +81,25 @@
 		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
 			<div class="input-section">
 				<label for="quoteText">Citát</label>
-				<textarea tabindex="1" name="quoteText" class="validate[required]" placeholder="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;" id="quoteText"></textarea>
+				<textarea id="quoteText"
+                          name="quoteText"
+                          class="validate[required]"
+                          placeholder="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;"
+                          tabindex="1">@quote.quoteText</textarea>
 			</div>
 			
 			<div class="input-section">
 				<label for="url">Zdroj citátu</label>
-				<input tabindex="2" type="text" placeholder="url, kde jste na citát narazili - např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" class="validate[required]" id="url" name="url" />
+				<input id="url" name="url"
+                       tabindex="2" type="text"
+                       @value(quote.url)
+                       class="validate[required]"
+                       placeholder="url, kde jste na citát narazili - např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" />
 			</div>	
 			
 			<div class="input-section">
 				<label for="author">Autor citátu</label>
-				<input type="text" tabindex="3" placeholder="např. Jiří Paroubek" class="validate[required]" id="author" name="author" />
+				<input type="text" id="author" name="author" @value(quote.author) class="validate[required]" tabindex="3" placeholder="např. Jiří Paroubek" />
 			</div>
 
             <div class="input-section">
@@ -92,9 +107,7 @@
                 <div>
                     @recaptcha(tabindex = "4")
                 </div>
-
             </div>
-
 
             <div id="buttons">
 				<input type="submit" id="submit" tabindex="5" value="Odeslat" />
