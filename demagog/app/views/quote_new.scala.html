@@ -72,10 +72,16 @@
 	<h2>2. Formulář</h2>
 	<div id="new_quote" class="ui-panel">
 
-        @if(flash.get("error")) {
+        @if(flash.get("error") != null) {
             <div id="formErrors">
                 @flash.get("error")
             </div>
+
+            <script type="text/javascript">
+               jQuery(document).ready(function() {
+                   $("#new_quote").scrollToMe();
+               });
+            </script>
         }
 
 		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
