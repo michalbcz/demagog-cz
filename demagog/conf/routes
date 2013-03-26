@@ -12,7 +12,7 @@ POST	/quote/save					controllers.Application.submitQuote()
 GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
 
 # Api
-GET    /api/v1/quote/save           controllers.Api.saveQuote()
+GET     /api/v1/quote/save           controllers.Api.saveQuote()
 
 # Admin
 GET		/admin/quotes				controllers.Admin.showNewlyAddedQuotes()
@@ -35,6 +35,7 @@ GET     /quotes/:content            controllers.Application.showQuotes(content: 
 POST    /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
 POST    /upVote/:content            controllers.Application.upVote(content: models.QuotesListContent)
 
+
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file               controllers.Assets.at(path = "/public", file)
 
