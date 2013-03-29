@@ -48,6 +48,8 @@
                     Toto přetáhněte do horní lišty
             </div>
             <div>
+                <!-- template for bookmarklet using templating library handlebars.js when {{variableName}} is
+                     replaced by value of variableName (passed to context when rendering tempalte) -->
                 <div id="bookmarklet-link-template" type="text/x-handlebars-template" style="display: none">
                         javascript:
                         var Demagog = Demagog || {};
@@ -89,12 +91,8 @@
 
                 </script>
             </div>
-        </div>
-
-
-     </div>
-		
-
+        </div> <!-- bookmarklet-link -->
+     </div> <!-- #bookmarklet-instructions -->
 
 	<h2>2. Formulář</h2>
 	<div id="new-quote" class="ui-panel">
