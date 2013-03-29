@@ -42,54 +42,60 @@
 				</ol>
 			</div>
 		</div>
+
+        <div id="bookmarklet-dnd">
+            <div>
+                    Toto přetáhněte do horní lišty
+            </div>
+            <div>
+                <div id="bookmarklet-link-template" type="text/x-handlebars-template" style="display: none">
+                        javascript:
+                        var Demagog = Demagog || {};
+                        Demagog.Bookmarklet = Demagog.Bookmarklet || {};
+                        Demagog.Bookmarklet.Settings = Demagog.Bookmarklet.Settings || {};
+
+                        Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl = "{{demagogApiBaseUrl}}";
+
+                        var script = document.createElement('script');
+                        script.src = 'https://raw.github.com/RHoK-November-2012/demagog-cz/master/bookmarklet/bookmarklet.js';
+                        /*script.src = 'http://localhost:8000/bookmarklet.js';/**/
+                        script.type = 'text/javascript';
+                        document.getElementsByTagName('head')[0].appendChild(script);
+                        void(0);
+                </div>
+                <a id="bookmarklet-dnd-button" href="#">Demagog.cz - ověřit výrok</a>
+
+                <script type="text/javascript">
+
+                    /* Dynamic generation of bookmarklet's settings for url of overto.demagog.cz api where it send
+                    * selected quote data. We use current url which is demagog page from where you drag'n'drop bookmarklet.
+                    * With this each dragged bookmarklet is deployment specific so you can easily use and test bookmarklets
+                    * for local dev server, staging, production..etc.
+                    */
+                    jQuery(document).ready(function() {
+                        var re = new RegExp('(https{0,1})://(.*?)/');
+                        var matcher = re.exec(window.location.href);
+                        var baseUri = matcher[2];
+
+                        var currentUrl = 'http://' + baseUri;
+
+                        var javascriptBookmarkletTemplate = jQuery("#bookmarklet-link-template").text();
+                        var compiledTemplate = Handlebars.compile(javascriptBookmarkletTemplate);
+                        var context = {demagogApiBaseUrl : currentUrl};
+                        var renderedTemplate = compiledTemplate(context);
+
+                        jQuery("#bookmarklet-dnd-button").attr("href", renderedTemplate);
+                    });
+
+                </script>
+            </div>
+        </div>
+
+
+     </div>
 		
-		<div id="bookmarklet-dnd">
-			<div>
-				Toto přetáhněte do horní lišty
-			</div>
-			<div>
-			<div id="bookmarklet-link-template" type="text/x-handlebars-template" style="display: none">
-                 javascript:
-			         var Demagog = Demagog || {};
-			         Demagog.Bookmarklet = Demagog.Bookmarklet || {};
-			         Demagog.Bookmarklet.Settings = Demagog.Bookmarklet.Settings || {};
 
-			         Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl = "{{demagogApiBaseUrl}}";
 
-			         var script = document.createElement('script');
-					 script.src = 'https://raw.github.com/RHoK-November-2012/demagog-cz/master/bookmarklet/bookmarklet.js';
-					 /*script.src = 'http://localhost:8000/bookmarklet.js';/**/
-					 script.type = 'text/javascript';
-					 document.getElementsByTagName('head')[0].appendChild(script);
-					 void(0);
-			</div>
-            <a id="bookmarklet-dnd-button" href="#">Demagog.cz - ověřit výrok</a>
-
-            <script type="text/javascript">
-                /* Dynamic generation of bookmarklet's settings for url of overto.demagog.cz api where it send
-                 * selected quote data. We use current url which is demagog page from where you drag'n'drop bookmarklet.
-                 * With this each dragged bookmarklet is deployment specific so you can easily use and test bookmarklets
-                 * for local dev server, staging, production..etc.
-                 */
-                jQuery(document).ready(function() {
-                    var re = new RegExp('(https{0,1})://(.*?)/');
-                    var matcher = re.exec(window.location.href);
-                    var baseUri = matcher[2];
-
-                    var currentUrl = 'http://' + baseUri;
-
-                    var javascriptBookmarkletTemplate = jQuery("#bookmarklet-link-template").text();
-                    var compiledTemplate = Handlebars.compile(javascriptBookmarkletTemplate);
-                    var context = {demagogApiBaseUrl : currentUrl};
-                    var renderedTemplate = compiledTemplate(context);
-
-                    jQuery("#bookmarklet-dnd-button").attr("href", renderedTemplate);
-                });
-
-            </script>
-		</div>
-	</div>
-		
 	<h2>2. Formulář</h2>
 	<div id="new-quote" class="ui-panel">
 
