@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import com.google.code.morphia.Key;
 import org.bson.types.ObjectId;
 
+import play.data.validation.Constraints;
 import utils.DBHolder;
 
 import com.google.code.morphia.annotations.Entity;
@@ -26,12 +27,18 @@ public class Quote {
 	/**
 	 * Source url of given quote
 	 */
+    @Constraints.MaxLength(2000) // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+    @Constraints.Required
 	public String url;
 
+    @Constraints.MaxLength(2000)
+    @Constraints.Required
 	public String quoteText;
 
+    @Constraints.MaxLength(100)
 	public String author;
 
+    @Constraints.MaxLength(15)
 	public String userIp;
 
 	public Date creationDate;
