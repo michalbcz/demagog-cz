@@ -229,21 +229,34 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         // modalni okno s preview a captchou
 
-        var data = [];
-        data.push({name: "url", value: paramsToSend.sourceUrl});
-        data.push({name: "quoteText", value: paramsToSend.selectedText});
-        data.push({name: "recaptcha_response_field", value: paramsToSend.recaptchaResponse});
-        data.push({name: "recaptcha_challenge_field", value: paramsToSend.recaptchaChallenge});
-        data.push({name: "token", value: "" + Demagog.Bookmarklet.Util.generateGuid()});
+        var data = {
+
+
+        };
+        data.url = paramsToSend.sourceUrl;
+        data.quoteText = paramsToSend.selectedText;
+        data.recaptchaResponse = paramsToSend.recaptchaResponse;
+        data.recaptchaChallenge = paramsToSend.recaptchaChallenge;
+
+
+//        data.push({name: "url", value: paramsToSend.sourceUrl});
+//        data.push({name: "quoteText", value: paramsToSend.selectedText});
+//        data.push({name: "recaptcha_response_field", value: paramsToSend.recaptchaResponse});
+//        data.push({name: "recaptcha_challenge_field", value: paramsToSend.recaptchaChallenge});
+//        data.push({name: "token", value: "" + Demagog.Bookmarklet.Util.generateGuid()});
 
         var apiUrl = Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl + "/api/v1/quote/save"
         console.debug("Sending data", data, " to server: ", apiUrl);
 
         jQuery.ajax ({
+            type: 'POST',
             url: apiUrl,
+            data : JSON.stringify(data),
+            processData : false,
             contentType: 'application/json',
-            data: data,
-            dataType: 'jsonp',
+//            contentType: 'text/plain',
+            crossDomain: true,
+            dataType: 'json',
             success: function(data) {
                 console.log("Response:", data);
                 Demagog.Bookmarklet.openSuccessDialog(data.quotePermalinkUrl);
