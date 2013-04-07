@@ -37,8 +37,11 @@ public class Application extends Controller {
     }
 
    	public static Result submitQuote() {
-		Form<Quote> quoteForm = form(Quote.class);
-		Quote quote = quoteForm.bindFromRequest().get();
+
+        /* binding concrete request fields to prevent attack - without this attacker could change for example
+           quote state and directly publish it after save */
+		Form<Quote> quoteForm = form(Quote.class).bindFromRequest("quoteText", "url", "author");
+        Quote quote = quoteForm.get();
 
         if (quoteForm.hasErrors()) {
             flash().put("error", "Ve formuláři jsou chyby opravte je.");
