@@ -3,17 +3,23 @@ package controllers;
 import java.util.Date;
 import java.util.Map;
 
+import com.google.code.morphia.Key;
 import models.Quote;
 import models.Quote.QuoteState;
 
+import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import utils.ReCaptchaService;
+import views.html.quote_new;
 
 public class Api extends Controller {
 
@@ -30,54 +36,81 @@ public class Api extends Controller {
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public static Result saveQuotePost() {
+    public static Result saveQuote() {
 
         JsonNode jsonNode = request().body().asJson();
 
-        Quote quote = new Quote();
-        quote.userIp = request().remoteAddress();
+        Form<Quote> quoteForm = form(Quote.class).bindFromRequest();
+        Quote quote = quoteForm.get();
 
-        ObjectNode json = Json.newObject();
+        String remoteAddress = request().remoteAddress();
+        quote.userIp = remoteAddress;
 
-        ObjectNode metaData = Json.newObject();
-        metaData.put("status", "ok");
-        metaData.put("status_message", "quote successfully saved");
-        json.put("metadata", metaData);
+        String recaptchaResponse = jsonNode.get("recaptchaResponse").asText();
+        String recaptchaChallenge = jsonNode.get("recaptchaChallenge").asText();
 
-        ObjectNode data = Json.newObject();
-        json.put("data", data);
+        ReCaptchaService recaptchaService = ReCaptchaService.get();
+        ReCaptchaResponse reCaptchaResponse =
+                recaptchaService.checkAnswer(remoteAddress, recaptchaChallenge, recaptchaResponse);
 
-        return ok(json);
+        if (!reCaptchaResponse.isValid()) {
+            quoteForm.reject("recaptcha.error", "recaptcha.failed");
+        }
+
+        if (quoteForm.hasErrors()) {
+            ObjectNode json = Json.newObject();
+
+            ObjectNode data = Json.newObject();
+            json.put("data", data);
+
+            JsonNode errors = quoteForm.errorsAsJson();
+            data.put("errors", errors);
+
+            /* meta data */
+            ObjectNode metaData = Json.newObject();
+            json.put("metadata", metaData);
+
+            ObjectNode status = Json.newObject();
+            metaData.put("status", status);
+
+            status.put("text", "error");
+            status.put("code", "500");
+            status.put("detail", "Captcha is not valid.");
+
+            return ok(json);
+
+        } else {
+
+            Key savedQuoteKey = quote.save();
+
+            ObjectNode json = Json.newObject();
+
+            /* response data */
+            ObjectNode data = Json.newObject();
+
+            String quoteKey = savedQuoteKey.getId().toString();
+            String quotePermalinkUrl = controllers.routes.Application.showQuoteDetail(quoteKey).absoluteURL(request());
+            data.put("quotePermalinkUrl", quotePermalinkUrl);
+            data.put("quoteId", quoteKey);
+
+            json.put("data", data);
+
+            /* meta data */
+            ObjectNode metaData = Json.newObject();
+            json.put("metadata", metaData);
+
+            ObjectNode status = Json.newObject();
+            metaData.put("status", status);
+
+            status.put("text", "ok");
+            status.put("code", "404");
+            status.put("detail", "Quote successfully saved with id: " + quoteKey);
+
+            return ok(json);
+
+        }
 
     }
-	
-	public static Result saveQuote() {
-		
-		Map<String, String[]> queryString = request().queryString();
-		String jsonpCallbackFunctionName = queryString.get("callback")[0];
-		String quoteText = queryString.get("quoteText")[0];
-		String sourceUrl = queryString.get("url")[0];
-		
-//		JsonNode json = request().body().asJson();
-//		String quoteText = json.get("quoteText").asText();
-//		String sourceUrl = json.get("url").asText();
-		
-		Quote quote = new Quote();
-		quote.creationDate = new Date();
-		quote.quoteState = QuoteState.NEW;
-		quote.url = sourceUrl;
-		quote.quoteText = quoteText;
-		quote.userIp = request().remoteAddress();
-		
-		quote.save();
-		
-		String quotePermalinkUrl = controllers.routes.Application.showQuoteDetail(quote.id.toString()).absoluteURL(request());
-		
-		ObjectNode jsonResponse = Json.newObject();
-		jsonResponse.put("quotePermalinkUrl", quotePermalinkUrl);
-		
-		return ok(jsonpCallbackFunctionName + "(" + jsonResponse.toString() + ");");
-		
-	}
+
 
 }

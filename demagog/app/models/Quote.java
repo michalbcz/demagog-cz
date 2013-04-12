@@ -41,9 +41,9 @@ public class Quote {
     @Constraints.MaxLength(15)
 	public String userIp;
 
-	public Date creationDate;
+	public Date creationDate = new Date(); /* sensible default */
 
-	public QuoteState quoteState;
+	public QuoteState quoteState = QuoteState.NEW; /* sensible default */
 
 	public Date approvalDate;
 

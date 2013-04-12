@@ -12,8 +12,7 @@ POST	/quote/save					controllers.Application.submitQuote()
 GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
 
 # Api
-GET     /api/v1/quote/save          controllers.Api.saveQuote()
-POST    /api/v1/quote/save          controllers.Api.saveQuotePost()
+POST    /api/v1/quote/save          controllers.Api.saveQuote()
 OPTIONS /api/*rest                  controllers.Api.header(rest)
 
 # Admin

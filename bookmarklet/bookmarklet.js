@@ -33,7 +33,8 @@ console.error = console.error || function() {};
 console.warn = console.warn || function() {};
 console.debug = console.debug || function() {};
 
-console.info("Detecting Demgagog.Bookmarklet...");
+console.info("Detecting Demagog.Bookmarklet...");
+
 
 if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
@@ -53,7 +54,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
             //TODO mbernhard : using jquery ui if exists or using something more minimalist...
 
-            console.debug("injecting jquery ui css");
+            console.debug("Demagog Bookmarklet > injecting jquery ui css");
 
             var style = document.createElement("link");
             style.type = "text/css";
@@ -61,7 +62,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             style.href = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
             document.getElementsByTagName("head")[0].appendChild(style);
 
-            console.debug("injecting and loading jQuery UI");
+            console.debug("Demagog Bookmarklet > injecting and loading jQuery UI");
 
             var jQueryUiScriptUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js";
             var jQueryUiScriptOnLoad = function() { Demagog.Bookmarklet.Events.onJqueryUiReady() };
@@ -78,55 +79,90 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         console.debug("Demagog Bookmarklet > Opening confirm dialog...")
         Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
-    }
+    };
 
     Demagog.Bookmarklet.openSuccessDialog = function(url) {
 
-        console.debug("Opening success modal with url param: ", url);
+        console.debug("Demagog Bookmarklet > Opening success modal with url param: ", url);
 
         var dialogHtml =
                 '<div id="demagogBookmarkletSuccessDialog" title="Demagog.cz" style="display: none">' +
                     '<p>Úspěšně přidáno na demagog.cz!</p><br/>' +
                     '<p id="demagogQuoteDetailUrl"><a href="' + url + '">' + url + '</a></p><br/>' +
-                    '<p>Výrok bude nejdřívě ověřen našim týmem potom se dostane do hlasování a ' +
-                    'pokud bude mít hodně hlasů či bude zajímavý tak bude ověřen našimi experty.' +
+                    '<p>Výrok bude nejdříve ověřen našim týmem, po schválení se dostane do hlasování a ' +
+                    'pokud bude mít větší množství hlasů či bude zajímavý tak bude ověřen našimi experty.' +
                     '</p>'
                 '</div>';
 
         jQuery("div:first").append(dialogHtml);
 
-        jQuery("#demagogBookmarkletSuccessDialog").dialog();
+        jQuery("#demagogBookmarkletSuccessDialog").dialog({ width: 450});
 
+    };
+
+    Demagog.Bookmarklet.openErrorDialog = function () {
+
+        console.debug("Opening error modal dialog");
+
+        var $errorDialog = jQuery("#demagogBookmarkletErrorDialog");
+
+        if ($errorDialog.size() > 0) {
+            $errorDialog.dialog("destroy"); // if already on the page destroy it and open again with fresh data
+        }
+
+        var dialogHtml =
+            '<div id="demagogBookmarkletErrorDialog" title="Demagog.cz - Chyba při odesílání" style="display: none">' +
+                'Nedaří se nám odeslat citát. Omlouváme se za potíže, zkuste to prosím později nebo využijte ' +
+                'možnost manuálního vložení na <a href="http://overto.demagog.cz/quote/add" target="_blank">overto.demamgo.cz</a>' +
+            '</div>';
+
+        jQuery("div:first").append(dialogHtml);
+        $errorDialog.dialog();
+
+    };
+
+    Demagog.Bookmarklet.closeConfirmDialog = function() {
+        console.debug("Demagog Bookmarklet > Closing confirm dialog");
+        var $confirmDialogWindow = jQuery("#demagogBookmarkletConfirmDialog");
+        $confirmDialogWindow.dialog("destroy");
     }
 
     Demagog.Bookmarklet.openConfirmDialog = function(quoteText) {
 
         console.debug("openConfirmDialog with quoteText: ", quoteText);
 
-        if (jQuery("#demagogBookmarkletConfirmDialog").size() == 0) {
-            var dialogHtml =
-                '<div id="demagogBookmarkletConfirmDialog" style="display: none">' +
-                '        <span>' +
-                '            Níže je citát, který jste vybrali a který se po potvrzení odešle na stránku' +
-                '            <a href="http://overto.demagog.cz" target="_blank">overto.demagog.cz</a>:' +
-                '        </span>' +
-                '        <div id="demagogBookmarkletConfirmDialogPreviewContent">' +
-                '            <span id="demagogBookmarkletConfirmDialogQuotePreview">' +
-                '            </span>' +
-                '        </div>' +
-                '        <div id="demagogBookmarkletConfirmDialogCaptcha">' +
-                '            Prosím pro potvrzení opište níže uvedený kód.' +
-                '            <div id="demagogBookmarkletConfirmDialogCaptchaPlaceholder">' +
-                '                <!-- captcha should be placed here -->' +
-                '            </div>' +
-                '        </div>' +
-                '        <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton" href="#">Odeslat citát</a>' +
-                '    </div>';
-
-            jQuery("body").append(dialogHtml);
+        var $dialogWindow = jQuery("#demagogBookmarkletConfirmDialog")
+        if (/* dialog already created */ $dialogWindow.size() > 0) {
+            $dialogWindow.remove();
         }
 
+        var dialogHtml =
+            '<div id="demagogBookmarkletConfirmDialog" style="display: none">' +
+            '        <span>' +
+            '            Níže je citát, který jste vybrali a který se po potvrzení odešle na stránku' +
+            '            <a href="http://overto.demagog.cz" target="_blank">overto.demagog.cz</a>:' +
+            '        </span>' +
+            '        <div id="demagogBookmarkletConfirmDialogPreviewContent">' +
+            '            <span id="demagogBookmarkletConfirmDialogQuotePreview">' +
+            '            </span>' +
+            '        </div>' +
+            '        <div id="demagogBookmarkletConfirmDialogCaptcha">' +
+            '            Pro potvrzení opište níže uvedený kód.' +
+            '            <div id="demagogBookmarkletConfirmDialogCaptchaPlaceholder">' +
+            '                <!-- captcha should be placed here -->' +
+            '            </div>' +
+            '            <div id="captchaError">' +
+            '           ' +
+            '           </div>' +
+            '           ' +
+            '        </div>' +
+            '        <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton" href="#">Odeslat citát</a>' +
+            '    </div>';
+
+        jQuery("body").append(dialogHtml);
+
         var confirmDialogOnOpen = function(event, ui) {
+
             console.debug("initializing confirm dialog...");
 
             console.debug("populating preview of quote...");
@@ -147,22 +183,42 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                     var recaptchaChallenge = Recaptcha.get_challenge();
                     var recaptchaResponse = Recaptcha.get_response();
 
+                    var onSuccess = function(responseData) {
+                        Demagog.Bookmarklet.closeConfirmDialog();
+                        Demagog.Bookmarklet.openSuccessDialog(responseData.quotePermalinkUrl);
+                    };
+
+                    var onError = function() {
+                        Demagog.Bookmarklet.openErrorDialog();
+                    };
+
+                    var onValidationError = function(responseData) {
+
+                        var $errorText = jQuery("#captchaError");
+                        $errorText.text("Text jste opsali špatně zkuste to znovu.")
+                        $errorText.show();
+
+                        Recaptcha.reload();
+                        Recaptcha.focus_response_field();
+
+                    };
+
                     Demagog.Bookmarklet.Util.postToUrlAsync({
                         selectedText : quoteText,
                         sourceUrl : sourceUrl,
                         recaptchaChallenge : recaptchaChallenge,
                         recaptchaResponse : recaptchaResponse
-                    });
+                    }, onSuccess, onValidationError, onError);
 
                 });
 
                 /* enable button */
                 $confirmButton.button( "option", "disabled", false);
 
-
             }
 
             var recaptchaOnLoad = function() {
+
                 Recaptcha.create(
                     "6LfnpN4SAAAAAEXiCrG_AlH8tx_T_hd3MrQjx55j" /* recaptcha public key */,
                     "demagogBookmarkletConfirmDialogCaptchaPlaceholder" /* id of element replaced by recaptcha's widget */,
@@ -172,12 +228,15 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                         callback: recaptchaApiLoaded
                     }
                 );
+
             }
 
             /* ReCaptcha Javascript API - see https://developers.google.com/recaptcha/docs/display#AJAX */
             if (typeof(Recaptcha) === "undefined") {
                 var recaptchaScriptUrl = "https://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
                 Demagog.Bookmarklet.Util.injectJavascript(recaptchaScriptUrl, recaptchaOnLoad);
+            } else {
+                recaptchaOnLoad(); // we can recreate whole recaptcha widget directly without obtaining recaptcha api script as it's already loaded
             }
 
             console.debug("initializing confirm button");
@@ -188,10 +247,12 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         };
 
         jQuery("#demagogBookmarkletConfirmDialog").dialog({
-            open: confirmDialogOnOpen
+            open: confirmDialogOnOpen,
+            width: 500,
+            height: 300
         });
 
-    }
+    };  // confirmDialogOnOpen
 
     Demagog.Bookmarklet.Util.getSelected = function() {
         var t = '';
@@ -223,21 +284,21 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 S4() + S4() + S4()
             );
 
-    }
+    },
 
-    Demagog.Bookmarklet.Util.postToUrlAsync = function(paramsToSend) {
+    Demagog.Bookmarklet.Util.postToUrlAsync = function(paramsToSend,
+                                                       onSuccessCallback,
+                                                       onValidationErrorCallback,
+                                                       onSendingErrorCallback) {
 
         // modalni okno s preview a captchou
-
         var data = {
-
 
         };
         data.url = paramsToSend.sourceUrl;
         data.quoteText = paramsToSend.selectedText;
         data.recaptchaResponse = paramsToSend.recaptchaResponse;
         data.recaptchaChallenge = paramsToSend.recaptchaChallenge;
-
 
 //        data.push({name: "url", value: paramsToSend.sourceUrl});
 //        data.push({name: "quoteText", value: paramsToSend.selectedText});
@@ -254,15 +315,22 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             data : JSON.stringify(data),
             processData : false,
             contentType: 'application/json',
-//            contentType: 'text/plain',
             crossDomain: true,
             dataType: 'json',
-            success: function(data) {
-                console.log("Response:", data);
-                Demagog.Bookmarklet.openSuccessDialog(data.quotePermalinkUrl);
+            success: function(response) {
+                console.log("Server response: ", response);
+
+                if (response.metadata.status.text === "error") {
+                     console.error("Server responds with an error message. Response:", response);
+                     onValidationErrorCallback(response);
+                }
+                else {
+                    onSuccessCallback(response.data)
+                }
             },
             error: function(jqXhr, textStatus, errorThrown) {
                 console.error("Error '", textStatus, "' when posting quote to api. Error thrown: ", errorThrown);
+                onSendingErrorCallback();
             }
         });
 
