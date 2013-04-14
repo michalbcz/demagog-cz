@@ -73,6 +73,7 @@ public class Admin extends Controller {
 
 	@Authenticated(UserAuthenticator.class)
     public static Result updateQuote() {
+
         Quote quote = form(Quote.class).bindFromRequest().get();
 
         final UpdateOperations<Quote> updateOperations =
@@ -80,6 +81,7 @@ public class Admin extends Controller {
                         .set("quoteText", quote.quoteText)
                         .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
                         .set("author", quote.author)
+                        .set("url", quote.url)
                         .set("lastUpdateDate", new Date());
 
         Quote oldQuote = Quote.findById(quote.id);
