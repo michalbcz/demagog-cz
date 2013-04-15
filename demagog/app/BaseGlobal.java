@@ -68,16 +68,6 @@ public class BaseGlobal extends GlobalSettings {
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
     }
 
-    @Override
-    public Result onHandlerNotFound(Http.RequestHeader request) {
-
-        if (request.path().startsWith("/api")) {
-            return Results.ok("ok");
-        }
-
-        return super.onHandlerNotFound(request);
-    }
-
     private void initAdminUser() {
 		createAdminUser().save();
 	}
