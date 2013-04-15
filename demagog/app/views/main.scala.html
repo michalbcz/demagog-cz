@@ -6,9 +6,9 @@
 <html>
     <head>
     	@if(title.size != 0) { 
-        	<title>Demagog.cz - @title</title>
+        	<title>Demagog.cz - Ověř to! @title</title>
         } else {
-        	<title>Demagog.cz</title>
+        	<title>Demagog.cz - Ověř to!</title>
         }
 
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
@@ -26,11 +26,11 @@
     	    <div id="header">
     	    @if(UserAuthenticator.isUserLoggedIn()) {
     	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
-    	        	<div id="logo-container"></div>
+                    @logo_header
         		</a> 
     	    } else {
     	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
-    	        	<div id="logo-container"></div>
+                    @logo_header
         		</a> 
         	}    		
             </div>
@@ -99,4 +99,13 @@
 			<li><a href="@{controllers.routes.Admin.logout()}">Odhlásit se</a></li>
     	</ul>
 	</div>
+}
+
+@logo_header = {
+    <div id="logo-container">
+    </div>
+    <div id="logo-sublogo">
+        <span>ověřto.demagog.cz - řekni nám, co chceš ověřit!</span>
+        <span class="orange-bar">BETA</span>
+    </div>
 }
