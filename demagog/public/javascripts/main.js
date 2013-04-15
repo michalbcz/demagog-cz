@@ -1,3 +1,15 @@
+/*
+ *  Initialize console object used for logging in javascript code.
+ *  For case when console object is not present (old browsers) use dump implementation.
+ */
+
+window.console = window.console || {}; // in old browsers like IE7 there is console object
+
+console.info = console.info || function() {};
+console.error = console.error || function() {};
+console.warn = console.warn || function() {};
+console.debug = console.debug || console.info; // in later IE there is console but without debug method, so fallback to info
+
 jQuery(document).ready(function() {
     $("input[type='button']").button();
     $("input[type='submit']").button();
