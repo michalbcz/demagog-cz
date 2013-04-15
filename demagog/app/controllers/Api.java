@@ -23,6 +23,13 @@ import views.html.quote_new;
 
 public class Api extends Controller {
 
+    /**
+     * For CORS (http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) purposes.
+     * Handling OPTIONS http's method.
+     *
+     * @param restOfUrl
+     * @return
+     */
     public static Result header(String restOfUrl) {
 
         Http.Response response = response();
@@ -41,17 +48,15 @@ public class Api extends Controller {
         JsonNode jsonNode = request().body().asJson();
 
         Form<Quote> quoteForm = form(Quote.class).bindFromRequest();
-        Quote quote = quoteForm.get();
-
-        String remoteAddress = request().remoteAddress();
-        quote.userIp = remoteAddress;
 
         String recaptchaResponse = jsonNode.get("recaptchaResponse").asText();
         String recaptchaChallenge = jsonNode.get("recaptchaChallenge").asText();
 
         ReCaptchaService recaptchaService = ReCaptchaService.get();
+
+        String remoteAddress = request().remoteAddress(); //TODO isnt remote address address of heroku routers mesh on production ?
         ReCaptchaResponse reCaptchaResponse =
-                recaptchaService.checkAnswer(remoteAddress, recaptchaChallenge, recaptchaResponse);
+                recaptchaService.checkAnswer(remoteAddress, recaptchaChallenge, recaptchaResponse); // TODO : what happens when recaptcha is down ?
 
         if (!reCaptchaResponse.isValid()) {
             quoteForm.reject("recaptcha.error", "recaptcha.failed");
@@ -81,7 +86,10 @@ public class Api extends Controller {
 
         } else {
 
-            Key savedQuoteKey = quote.save();
+            Quote quote = quoteForm.get();
+            quote.userIp = remoteAddress;
+
+            Key savedQuoteKey = quote.save(); //TODO: what happend when save failed ? (btw activate safe save!)
 
             ObjectNode json = Json.newObject();
 
