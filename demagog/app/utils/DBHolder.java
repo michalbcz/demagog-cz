@@ -8,6 +8,7 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 import com.typesafe.config.ConfigFactory;
+import play.Play;
 
 public class DBHolder {
 
@@ -21,7 +22,7 @@ public class DBHolder {
 			String name;
 			String password;
 
-			String mongoDbUrl = ConfigFactory.load().getString("mongodb.url");
+			String mongoDbUrl = Play.application().configuration().getString("mongodb.url");
 
 			Logger.info("Connecting to MongoDB instance at url: " + mongoDbUrl);
 

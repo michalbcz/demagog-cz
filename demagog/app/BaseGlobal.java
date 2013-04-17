@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 
 import play.Application;
 import play.GlobalSettings;
+import play.Play;
 import play.api.mvc.Codec;
 import play.api.templates.Txt;
 import play.data.format.Formatters;
@@ -74,17 +75,21 @@ public class BaseGlobal extends GlobalSettings {
 
     protected User createAdminUser() {
 
-        String defaultUsername = System.getProperty("demagog.defaultUser");
+        String defaultUsername = getConfigurationParameter("demagog.defaultUser");
         if (defaultUsername == null) {
             throw new IllegalStateException("System property demagog.defaultUser must be set.");
         }
 
-        String defaultPassword = System.getProperty("demagog.defaultPassword");
+        String defaultPassword = getConfigurationParameter("demagog.defaultPassword");
         if (defaultPassword == null) {
             throw new IllegalStateException("System property demagog.defaultPassword must be set.");
         }
 
         return new User(defaultUsername, defaultPassword);
+    }
+
+    private String getConfigurationParameter(String parameterKey) {
+        return Play.application().configuration().getString(parameterKey);
     }
 
     private void initCustomFormatters() {

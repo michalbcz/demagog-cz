@@ -24,6 +24,8 @@ GET		/admin/checkquotes			controllers.Admin.showApprovedQuotes()
 GET		/admin/inanalysis			controllers.Admin.showQuotesInAnalysis()
 GET		/admin/published			controllers.Admin.showPublishedQuotes()
 
+GET     /admin/settings             controllers.Admin.showSettings()
+
 # Authentication
 GET		/admin 						controllers.Admin.login()
 GET		/admin/						controllers.Admin.login()

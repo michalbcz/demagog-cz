@@ -17,53 +17,41 @@
  *
  */
 
-if (typeof(console) === "undefined") {
-    console = {
-
-        info : function() {},
-        debug : function() {},
-        error : function() {},
-        warn : function() {}
-
-    };
-}
+console = console || {};
 
 console.info = console.info || function() {};
 console.error = console.error || function() {};
 console.warn = console.warn || function() {};
-console.debug = console.debug || function() {};
+console.debug = console.debug || console.info; // when console.debug doesn't exist (like in IE8+) fallback to info
 
 console.info("Detecting Demagog.Bookmarklet...");
 
 
 if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
-    console.info("Demagog Bookmarklet is not detected on the page");
-    console.info("Demagog Bookmarklet > Loading...");
+    console.info("Demagog Bookmarklet is not already loaded on the page. Loading it now...");
 
     var Demagog = Demagog || {};
     Demagog.Bookmarklet = Demagog.Bookmarklet || {};
     Demagog.Bookmarklet.Events = Demagog.Bookmarklet.Events || {};
     Demagog.Bookmarklet.Util = Demagog.Bookmarklet.Util || {};
 
-    Demagog.Bookmarklet.Events.onJqueryReady = function() {
+    Demagog.Bookmarklet.confirmSelectedTextAsQuote = function() {
+        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelected();
+        Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
+    }
 
-        console.info("Demagog Bookmarklet > jQuery successfully loaded");
+    Demagog.Bookmarklet.Events.onJqueryReady = function() {
 
         jQuery(document).ready(function() {
 
             //TODO mbernhard : using jquery ui if exists or using something more minimalist...
 
             console.debug("Demagog Bookmarklet > injecting jquery ui css");
-
-            var style = document.createElement("link");
-            style.type = "text/css";
-            style.rel = "stylesheet";
-            style.href = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
-            document.getElementsByTagName("head")[0].appendChild(style);
+            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
+            Demagog.Bookmarklet.Util.injectCss(jQueryUiCssUrl);
 
             console.debug("Demagog Bookmarklet > injecting and loading jQuery UI");
-
             var jQueryUiScriptUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js";
             var jQueryUiScriptOnLoad = function() { Demagog.Bookmarklet.Events.onJqueryUiReady() };
             Demagog.Bookmarklet.Util.injectJavascript(jQueryUiScriptUrl, jQueryUiScriptOnLoad);
@@ -75,9 +63,12 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
     Demagog.Bookmarklet.Events.onJqueryUiReady = function() {
 
         console.debug("Demagog Bookmarklet > jQuery UI successfully loaded");
-        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelected();
+
+        console.debug("Demagog Bookmarklet > Loading custom css style");
+        Demagog.Bookmarklet.Util.injectCss(Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl + "/bookmarklet.css");
 
         console.debug("Demagog Bookmarklet > Opening confirm dialog...")
+        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelected();
         Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
     };
 
@@ -88,7 +79,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         var dialogHtml =
                 '<div id="demagogBookmarkletSuccessDialog" title="Demagog.cz" style="display: none">' +
                     '<p>Úspěšně přidáno na demagog.cz!</p><br/>' +
-                    '<p id="demagogQuoteDetailUrl"><a href="' + url + '">' + url + '</a></p><br/>' +
+                    '<p id="demagogQuoteDetailUrl"><a href="' + url + '" target="_blank">' + url + '</a></p><br/>' +
                     '<p>Výrok bude nejdříve ověřen našim týmem, po schválení se dostane do hlasování a ' +
                     'pokud bude mít větší množství hlasů či bude zajímavý tak bude ověřen našimi experty.' +
                     '</p>'
@@ -129,7 +120,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
     Demagog.Bookmarklet.openConfirmDialog = function(quoteText) {
 
-        console.debug("openConfirmDialog with quoteText: ", quoteText);
+        console.debug("Demagog Bookmarklet > openConfirmDialog with quoteText: ", quoteText);
 
         var $dialogWindow = jQuery("#demagogBookmarkletConfirmDialog")
         if (/* dialog already created */ $dialogWindow.size() > 0) {
@@ -156,25 +147,34 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             '           </div>' +
             '           ' +
             '        </div>' +
+            '       <hr style="display: "/>' +
             '        <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton" href="#">Odeslat citát</a>' +
+            '        <a class="button" id="demagogBookmarkletConfirmDialogCancelButton" href="#">Zavřít</a>' +
             '    </div>';
 
         jQuery("body").append(dialogHtml);
 
         var confirmDialogOnOpen = function(event, ui) {
 
-            console.debug("initializing confirm dialog...");
+            console.debug("Demagog Bookmarklet > initializing confirm dialog...");
 
-            console.debug("populating preview of quote...");
+            console.debug("Demagog Bookmarklet > populating preview of quote...");
             jQuery("#demagogBookmarkletConfirmDialogQuotePreview").text(quoteText);
 
-            console.debug("adding recaptcha widget...");
+            console.debug("Demagog Bookmarklet > adding recaptcha widget to confirm dialog...");
             var recaptchaApiLoaded = function() {
 
-                console.debug("Focusing on response field in recaptcha widget.");
+                console.debug("Demagog Bookmarklet > Focusing on response field in recaptcha widget.");
                 Recaptcha.focus_response_field();
 
-                console.debug("Enable confirm button and adding onclick behaviour.");
+                console.debug("Demagog Bookmarklet > Enable confirm button and adding onclick behaviour.");
+
+                var $confirmDialogCloseButton = jQuery("#demagogBookmarkletConfirmDialogCancelButton");
+                $confirmDialogCloseButton.click(function() {
+                    var $confirmDialogWindow = jQuery("#demagogBookmarkletConfirmDialog");
+                    $confirmDialogWindow.dialog("close");
+                });
+                $confirmDialogCloseButton.button();
 
                 var $confirmButton = jQuery("#demagogBookmarkletConfirmDialogConfirmButton");
                 $confirmButton.click(function() {
@@ -203,12 +203,14 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
                     };
 
-                    Demagog.Bookmarklet.Util.postToUrlAsync({
+                    var dataToSend = {
                         selectedText : quoteText,
                         sourceUrl : sourceUrl,
                         recaptchaChallenge : recaptchaChallenge,
                         recaptchaResponse : recaptchaResponse
-                    }, onSuccess, onValidationError, onError);
+                    }
+
+                    Demagog.Bookmarklet.Util.postToUrl(dataToSend, onSuccess, onValidationError, onError);
 
                 });
 
@@ -239,11 +241,11 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 recaptchaOnLoad(); // we can recreate whole recaptcha widget directly without obtaining recaptcha api script as it's already loaded
             }
 
-            console.debug("initializing confirm button");
+            console.debug("Demagog Bookmarklet > initializing confirm button");
             jQuery("#demagogBookmarkletConfirmDialogConfirmButton").button();
             jQuery("#demagogBookmarkletConfirmDialogConfirmButton").button( "option", "disabled", true );
 
-            console.debug("initializing confirm dialog - DONE");
+            console.debug("Demagog Bookmarklet > initializing confirm dialog - DONE");
         };
 
         jQuery("#demagogBookmarkletConfirmDialog").dialog({
@@ -284,35 +286,25 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 S4() + S4() + S4()
             );
 
-    },
+    };
 
-    Demagog.Bookmarklet.Util.postToUrlAsync = function(paramsToSend,
-                                                       onSuccessCallback,
-                                                       onValidationErrorCallback,
-                                                       onSendingErrorCallback) {
+    Demagog.Bookmarklet.Util.postToUrl = function(
+                                            paramsToSend, onSuccessCallback, onValidationErrorCallback, onSendingErrorCallback) {
 
-        // modalni okno s preview a captchou
         var data = {
-
+            url: paramsToSend.sourceUrl,
+            quoteText: paramsToSend.selectedText,
+            recaptchaResponse: paramsToSend.recaptchaResponse,
+            recaptchaChallenge: paramsToSend.recaptchaChallenge
         };
-        data.url = paramsToSend.sourceUrl;
-        data.quoteText = paramsToSend.selectedText;
-        data.recaptchaResponse = paramsToSend.recaptchaResponse;
-        data.recaptchaChallenge = paramsToSend.recaptchaChallenge;
-
-//        data.push({name: "url", value: paramsToSend.sourceUrl});
-//        data.push({name: "quoteText", value: paramsToSend.selectedText});
-//        data.push({name: "recaptcha_response_field", value: paramsToSend.recaptchaResponse});
-//        data.push({name: "recaptcha_challenge_field", value: paramsToSend.recaptchaChallenge});
-//        data.push({name: "token", value: "" + Demagog.Bookmarklet.Util.generateGuid()});
 
         var apiUrl = Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl + "/api/v1/quote/save"
-        console.debug("Sending data", data, " to server: ", apiUrl);
+        console.debug("Demagog Bookmarklet > Sending data: ", data, " to server: ", apiUrl);
 
-        jQuery.ajax ({
+        jQuery.ajax({
             type: 'POST',
             url: apiUrl,
-            data : JSON.stringify(data),
+            data: JSON.stringify(data),
             processData : false,
             contentType: 'application/json',
             crossDomain: true,
@@ -321,7 +313,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 console.log("Server response: ", response);
 
                 if (response.metadata.status.text === "error") {
-                     console.error("Server responds with an error message. Response:", response);
+                     console.error("Demagog Bookmarklet > Server responds with an error message. Response:", response);
                      onValidationErrorCallback(response);
                 }
                 else {
@@ -329,43 +321,78 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 }
             },
             error: function(jqXhr, textStatus, errorThrown) {
-                console.error("Error '", textStatus, "' when posting quote to api. Error thrown: ", errorThrown);
+                console.error(
+                    "Demagog Bookmarklet > Ajax error: ", textStatus, " when posting quote to api. Error thrown: ", errorThrown);
                 onSendingErrorCallback();
             }
         });
 
-    }
+    };
+
+    /**
+     * Inject css from given url to page.
+     *
+     * @param url point to css you would like to inject (expecting url format including http part) eg. http://jquery.com/jquery.js
+     * @param [optional] onLoadCallback this function is called when css is successfully injected and loaded by browser
+     */
+    Demagog.Bookmarklet.Util.injectCss = function(url, onLoadCallback) {
+
+        var styleElement = document.createElement("link");
+        styleElement.type = "text/css";
+        styleElement.rel = "stylesheet";
+        styleElement.href = url;
+        styleElement.onload = function() {
+
+            console.debug("Demagog Bookmarklet > Loaded css from: ", url);
+
+            if (typeof(onLoadCallback) != "undefined") {
+                onLoadCallback();
+            }
+
+        };
+        document.getElementsByTagName("head")[0].appendChild(styleElement);
+
+    };
 
     /**
      * Inject javascript from given url to page.
      *
      * @param url point to javascript you would like to inject (expecting url format including http part) eg. http://jquery.com/jquery.js
-     * @param onLoadCallback this function is called when script is succesfully injected and loaded by browser
+     * @param [optional] onLoadCallback this function is called when script is successfully injected and loaded by browser
      */
     Demagog.Bookmarklet.Util.injectJavascript = function(url, onLoadCallback) {
 
         var javascriptElement = document.createElement("script");
         javascriptElement.type = "text/javascript";
         javascriptElement.src = url;
-        javascriptElement.onload = onLoadCallback || function() {};
+        javascriptElement.onload = function() {
+
+            console.debug("Demagog Bookmarklet > Loaded javascript from: ", url);
+
+            if (typeof(onLoadCallback) != "undefined") {
+                onLoadCallback();
+            }
+
+        };
 
         document.getElementsByTagName("head")[0].appendChild(javascriptElement);
 
-    }
+    };
 
-    console.debug("Demagog.Bookmarklet > Injecting jQuery...")
+    console.debug("Demagog.Bookmarklet > Injecting jQuery 1.7.2 ...");
     var jQueryScriptUrl = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js";
     var jQueryScriptOnLoad = function() {
+        console.info("Demagog Bookmarklet > jQuery ", jQuery.fn.jquery, "successfully loaded");
         Demagog.Bookmarklet.Events.onJqueryReady()
     };
 
     // TODO michalb_cz : reusing jQuery if already present on the page (detecting minimal jQuery version which support api we use)
     Demagog.Bookmarklet.Util.injectJavascript(jQueryScriptUrl, jQueryScriptOnLoad);
 
+    Demagog.Bookmarklet
+
 } /* if Demagog bookmarklet is not already loaded END*/
 else {
     console.debug("Demagog.Bookmarklet is already loaded to this page.");
-
-    var selectedQuoteText = Demagog.Bookmarklet.Util.getSelected();
-    Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
+    Demagog.Bookmarklet.confirmSelectedTextAsQuote();
 }
