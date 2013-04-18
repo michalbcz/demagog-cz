@@ -48,7 +48,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             //TODO mbernhard : using jquery ui if exists or using something more minimalist...
 
             console.debug("Demagog Bookmarklet > injecting jquery ui css");
-            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css";
+            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/sunny/jquery-ui.css";
             Demagog.Bookmarklet.Util.injectCss(jQueryUiCssUrl);
 
             console.debug("Demagog Bookmarklet > injecting and loading jQuery UI");
