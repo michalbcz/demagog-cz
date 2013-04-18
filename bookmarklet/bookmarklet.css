@@ -1,10 +1,42 @@
+.bookmarkletDialog {
+    text-align: left;
+}
+
+.bookmarkletDialog #recaptcha_area {
+    /* recaptcha widget - align to center */
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#demagogBookmarkletConfirmDialog #captchaError {
+    color: #ff3030;
+    font-weight: bolder;
+    text-align: center;
+}
+
+#demagogBookmarkletConfirmDialogCaptchaPlaceholder {
+    margin-top: 5px;
+}
+
 #demagogBookmarkletConfirmDialogPreviewContent {
     font-weight: bolder;
     padding: 10px 10px;
+    font-size: smaller;
 }
 
-hr#demagogBookmarklet {
-    border: 5px;
+.bookmarkletDialog hr {
     width: 80%;
+    background-color: black;
+    height: 1px;
+    border: 1px;
+    margin-top: 10px;
+    margin-bottom : 10px;
+    display: block;
 }
+
+.demagogBookmarkletDialogFooter {
+    text-align: center;
+}
+
+
 

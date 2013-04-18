@@ -37,7 +37,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
     Demagog.Bookmarklet.Util = Demagog.Bookmarklet.Util || {};
 
     Demagog.Bookmarklet.confirmSelectedTextAsQuote = function() {
-        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelected();
+        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelectedText();
         Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
     }
 
@@ -64,11 +64,11 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         console.debug("Demagog Bookmarklet > jQuery UI successfully loaded");
 
-        console.debug("Demagog Bookmarklet > Loading custom css style");
-        Demagog.Bookmarklet.Util.injectCss(Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl + "/bookmarklet.css");
+        var bookmarkletCssUrl = Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl + "/bookmarklet.css";
+        Demagog.Bookmarklet.Util.injectCss(bookmarkletCssUrl);
 
         console.debug("Demagog Bookmarklet > Opening confirm dialog...")
-        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelected();
+        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelectedText();
         Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
     };
 
@@ -138,7 +138,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             '            </span>' +
             '        </div>' +
             '        <div id="demagogBookmarkletConfirmDialogCaptcha">' +
-            '            Pro potvrzení opište níže uvedený kód.' +
+            '            Pro potvrzení opište níže uvedený kód:' +
             '            <div id="demagogBookmarkletConfirmDialogCaptchaPlaceholder">' +
             '                <!-- captcha should be placed here -->' +
             '            </div>' +
@@ -147,9 +147,11 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             '           </div>' +
             '           ' +
             '        </div>' +
-            '       <hr style="display: "/>' +
-            '        <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton" href="#">Odeslat citát</a>' +
-            '        <a class="button" id="demagogBookmarkletConfirmDialogCancelButton" href="#">Zavřít</a>' +
+            '       <hr/>' +
+            '       <div class="demagogBookmarkletDialogFooter">' +
+            '          <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton" href="#">Odeslat citát</a>' +
+            '          <a class="button" id="demagogBookmarkletConfirmDialogCancelButton" href="#">Zavřít</a>' +
+            '       </div>' +
             '    </div>';
 
         jQuery("body").append(dialogHtml);
@@ -249,14 +251,22 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         };
 
         jQuery("#demagogBookmarkletConfirmDialog").dialog({
+            title: "overto.Demagog.cz - Odeslání citátu k ověření",
+            dialogClass: "bookmarkletDialog",
             open: confirmDialogOnOpen,
-            width: 500,
-            height: 300
+            width: 580,
+            minHeight: 300,
+            height: "auto"
+
         });
 
     };  // confirmDialogOnOpen
 
-    Demagog.Bookmarklet.Util.getSelected = function() {
+    /**
+     *
+     * @return {String} selected (highlighted) text on the page if any
+     */
+    Demagog.Bookmarklet.Util.getSelectedText = function() {
         var t = '';
         if(window.getSelection) {
             t = window.getSelection();
@@ -267,25 +277,6 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         }
 
         return t.toString();
-    };
-
-    Demagog.Bookmarklet.Util.generateGuid = function() {
-
-        var S4 = function ()
-        {
-            return Math.floor(
-                    Math.random() * 0x10000 /* 65536 */
-                ).toString(16);
-        };
-
-        return (
-                S4() + S4() + "-" +
-                S4() + "-" +
-                S4() + "-" +
-                S4() + "-" +
-                S4() + S4() + S4()
-            );
-
     };
 
     Demagog.Bookmarklet.Util.postToUrl = function(
@@ -332,18 +323,20 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
     /**
      * Inject css from given url to page.
      *
-     * @param url point to css you would like to inject (expecting url format including http part) eg. http://jquery.com/jquery.js
+     * @param cssUrl point to css you would like to inject (expecting url format including http part) eg. http://jquery.com/jquery.js
      * @param [optional] onLoadCallback this function is called when css is successfully injected and loaded by browser
      */
-    Demagog.Bookmarklet.Util.injectCss = function(url, onLoadCallback) {
+    Demagog.Bookmarklet.Util.injectCss = function(cssUrl, onLoadCallback) {
+
+        console.debug("Demagog Bookmarklet > Loading custom css style from ", cssUrl);
 
         var styleElement = document.createElement("link");
         styleElement.type = "text/css";
         styleElement.rel = "stylesheet";
-        styleElement.href = url;
+        styleElement.href = cssUrl;
         styleElement.onload = function() {
 
-            console.debug("Demagog Bookmarklet > Loaded css from: ", url);
+            console.debug("Demagog Bookmarklet > css from: ", cssUrl, "successfully loaded.");
 
             if (typeof(onLoadCallback) != "undefined") {
                 onLoadCallback();
