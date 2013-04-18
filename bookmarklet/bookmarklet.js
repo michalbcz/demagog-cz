@@ -48,7 +48,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             //TODO mbernhard : using jquery ui if exists or using something more minimalist...
 
             console.debug("Demagog Bookmarklet > injecting jquery ui css");
-            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/sunny/jquery-ui.css";
+            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/sunny/jquery-ui.css";
             Demagog.Bookmarklet.Util.injectCss(jQueryUiCssUrl);
 
             console.debug("Demagog Bookmarklet > injecting and loading jQuery UI");
@@ -76,18 +76,44 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         console.debug("Demagog Bookmarklet > Opening success modal with url param: ", url);
 
+        var $successDialog = jQuery("#demagogBookmarkletSuccessDialog");
+        if ($successDialog.size() > 0) {
+            $successDialog.remove(); // if already on the page destroy it and open again with fresh data
+        }
+
         var dialogHtml =
                 '<div id="demagogBookmarkletSuccessDialog" title="Demagog.cz" style="display: none">' +
-                    '<p>Úspěšně přidáno na demagog.cz!</p><br/>' +
+                    '<span>' +
+                        '<p class="demagogBookmarkletSuccessText">Váš citát byl úspěšně přidán na overto.demagog.cz. </p><br/>' +
+                        '<p class="demagogQuoteDetailUrlLabel">Výsledek najdete na níže uvedené adrese:</p>' +
+                    '</span>' +
                     '<p id="demagogQuoteDetailUrl"><a href="' + url + '" target="_blank">' + url + '</a></p><br/>' +
-                    '<p>Výrok bude nejdříve ověřen našim týmem, po schválení se dostane do hlasování a ' +
+                    '<p>Výrok bude nejdříve ověřen našim týmem a po schválení se dostane do hlasování a ' +
                     'pokud bude mít větší množství hlasů či bude zajímavý tak bude ověřen našimi experty.' +
-                    '</p>'
+                    '</p>' +
+                    '<hr>' +
+                    '<div class="demagogBookmarkletDialogFooter">' +
+                    '          <a class="button" id="demagogBookmarkletSuccessDialogCancelButton" href="#">Zavřít</a>' +
+                    '</div>' +
                 '</div>';
+
 
         jQuery("div:first").append(dialogHtml);
 
-        jQuery("#demagogBookmarkletSuccessDialog").dialog({ width: 450});
+        jQuery("#demagogBookmarkletSuccessDialog").dialog({
+            title: "overto.Demagog.cz - Citát odeslán",
+            dialogClass: "bookmarkletDialog",
+            width: 580,
+            height: "auto",
+            open: function() {
+                var $successDialogCloseButton = jQuery("#demagogBookmarkletSuccessDialogCancelButton");
+                $successDialogCloseButton.click(function() {
+                    var $successDialogWindow = jQuery("#demagogBookmarkletSuccessDialog");
+                    $successDialogWindow.dialog("close");
+                });
+                $successDialogCloseButton.button();
+            }
+        });
 
     };
 
@@ -98,7 +124,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         var $errorDialog = jQuery("#demagogBookmarkletErrorDialog");
 
         if ($errorDialog.size() > 0) {
-            $errorDialog.dialog("destroy"); // if already on the page destroy it and open again with fresh data
+            $errorDialog.remove(); // if already on the page destroy it and open again with fresh data
         }
 
         var dialogHtml =
@@ -108,7 +134,11 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             '</div>';
 
         jQuery("div:first").append(dialogHtml);
-        $errorDialog.dialog();
+
+        $errorDialog.dialog({
+            title: "overto.Demagog.cz - Chyba při odesílání",
+            dialogClass: "bookmarkletDialog"
+        });
 
     };
 
@@ -122,9 +152,9 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         console.debug("Demagog Bookmarklet > openConfirmDialog with quoteText: ", quoteText);
 
-        var $dialogWindow = jQuery("#demagogBookmarkletConfirmDialog")
-        if (/* dialog already created */ $dialogWindow.size() > 0) {
-            $dialogWindow.remove();
+        var $confirmDialog = jQuery("#demagogBookmarkletConfirmDialog")
+        if (/* dialog already created */ $confirmDialog.size() > 0) {
+            $confirmDialog.remove();
         }
 
         var dialogHtml =
@@ -154,7 +184,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             '       </div>' +
             '    </div>';
 
-        jQuery("body").append(dialogHtml);
+        jQuery("div:first").append(dialogHtml);
 
         var confirmDialogOnOpen = function(event, ui) {
 
