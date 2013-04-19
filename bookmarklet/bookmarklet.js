@@ -64,8 +64,77 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         console.debug("Demagog Bookmarklet > jQuery UI successfully loaded");
 
+        /*
         var bookmarkletCssUrl = Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl + "/bookmarklet.css";
         Demagog.Bookmarklet.Util.injectCss(bookmarkletCssUrl);
+        */
+
+        var cssContent = ".bookmarkletDialog {\n" +
+            "    text-align: left;\n" +
+            "    font-size: 14px !important;\n" +
+            "}\n" +
+            "\n" +
+            ".bookmarkletDialog #recaptcha_area {\n" +
+            "    /* recaptcha widget - align to center */\n" +
+            "    margin-right: auto;\n" +
+            "    margin-left: auto;\n" +
+            "}\n" +
+            "\n" +
+            "#demagogBookmarkletConfirmDialog #captchaError {\n" +
+            "    color: #ff3030;\n" +
+            "    font-weight: bolder;\n" +
+            "    text-align: center;\n" +
+            "}\n" +
+            "\n" +
+            ".demagogBookmarkletSuccessText {\n" +
+            "    font-weight: bolder;\n" +
+            "    text-align: center;\n" +
+            "}\n" +
+            "\n" +
+            ".demagogQuoteDetailUrlLabel {\n" +
+            "    text-align: center;\n" +
+            "}\n" +
+            "\n" +
+            ".demagogBookmarkletSuccessLink {\n" +
+            "    font-weight: bolder;\n" +
+            "}\n" +
+            "\n" +
+            "#demagogBookmarkletConfirmDialogCaptchaPlaceholder {\n" +
+            "    margin-top: 5px;\n" +
+            "}\n" +
+            "\n" +
+            "#demagogBookmarkletConfirmDialogPreviewContent {\n" +
+            "    font-weight: bolder;\n" +
+            "    padding: 10px 10px;\n" +
+            "    font-size: smaller;\n" +
+            "}\n" +
+            "\n" +
+            ".bookmarkletDialog hr {\n" +
+            "    width: 100%;\n" +
+            "    background-color: black;\n" +
+            "    height: 1px;\n" +
+            "    border: 1px;\n" +
+            "    margin-top: 10px;\n" +
+            "    margin-bottom : 10px;\n" +
+            "    display: block;\n" +
+            "}\n" +
+            "\n" +
+            "#demagogQuoteDetailUrl {\n" +
+            "    text-align: center;\n" +
+            "    font-weight: bolder;\n" +
+            "}\n" +
+            "\n" +
+            ".demagogBookmarkletDialogFooter {\n" +
+            "    text-align: center;\n" +
+            "}";
+
+        var styleElement = document.createElement("style");
+        styleElement.type = "text/css";
+        styleElement.onload = function() {
+            console.debug("Demagog Bookmarklet > Loaded custom css style.");
+        };
+        jQuery(styleElement).text(cssContent);
+        document.getElementsByTagName("head")[0].appendChild(styleElement);
 
         console.debug("Demagog Bookmarklet > Opening confirm dialog...")
         var selectedQuoteText = Demagog.Bookmarklet.Util.getSelectedText();
@@ -135,7 +204,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         jQuery("div:first").append(dialogHtml);
 
-        $errorDialog.dialog({
+        jQuery("#demagogBookmarkletErrorDialog").dialog({
             title: "overto.Demagog.cz - Chyba při odesílání",
             dialogClass: "bookmarkletDialog"
         });
