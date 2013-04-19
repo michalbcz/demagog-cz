@@ -47,12 +47,16 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             //TODO mbernhard : using jquery ui if exists or using something more minimalist...
 
             console.debug("Demagog Bookmarklet > injecting jquery ui css");
-            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/sunny/jquery-ui.css";
+            var jQueryUiCssUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/themes/sunny/jquery-ui.css";
             Demagog.Bookmarklet.Util.injectCss(jQueryUiCssUrl);
 
             console.debug("Demagog Bookmarklet > injecting and loading jQuery UI");
-            var jQueryUiScriptUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js";
-            var jQueryUiScriptOnLoad = function() { Demagog.Bookmarklet.Events.onJqueryUiReady() };
+            var jQueryUiScriptUrl = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js";
+            var jQueryUiScriptOnLoad = function() {
+                jQuery(document).ready(function() {
+                    Demagog.Bookmarklet.Events.onJqueryUiReady()
+                });
+            };
             Demagog.Bookmarklet.Util.injectJavascript(jQueryUiScriptUrl, jQueryUiScriptOnLoad);
 
         });
@@ -475,13 +479,12 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
     var jQueryScriptUrl = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js";
     var jQueryScriptOnLoad = function() {
         console.info("Demagog Bookmarklet > jQuery ", jQuery.fn.jquery, "successfully loaded");
-        Demagog.Bookmarklet.Events.onJqueryReady()
+        $.noConflict();
+        Demagog.Bookmarklet.Events.onJqueryReady();
     };
 
     // TODO michalb_cz : reusing jQuery if already present on the page (detecting minimal jQuery version which support api we use)
     Demagog.Bookmarklet.Util.injectJavascript(jQueryScriptUrl, jQueryScriptOnLoad);
-
-    Demagog.Bookmarklet
 
 } /* if Demagog bookmarklet is not already loaded END*/
 else {
