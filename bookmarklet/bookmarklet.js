@@ -26,7 +26,6 @@ console.debug = console.debug || console.info; // when console.debug doesn't exi
 
 console.info("Detecting Demagog.Bookmarklet...");
 
-
 if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
     console.info("Demagog Bookmarklet is not already loaded on the page. Loading it now...");
@@ -69,9 +68,10 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         Demagog.Bookmarklet.Util.injectCss(bookmarkletCssUrl);
         */
 
-        var cssContent = ".bookmarkletDialog {\n" +
+        var cssContent = ".bookmarkletDialog * {\n" +
             "    text-align: left;\n" +
             "    font-size: 14px !important;\n" +
+            "    float: none;" +
             "}\n" +
             "\n" +
             ".bookmarkletDialog #recaptcha_area {\n" +
