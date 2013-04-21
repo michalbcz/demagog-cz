@@ -15,6 +15,7 @@ import org.bson.types.ObjectId;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
 import utils.ReCaptchaService;
@@ -129,26 +130,20 @@ public class Application extends Controller {
 	}
 
 	public static Result upVote(QuotesListContent content) {
-		String id = request().body().asFormUrlEncoded().get("id")[0];
-
-		Quote.upVote(new ObjectId(id), RequestUtils.getRemoteAddress(request()));
-
-		Cookie cookie = request().cookies().get(COOKIE_NAME);
-		String votes = "";
-		if (cookie != null && cookie.value() != null) {
-			votes = cookie.value();
-			votes += COOKIE_VALUE_SEPARATOR;
-		}
-
-		votes += id;
-
-		response().setCookie(COOKIE_NAME, votes);
+        String id = request().body().asFormUrlEncoded().get("id")[0];
+        upVoteQuote(id);
 
 		return showQuotes(content);
 	}
 
     public static Result upVoteAjax(QuotesListContent content) {
         String id = request().body().asFormUrlEncoded().get("id")[0];
+        upVoteQuote(id);
+
+        return ok();
+    }
+
+    private static void upVoteQuote(String id) {
 
         Quote.upVote(new ObjectId(id), RequestUtils.getRemoteAddress(request()));
 
@@ -162,9 +157,8 @@ public class Application extends Controller {
         votes += id;
 
         response().setCookie(COOKIE_NAME, votes);
-
-        return ok();
     }
+
 
 	/**
 	 * Find ids of quotes user allready voted on. (from cookie)
