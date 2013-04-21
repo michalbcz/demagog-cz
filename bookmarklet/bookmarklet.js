@@ -37,7 +37,18 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
     Demagog.Bookmarklet.confirmSelectedTextAsQuote = function() {
         var selectedQuoteText = Demagog.Bookmarklet.Util.getSelectedText();
-        Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
+
+        var maxQuoteTextSizeLimit = 2000;
+        if (selectedQuoteText.length > maxQuoteTextSizeLimit) {
+           Demagog.Bookmarklet.openQuoteTextTooLongDialog(maxQuoteTextSizeLimit);
+        }
+        else if (selectedQuoteText.length === 0) {
+            Demagog.Bookmarklet.openQuoteTextEmptyDialog();
+        }
+        else {
+           Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
+        }
+
     }
 
     Demagog.Bookmarklet.Events.onJqueryReady = function() {
@@ -123,13 +134,23 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             "    display: block;\n" +
             "}\n" +
             "\n" +
+            ".bookmarkletDialog strong {" +
+            "   font-weight: bolder;" +
+            "}\n" +
+            ".bookmarkletDialog .demagogBookmarkletInfoText {" +
+            "   font-weight: bolder;" +
+            "   text-align: center;" +
+            "   display: block;" +
+            "   margin-top: 5px;" +
+            "   margin-bottom: 5px;" +
+            "}\n" +
             "#demagogQuoteDetailUrl {\n" +
             "    text-align: center;\n" +
             "    font-weight: bolder;\n" +
             "}\n" +
             "\n" +
-            ".demagogBookmarkletDialogFooter {\n" +
-            "    text-align: center;\n" +
+            ".demagogBookmarkletDialogFooter {" +
+            "    text-align: center;" +
             "}";
 
         var styleElement = document.createElement("style");
@@ -140,9 +161,8 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         jQuery(styleElement).text(cssContent);
         document.getElementsByTagName("head")[0].appendChild(styleElement);
 
-        console.debug("Demagog Bookmarklet > Opening confirm dialog...")
-        var selectedQuoteText = Demagog.Bookmarklet.Util.getSelectedText();
-        Demagog.Bookmarklet.openConfirmDialog(selectedQuoteText);
+        Demagog.Bookmarklet.confirmSelectedTextAsQuote();
+
     };
 
     Demagog.Bookmarklet.openSuccessDialog = function(url) {
@@ -190,9 +210,80 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
     };
 
+    Demagog.Bookmarklet.openQuoteTextTooLongDialog = function(maxSizeOfQuoteText) {
+
+        console.info("Demagog Bookmarklet > Opening 'quote too long' error dialog. Text exceeded ", maxSizeOfQuoteText, " characters");
+
+        var $errorDialog = jQuery("#demagogBookmarkletQuoteTooLongDialog");
+
+        if ($errorDialog.size() > 0) {
+            $errorDialog.remove(); // if already on the page destroy it and open again with fresh data
+        }
+
+        var dialogHtml =
+            '<div id="demagogBookmarkletQuoteTooLongDialog" style="display: none">' +
+                '<span class="demagogBookmarkletInfoText">Vámi vybraný citát je příliš dlouhý.</span>' +
+                'Zkuste vybrat menší část textu. Maximální délka je ' + maxSizeOfQuoteText + ' znaků.' +
+                '<hr/>' +
+                '<div class="demagogBookmarkletDialogFooter">' +
+                '   <a id="demagogBookmarkletQuoteTooLongDialogCloseButton" href="#">Zavřít</a>' +
+                '</div>'
+             '</div>';
+
+        jQuery("div:first").append(dialogHtml);
+
+        var closeButton = jQuery("#demagogBookmarkletQuoteTooLongDialogCloseButton");
+        closeButton.button();
+        closeButton.click(function() {
+            jQuery("#demagogBookmarkletQuoteTooLongDialog").dialog("close");
+        });
+
+        jQuery("#demagogBookmarkletQuoteTooLongDialog").dialog({
+            title: "overto.Demagog.cz - Vybraný text je příliš dlouhý",
+            dialogClass: "bookmarkletDialog"
+        });
+
+    };
+
+    Demagog.Bookmarklet.openQuoteTextEmptyDialog = function() {
+
+        console.info("Demagog Bookmarklet > Opening 'quote text empty' error dialog.");
+
+        var $errorDialog = jQuery("#demagogBookmarkletQuoteTextEmptyDialog");
+
+        if ($errorDialog.size() > 0) {
+            $errorDialog.remove(); // if already on the page destroy it and open again with fresh data
+        }
+
+        var dialogHtml =
+            '<div id="demagogBookmarkletQuoteTextEmptyDialog" style="display: none">' +
+                '<span class="demagogBookmarkletInfoText">Nevybrali jste žádný text.</span>' +
+                'Text označte stiskem levého tlačítka myši na začátku textu, tlačítko držte a přesuňte se kurzorem na konec textu. ' +
+                'Text by měl být zvýrazněn (typicky modrým podbarvením).' +
+                '<hr/>' +
+                '<div class="demagogBookmarkletDialogFooter">' +
+                '   <a id="demagogBookmarkletQuoteTextEmptyDialogCloseButton" href="#">Zavřít</a>' +
+                '</div>'
+        '</div>';
+
+        jQuery("div:first").append(dialogHtml);
+
+        var closeButton = jQuery("#demagogBookmarkletQuoteTextEmptyDialogCloseButton");
+        closeButton.button();
+        closeButton.click(function() {
+            jQuery("#demagogBookmarkletQuoteTextEmptyDialog").dialog("close");
+        });
+
+        jQuery("#demagogBookmarkletQuoteTextEmptyDialog").dialog({
+            title: "overto.Demagog.cz - Není výbrán text citátu",
+            dialogClass: "bookmarkletDialog"
+        });
+
+    };
+
     Demagog.Bookmarklet.openErrorDialog = function () {
 
-        console.debug("Opening error modal dialog");
+        console.debug("Demagog Bookmarklet > Opening error modal dialog");
 
         var $errorDialog = jQuery("#demagogBookmarkletErrorDialog");
 
@@ -202,11 +293,21 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         var dialogHtml =
             '<div id="demagogBookmarkletErrorDialog" title="Demagog.cz - Chyba při odesílání" style="display: none">' +
-                'Nedaří se nám odeslat citát. Omlouváme se za potíže, zkuste to prosím později nebo využijte ' +
-                'možnost manuálního vložení na <a href="http://overto.demagog.cz/quote/add" target="_blank">overto.demamgo.cz</a>' +
+                '<span class="demagogBookmarkletInfoText">Nedaří se nám odeslat citát.</span>Omlouváme se za potíže, zkuste to prosím později nebo využijte ' +
+                'možnost manuálního vložení na <a href="http://overto.demagog.cz/quote/add" target="_blank">overto.demagog.cz</a>' +
+                '<hr/>' +
+                '<div class="demagogBookmarkletDialogFooter">' +
+                '   <a id="demagogBookmarkletErrorDialogCloseButton" href="#">Zavřít</a>' +
+                '</div>'
             '</div>';
 
         jQuery("div:first").append(dialogHtml);
+
+        var closeButton = jQuery("#demagogBookmarkletErrorDialogCloseButton");
+        closeButton.button();
+        closeButton.click(function() {
+            jQuery("#demagogBookmarkletErrorDialog").dialog("close");
+        });
 
         jQuery("#demagogBookmarkletErrorDialog").dialog({
             title: "overto.Demagog.cz - Chyba při odesílání",
@@ -219,7 +320,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
         console.debug("Demagog Bookmarklet > Closing confirm dialog");
         var $confirmDialogWindow = jQuery("#demagogBookmarkletConfirmDialog");
         $confirmDialogWindow.dialog("destroy");
-    }
+    };
 
     Demagog.Bookmarklet.openConfirmDialog = function(quoteText) {
 
@@ -294,6 +395,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                     };
 
                     var onError = function() {
+                        Demagog.Bookmarklet.closeConfirmDialog();
                         Demagog.Bookmarklet.openErrorDialog();
                     };
 
