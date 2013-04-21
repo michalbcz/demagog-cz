@@ -1,0 +1,61 @@
+.bookmarkletDialog {
+    text-align: left;
+    font-size: 14px !important;
+}
+
+.bookmarkletDialog #recaptcha_area {
+    /* recaptcha widget - align to center */
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#demagogBookmarkletConfirmDialog #captchaError {
+    color: #ff3030;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.demagogBookmarkletSuccessText {
+    font-weight: bolder;
+    text-align: center;
+}
+
+.demagogQuoteDetailUrlLabel {
+    text-align: center;
+}
+
+.demagogBookmarkletSuccessLink {
+    font-weight: bolder;
+}
+
+#demagogBookmarkletConfirmDialogCaptchaPlaceholder {
+    margin-top: 5px;
+}
+
+#demagogBookmarkletConfirmDialogPreviewContent {
+    font-weight: bolder;
+    padding: 10px 10px;
+    font-size: smaller;
+}
+
+.bookmarkletDialog hr {
+    width: 100%;
+    background-color: black;
+    height: 1px;
+    border: 1px;
+    margin-top: 10px;
+    margin-bottom : 10px;
+    display: block;
+}
+
+#demagogQuoteDetailUrl {
+    text-align: center;
+    font-weight: bolder;
+}
+
+.demagogBookmarkletDialogFooter {
+    text-align: center;
+}
+
+
+

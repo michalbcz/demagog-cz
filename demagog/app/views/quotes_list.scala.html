@@ -97,7 +97,10 @@
 			<span class="author">Autor: </span>
 			<input name="author" type="text" value="@{quote.author}" />
 
-			<span class="url">Zdroj: <a href="@{quote.url}" target="_blank">@{quote.url}</a></span>
+			<span class="url">Zdroj:
+                <input name="url" type="text" size="80" value="@{quote.url}" />
+                <a href="@{quote.url}" target="_blank">Otevřít</a>
+            </span>
 
             <div class="demagogBacklinkUrl">
                 <span class="label">Zpětný odkaz na demagog.cz: &nbsp;&nbsp;</span>

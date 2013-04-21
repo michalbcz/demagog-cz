@@ -9,6 +9,8 @@ import java.util.TreeSet;
 import com.google.code.morphia.Key;
 import org.bson.types.ObjectId;
 
+import play.Logger;
+import play.data.validation.Constraints;
 import utils.DBHolder;
 
 import com.google.code.morphia.annotations.Entity;
@@ -26,17 +28,23 @@ public class Quote {
 	/**
 	 * Source url of given quote
 	 */
+    @Constraints.MaxLength(2000) // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+    @Constraints.Required
 	public String url;
 
+    @Constraints.MaxLength(2000)
+    @Constraints.Required
 	public String quoteText;
 
+    @Constraints.MaxLength(100)
 	public String author;
 
+    @Constraints.MaxLength(15)
 	public String userIp;
 
-	public Date creationDate;
+	public Date creationDate = new Date(); /* sensible default */
 
-	public QuoteState quoteState;
+	public QuoteState quoteState = QuoteState.NEW; /* sensible default */
 
 	public Date approvalDate;
 
@@ -112,15 +120,17 @@ public class Quote {
 	}
 
 	public static void upVote(ObjectId id) {
+        Logger.info("Upvote for quote id: " + id);
 		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).inc("voteCount"));
 	}
 
 	public static Quote findById(ObjectId id) {
-		return DBHolder.ds.find(Quote.class, "_id", id).get();
+        Logger.debug("Looking for Quote with id: " + id);
+        return DBHolder.ds.find(Quote.class, "_id", id).get();
 	}
 
 	public static List<Quote> findAll() {
-		return DBHolder.ds.find(Quote.class).field("deleted").equal(false).asList();
+		return DBHolder.ds.find(Quote.class).field("deleted").equal(false).order("-lastUpdateDate, voteCount").asList();
 	}
 
 	public static List<Quote> findAllWithStateOrderedByCreationDate(QuoteState state) {
@@ -139,8 +149,9 @@ public class Quote {
                 .asList();
     }
 
-	public static void delete(ObjectId id, boolean pernament) {
-		if (pernament) {
+    //TODO michalb_cz 16.04.2013: permanent what? well i think it should be possible to delete permanently through application
+	public static void delete(ObjectId id, boolean permanent) {
+		if (permanent) {
 			DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));
 		} else {
 			DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).set("deleted", true));
