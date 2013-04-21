@@ -186,7 +186,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                     '</p>' +
                     '<hr>' +
                     '<div class="demagogBookmarkletDialogFooter">' +
-                    '          <a class="button" id="demagogBookmarkletSuccessDialogCancelButton" href="#">Zavřít</a>' +
+                    '          <a class="button" id="demagogBookmarkletSuccessDialogCancelButton">Zavřít</a>' +
                     '</div>' +
                 '</div>';
 
@@ -226,7 +226,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 'Zkuste vybrat menší část textu. Maximální délka je ' + maxSizeOfQuoteText + ' znaků.' +
                 '<hr/>' +
                 '<div class="demagogBookmarkletDialogFooter">' +
-                '   <a id="demagogBookmarkletQuoteTooLongDialogCloseButton" href="#">Zavřít</a>' +
+                '   <a id="demagogBookmarkletQuoteTooLongDialogCloseButton" >Zavřít</a>' +
                 '</div>'
              '</div>';
 
@@ -262,7 +262,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 'Text by měl být zvýrazněn (typicky modrým podbarvením).' +
                 '<hr/>' +
                 '<div class="demagogBookmarkletDialogFooter">' +
-                '   <a id="demagogBookmarkletQuoteTextEmptyDialogCloseButton" href="#">Zavřít</a>' +
+                '   <a id="demagogBookmarkletQuoteTextEmptyDialogCloseButton">Zavřít</a>' +
                 '</div>'
         '</div>';
 
@@ -297,7 +297,7 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
                 'možnost manuálního vložení na <a href="http://overto.demagog.cz/quote/add" target="_blank">overto.demagog.cz</a>' +
                 '<hr/>' +
                 '<div class="demagogBookmarkletDialogFooter">' +
-                '   <a id="demagogBookmarkletErrorDialogCloseButton" href="#">Zavřít</a>' +
+                '   <a id="demagogBookmarkletErrorDialogCloseButton">Zavřít</a>' +
                 '</div>'
             '</div>';
 
@@ -353,8 +353,8 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             '        </div>' +
             '       <hr/>' +
             '       <div class="demagogBookmarkletDialogFooter">' +
-            '          <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton" href="#">Odeslat citát</a>' +
-            '          <a class="button" id="demagogBookmarkletConfirmDialogCancelButton" href="#">Zavřít</a>' +
+            '          <a class="button" id="demagogBookmarkletConfirmDialogConfirmButton">Odeslat citát</a>' +
+            '          <a class="button" id="demagogBookmarkletConfirmDialogCancelButton">Zavřít</a>' +
             '       </div>' +
             '    </div>';
 
