@@ -5,13 +5,20 @@ import java.util.List;
 
 import models.Quote;
 import models.Quote.QuoteState;
+import models.QuotesListContent;
 import models.User;
 
 import org.bson.types.ObjectId;
 
+import org.codehaus.jackson.node.ObjectNode;
+import play.Configuration;
+import play.Logger;
+import play.Play;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
+import scala.util.parsing.json.JSON;
 import utils.DBHolder;
 import views.html.loginForm;
 import views.html.quotes_list;
@@ -72,6 +79,7 @@ public class Admin extends Controller {
 
 	@Authenticated(UserAuthenticator.class)
     public static Result updateQuote() {
+
         Quote quote = form(Quote.class).bindFromRequest().get();
 
         final UpdateOperations<Quote> updateOperations =
@@ -79,6 +87,7 @@ public class Admin extends Controller {
                         .set("quoteText", quote.quoteText)
                         .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
                         .set("author", quote.author)
+                        .set("url", quote.url)
                         .set("lastUpdateDate", new Date());
 
         Quote oldQuote = Quote.findById(quote.id);
@@ -114,7 +123,9 @@ public class Admin extends Controller {
 	public static Result showQuotes(QuoteState state) {
 		List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
 
-		return ok(quotes_list.render(quotes, true, null, null, null, null));
+        // FIXME Michal Bernhard 26.03 : when instead of third parameter 'QuotesListContent.CHECKED' is null it
+        // doesn't work, dunnno why
+		return ok(quotes_list.render(quotes, true, QuotesListContent.CHECKED, null, null, null));
 	}
 
 	@Authenticated(UserAuthenticator.class)
@@ -136,5 +147,25 @@ public class Admin extends Controller {
 	public static Result showPublishedQuotes() {
 		return showQuotes(QuoteState.CHECKED_AND_PUBLISHED);
 	}
+
+    @Authenticated(UserAuthenticator.class)
+    public static Result showSettings() {
+        Configuration configuration = Play.application().configuration();
+
+        StringBuilder sb = new StringBuilder();
+
+        for(String key : configuration.keys()) {
+            String keyValue = "n/a";
+            try {
+                keyValue = configuration.getString(key);
+            } catch (Exception /*com.typesafe.config.ConfigException*/ ex) {
+                keyValue = "Cannot obtain string value of configuration key because of: " + ex.getMessage();
+            }
+
+            sb.append(key).append(" : ").append(keyValue).append("\n\n");
+        }
+
+        return ok(sb.toString());
+    }
 
 }

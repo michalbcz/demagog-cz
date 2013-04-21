@@ -1,4 +1,12 @@
+@(quote : Quote)
+@import play.api.Configuration
+@import tags._
 
+@value(value : String) = @{
+    if (value != null) {
+        "value = '" + value + "'"
+    }
+}
 
 @main("Nový citát") {
 	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
@@ -35,56 +43,133 @@
 				</ol>
 			</div>
 		</div>
-		
-		<div id="bookmarklet-dnd">
-			<div>
-				Toto přetáhněte do horní lišty
-			</div>
-			<div>
-			<a href="javascript:var script = document.createElement('script');
-					 script.src = 'https://raw.github.com/RHoK-November-2012/demagog-cz/master/bookmarklet/bookmarklet.js';
-					 script.type = 'text/javascript';
-					 document.getElementsByTagName('head')[0].appendChild(script);
-					 void(0);" id="bookmarklet-dnd-button">Demagog.cz - ověřit výrok</a>
-			</div>
-		</div>
-	</div>
-		
+
+        <div id="bookmarklet-dnd">
+            <div>
+                    Toto přetáhněte do horní lišty
+            </div>
+            <div>
+                @defining(play.api.Play.current.configuration.getString("demagog.bookmarkletSourcesBaseUrl").get) { baseUrl =>
+                    <!-- template for bookmarklet using templating library handlebars.js when {{variableName}} is
+                         replaced by value of variableName (passed to context when rendering tempalte) -->
+                    <div id="bookmarklet-link-template" type="text/x-handlebars-template" style="display: none">
+                            javascript:
+                            var Demagog = Demagog || {};
+                            Demagog.Bookmarklet = Demagog.Bookmarklet || {};
+                            Demagog.Bookmarklet.Settings = Demagog.Bookmarklet.Settings || {};
+
+                            Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl = '{{demagogApiBaseUrl}}';
+
+                            /* where resides bookmarklet.js and bookmarklet.css files */
+                            var bookmarkletSourcesBaseUrl = '@{Html(baseUrl)}';
+                            Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl = bookmarkletSourcesBaseUrl;
+
+                            var script = document.createElement('script');
+                            script.src = bookmarkletSourcesBaseUrl + '/bookmarklet.js';
+                            script.type = 'text/javascript';
+                            document.getElementsByTagName('head')[0].appendChild(script);
+                            void(0);
+                    </div>
+                }
+
+
+                <a id="bookmarklet-dnd-button" href="#">Ověřit výrok!</a>
+
+                <script type="text/javascript">
+
+                    /* Dynamic generation of bookmarklet's settings for url of overto.demagog.cz api where it send
+                    * selected quote data. We use current url which is demagog page from where you drag'n'drop bookmarklet.
+                    * With this each dragged bookmarklet is deployment specific so you can easily use and test bookmarklets
+                    * for local dev server, staging, production..etc.
+                    */
+                    jQuery(document).ready(function() {
+                        var re = new RegExp('(https{0,1})://(.*?)/');
+                        var matcher = re.exec(window.location.href);
+                        var baseUri = matcher[2];
+
+                        var currentUrl = 'http://' + baseUri;
+
+                        var javascriptBookmarkletTemplate = jQuery("#bookmarklet-link-template").text();
+                        var compiledTemplate = Handlebars.compile(javascriptBookmarkletTemplate);
+                        var context = {demagogApiBaseUrl : currentUrl};
+                        var renderedTemplate = compiledTemplate(context);
+
+                        jQuery("#bookmarklet-dnd-button").attr("href", renderedTemplate);
+                    });
+
+                </script>
+            </div>
+        </div> <!-- bookmarklet-link -->
+     </div> <!-- #bookmarklet-instructions -->
+
 	<h2>2. Formulář</h2>
-	<div id="new_quote" class="ui-panel">
-		<form action="@{controllers.routes.Application.submitQuote()}" id="newQuoteForm" method="POST">
+	<div id="new-quote" class="ui-panel">
+
+        @if(flash.get("error") != null) {
+            <div id="form-errors" class="alert alert-error">
+                <strong>Chyba!</strong> @flash.get("error")
+            </div>
+
+            <script type="text/javascript">
+               jQuery(document).ready(function($) {
+
+                    /* when there are some errors on form we scroll to that form otherwise user would see
+                       "about bookmarklet" part of the page and must scroll down to form with erros which
+                       is contra intuitive */
+                    $("#new-quote").scrollToMe();
+               });
+            </script>
+        }
+
+		<form action="@{controllers.routes.Application.submitQuote()}" id="new-quote-form" method="POST">
 			<div class="input-section">
-				<label for="quoteText">Citát: </label>
-				<textarea name="quoteText" class="validate[required]" id="quoteText"></textarea>
+				<label for="quote-text">Citát</label>
+				<textarea id="quote-text"
+                          name="quoteText"
+                          class="validate[required]"
+                          placeholder="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;"
+                          tabindex="1">@quote.quoteText</textarea>
 			</div>
 			
 			<div class="input-section">
-				<label for="url">Zdroj citátu: </label>
-				<input type="text" class="validate[required]" name="url" />
+				<label for="url">Zdroj citátu</label>
+				<input id="url" name="url"
+                       tabindex="2" type="text"
+                       @value(quote.url)
+                       class="validate[required,custom[url]]"
+                       placeholder="url, kde jste na citát narazili - např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" />
 			</div>	
 			
 			<div class="input-section">
-				<label for="url">Autor citátu: </label>
-				<input type="text" class="validate[required]" name="author" />
-			</div>		
-			
-			<div id="buttons">
-				<input type="submit" id="submit" value="Odeslat" />
+				<label for="author">Autor citátu</label>
+				<input type="text" id="author" name="author" @value(quote.author) tabindex="3" placeholder="např. Jiří Paroubek" />
 			</div>
-			
-			<script type="text/javascript">$('#submit').button();</script>
+
+            <div class="input-section">
+                <label>Prosím opište text</label>
+                <div>
+                    @recaptcha(tabindex = "4")
+                </div>
+            </div>
+
+            <div id="buttons">
+				<input type="submit" id="submit" tabindex="5" value="Odeslat" />
+			</div>
+
 		</form>
 	</div>
 	
 	<script src="@routes.Assets.at("javascripts/jquery.validationEngine-cz.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("javascripts/jquery.validationEngine.js")" type="text/javascript" charset="utf-8"></script>
-	
+    <script src="@routes.Assets.at("javascripts/handlebars-1.0.0.rc3.js")" type="text/javascript"></script>
+
 	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/validationEngine.jquery.css")">
+
 	
 	<script>
 		$(function(){
 			// binds form submission and fields to the validation engine
-			$("#newQuoteForm").validationEngine();
+			$("#new-quote-form").validationEngine();
 			
 			$('#bookmarklet-help-label').click(function() {
 				$('#bookmarklet-help').slideToggle();

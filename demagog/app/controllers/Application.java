@@ -1,24 +1,27 @@
 package controllers;
 
+import com.google.code.morphia.Key;
+import models.Quote;
+import models.Quote.QuoteState;
+import models.QuotesListContent;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.bson.types.ObjectId;
+import play.Logger;
+import play.data.Form;
+import play.libs.F;
+import play.mvc.Controller;
+import play.mvc.Http.Cookie;
+import play.mvc.Result;
+import scala.Option;
+import utils.ReCaptchaService;
+import views.html.quote_detail;
+import views.html.quote_new;
+import views.html.quotes_list;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import models.Quote;
-import models.Quote.QuoteState;
-import models.QuotesListContent;
-
-import org.bson.types.ObjectId;
-
-import play.Logger;
-import play.data.Form;
-import play.mvc.Controller;
-import play.mvc.Http.Cookie;
-import play.mvc.Result;
-import views.html.quote_detail;
-import views.html.quote_new;
-import views.html.quotes_list;
 
 public class Application extends Controller {
 
@@ -26,20 +29,52 @@ public class Application extends Controller {
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
 
 	public static Result showNewQuoteForm() {
-		return ok(quote_new.render());
+		return ok(quote_new.render(new Quote()));
 	}
 
-	public static Result submitQuote() {
-		Form<Quote> quoteForm = form(Quote.class);
-		Quote quote = quoteForm.bindFromRequest().get();
+    public static Result showNewQuoteForm(Quote quote) {
+        return ok(quote_new.render(quote));
+    }
 
-		quote.userIp = request().remoteAddress();
+   	public static Result submitQuote() {
+
+        /* binding concrete request fields to prevent attack - without this attacker could change for example
+           quote state and directly publish it after save */
+		Form<Quote> quoteForm = form(Quote.class).bindFromRequest("quoteText", "url", "author");
+        Quote quote = quoteForm.get();
+
+        if (quoteForm.hasErrors()) {
+            flash().put("error", "Ve formuláři jsou chyby opravte je.");
+            return ok(quote_new.render(quote));
+        }
+
+        String remoteAddress = request().remoteAddress();
+        quote.userIp = remoteAddress;
 		quote.quoteState = QuoteState.NEW;
 
-		quote.save();
+        Map<String, String[]> formBody = request().body().asFormUrlEncoded();
+        String reCaptchaChallengeField = formBody.get("recaptcha_challenge_field")[0];
+        String reCaptchaResponseField = formBody.get("recaptcha_response_field")[0];
 
-		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
+        ReCaptchaService recaptchaService = ReCaptchaService.get();
+        ReCaptchaResponse reCaptchaResponse =
+                        recaptchaService.checkAnswer(remoteAddress, reCaptchaChallengeField, reCaptchaResponseField);
+
+
+        if (!reCaptchaResponse.isValid()) {
+            quoteForm.reject("recaptcha.error", "recaptcha.failed");
+            flash().put("error", "Zadali jste špatně captchu, zkuste to znovu.");
+        }
+
+        if (quoteForm.hasErrors()) {
+            return ok(quote_new.render(quote));
+        } else {
+            Key savedQuoteKey = quote.save();
+            return redirect(routes.Application.showQuoteDetail(savedQuoteKey.getId().toString()));
+        }
+
 	}
+
 
 	public static Result showApprovedQuotes() {
 		return showQuotes(QuotesListContent.APPROVED);
@@ -107,8 +142,27 @@ public class Application extends Controller {
 
 		response().setCookie(COOKIE_NAME, votes);
 
-		return redirect(routes.Application.showQuotes(content));
+		return showQuotes(content);
 	}
+
+    public static Result upVoteAjax(QuotesListContent content) {
+        String id = request().body().asFormUrlEncoded().get("id")[0];
+
+        Quote.upVote(new ObjectId(id));
+
+        Cookie cookie = request().cookies().get(COOKIE_NAME);
+        String votes = "";
+        if (cookie != null && cookie.value() != null) {
+            votes = cookie.value();
+            votes += COOKIE_VALUE_SEPARATOR;
+        }
+
+        votes += id;
+
+        response().setCookie(COOKIE_NAME, votes);
+
+        return ok();
+    }
 
 	/**
 	 * Find ids of quotes user allready voted on. (from cookie)

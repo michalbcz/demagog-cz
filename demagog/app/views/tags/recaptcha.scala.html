@@ -1,0 +1,24 @@
+@*********************
+* Usage:
+*
+*       @recaptcha() // results in html snippet for recaptcha
+*
+*********************@
+@(tabindex : String = null)
+@import play.api.Configuration
+@import java.util.Properties
+
+@rawRecaptcha = @{
+    val reCaptchaService = utils.ReCaptchaService.get()
+    val properties = new Properties()
+    properties.setProperty("theme", "clean")
+
+    if (tabindex != null) {
+        properties.setProperty("tabindex", tabindex)
+    }
+
+    reCaptchaService.createRecaptchaHtml(null, properties)
+}
+
+@Html(rawRecaptcha)
+

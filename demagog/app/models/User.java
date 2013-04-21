@@ -1,5 +1,6 @@
 package models;
 
+import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 
 import utils.DBHolder;
@@ -18,9 +19,9 @@ public class User {
 	
 	public User() {}
 	
-	public User(String uname, String passwd) {
-		this.username = uname;
-		this.password = passwd;
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class User {
 	}
 
 	public void save() {
-		DBHolder.ds.save(this);
+		DBHolder.ds.save(this /*, WriteConcern.SAFE/**/);
 	}
 	
 	public static User findByName(String username) {

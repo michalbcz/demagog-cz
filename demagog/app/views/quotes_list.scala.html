@@ -1,12 +1,13 @@
 @(quotes: List[Quote], admin: Boolean, content: models.QuotesListContent, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
 
 @import models.Quote.QuoteState
+@import org.apache.commons.lang3.StringUtils
 
 @main("", utils.MenuUtils.getMenuType(admin)) {
     @if(!admin && quotes.size() > 0) {
 		<div class="filter-container">
 			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
-				<label for="quoteText">Filtrovat podle autora:</label>
+				<label for="filterByAuthorSelect">Filtrovat podle autora:</label>
 				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:$('#filterByAuthor').submit(); void(0);"> 
 					@for(authorName <- filterAuthorNames) {
 						@if(selectedFilterAuthorName.equals(authorName)) {
@@ -43,9 +44,20 @@
 
 @footer(quote: Quote) = {
 	<div class="footer">
-		<span class="author">Autor: @{quote.author}</span>
+		<span class="author">Autor: 
+			@if(quote.author == null) {
+				"neznámý"
+			} else {
+				@quote.author
+			}
+		</span>
 		<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
 	</div>	
+}
+
+@quoteAlreadyVotedImage() = {
+    <img src="@routes.Assets.at("images/24x24/add_disabled.png")"
+         title="Hlasování bylo ukončeno, nebo jste již hlasoval." />
 }
 
 @userForm(quote: Quote) = {
@@ -54,11 +66,11 @@
 			<input type="hidden" name="id" value="@{quote.id}" />
 			<span class="vote-count">@{quote.voteCount}</span>
 			@if(QuoteState.APPROVED_FOR_VOTING == quote.quoteState && !allreadyVoted.contains(quote.id)) {
-				<a href="javascript:voteOnServer('@{quote.id}');">
+				<a class="upVoteButton" href="javascript:voteOnServer('@{quote.id}');">
 					<img src="@routes.Assets.at("images/24x24/add.png")" />
 				</a>
 			} else {
-				<img src="@routes.Assets.at("images/24x24/add_disabled.png")" title="Hlasování bylo ukončeno, nebo jste již hlasoval." />
+                @quoteAlreadyVotedImage()
 			}
 		</form>
 	</div>
@@ -85,7 +97,10 @@
 			<span class="author">Autor: </span>
 			<input name="author" type="text" value="@{quote.author}" />
 
-			<span class="url">Zdroj: <a href="@{quote.url}" target="_blank">@{quote.url}</a></span>
+			<span class="url">Zdroj:
+                <input name="url" type="text" size="80" value="@{quote.url}" />
+                <a href="@{quote.url}" target="_blank">Otevřít</a>
+            </span>
 
             <div class="demagogBacklinkUrl">
                 <span class="label">Zpětný odkaz na demagog.cz: &nbsp;&nbsp;</span>
@@ -116,12 +131,38 @@
 
 <script type="text/javascript">
 	function voteOnServer(quoteId) {
+
+        /* disable clicking on voting button */
+        var $form = $("#" + quoteId);
+        var $formsUpVoteButton = $form.find(".upVoteButton");
+        var $disabledUpVoteButton = $formsUpVoteButton.replaceWith('@Html(StringUtils.normalizeSpace(quoteAlreadyVotedImage().toString()))');
+
 		var $quoteForm = $("#" + quoteId);
 		var $authorFilter = $("#filterByAuthor select option:selected").val();
 	
 		$quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
 
-		$quoteForm.submit();
+        var upVoteAjaxUrl = '@{controllers.routes.Application.upVote(content)}';
+        console.debug("Sending vote request for form", $quoteForm, " on ", upVoteAjaxUrl);
+        jQuery.ajax(upVoteAjaxUrl, {
+            type : "POST",
+            data : $quoteForm.serialize(),
+            success : function(response, textStatus) {
+                console.log("up vote was successful");
+
+                console.debug("adding +1 to vote count number")
+                var $voteCounts = $form.find(".vote-count")
+                var voteCounts = parseInt($voteCounts.text(), 10 /* radix */);
+                voteCounts = voteCounts + 1
+                $voteCounts.text(voteCounts.toString(10));
+
+            },
+            error : function(jqXhr, textStatus, errorThrown) {
+                console.error("up vote failed with an error :", errorThrown)
+                $disabledUpVoteButton.replaceWith($formsUpVoteButton);
+            }
+        });
+
 	}
 </script>
 

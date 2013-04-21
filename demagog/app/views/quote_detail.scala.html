@@ -37,7 +37,13 @@
 		</span>
 		
 		<div class="footer">
-			<span class="author">Autor: @{quote.author}</span>
+			<span class="author">Autor: 
+				@if(quote.author == null) {
+					"neznámý"
+				} else {
+					@quote.author
+				}
+			</span>
 			<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
 
             @if(quote.demagogBacklinkUrl != null) {
@@ -48,6 +54,6 @@
 
             }
 		</div>
-		<div class="fb-like" data-href="http://demagog.herokuapp.com" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
+		<div class="fb-like" data-href="@utils.Settings.getUrl("quote/" + quote.id.toString())" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
 	</div>
 }

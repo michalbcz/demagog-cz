@@ -1,7 +1,7 @@
 @main("Administrace", "menu-none") {
 
 	<div id="login-panel" class="ui-panel">
-		<form action=@{controllers.routes.Admin.authenticate()} id="loginForm" method="POST">
+		<form action="@{controllers.routes.Admin.authenticate()}" id="loginForm" method="POST">
 			<div class="input-section">
 				<label for="username">Uživatelské jméno</label>
 				<input type="text" id="username" class="validate[required]" name="username">
