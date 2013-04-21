@@ -136,13 +136,13 @@
 				<input id="url" name="url"
                        tabindex="2" type="text"
                        @value(quote.url)
-                       class="validate[required]"
+                       class="validate[required,custom[url]]"
                        placeholder="url, kde jste na citát narazili - např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" />
 			</div>	
 			
 			<div class="input-section">
 				<label for="author">Autor citátu</label>
-				<input type="text" id="author" name="author" @value(quote.author) class="validate[required]" tabindex="3" placeholder="např. Jiří Paroubek" />
+				<input type="text" id="author" name="author" @value(quote.author) tabindex="3" placeholder="např. Jiří Paroubek" />
 			</div>
 
             <div class="input-section">
