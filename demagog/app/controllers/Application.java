@@ -1,27 +1,29 @@
 package controllers;
 
-import com.google.code.morphia.Key;
-import models.Quote;
-import models.Quote.QuoteState;
-import models.QuotesListContent;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.bson.types.ObjectId;
-import play.Logger;
-import play.data.Form;
-import play.libs.F;
-import play.mvc.Controller;
-import play.mvc.Http.Cookie;
-import play.mvc.Result;
-import scala.Option;
-import utils.ReCaptchaService;
-import views.html.quote_detail;
-import views.html.quote_new;
-import views.html.quotes_list;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import models.Quote;
+import models.Quote.QuoteState;
+import models.QuotesListContent;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
+import org.bson.types.ObjectId;
+
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Http.Cookie;
+import play.mvc.Result;
+import utils.ReCaptchaService;
+import utils.RequestUtils;
+import views.html.quote_detail;
+import views.html.quote_new;
+import views.html.quotes_list;
+
+import com.google.code.morphia.Key;
 
 public class Application extends Controller {
 
@@ -129,7 +131,7 @@ public class Application extends Controller {
 	public static Result upVote(QuotesListContent content) {
 		String id = request().body().asFormUrlEncoded().get("id")[0];
 
-		Quote.upVote(new ObjectId(id));
+		Quote.upVote(new ObjectId(id), RequestUtils.getRemoteAddress(request()));
 
 		Cookie cookie = request().cookies().get(COOKIE_NAME);
 		String votes = "";
@@ -148,7 +150,7 @@ public class Application extends Controller {
     public static Result upVoteAjax(QuotesListContent content) {
         String id = request().body().asFormUrlEncoded().get("id")[0];
 
-        Quote.upVote(new ObjectId(id));
+        Quote.upVote(new ObjectId(id), RequestUtils.getRemoteAddress(request()));
 
         Cookie cookie = request().cookies().get(COOKIE_NAME);
         String votes = "";
