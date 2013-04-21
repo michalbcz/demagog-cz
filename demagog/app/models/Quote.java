@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
 import org.springframework.util.Assert;
 
@@ -125,8 +126,18 @@ public class Quote {
 	public static void upVote(ObjectId id, String ipAddress) {
 		Assert.notNull(id);
 		Assert.hasText(ipAddress);
+
         Logger.info("Upvote for quote id: " + id + "from ip: " + ipAddress);
-		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).inc("voteCount").add("voteIpList", ipAddress));
+        UpdateOperations<Quote> updateOperations = DBHolder.ds.createUpdateOperations(Quote.class);
+        UpdateOperations<Quote> quoteUpdateOperations = updateOperations.inc("voteCount").add("voteIpList", ipAddress);
+
+        Query<Quote> selectByIdApprovedForVoting =
+                                DBHolder.ds.createQuery(Quote.class)
+                                                    .field("_id").equal(id)
+                                                    .field("voteCount").lessThanOrEq(10000) // can't vote for more than 10 000 times
+                                                    .field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
+
+        DBHolder.ds.update(selectByIdApprovedForVoting, quoteUpdateOperations);
 	}
 
 	public static Quote findById(ObjectId id) {
