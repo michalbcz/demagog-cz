@@ -129,7 +129,7 @@ public class Quote {
 
         Logger.info("Upvote for quote id: " + id + "from ip: " + ipAddress);
         UpdateOperations<Quote> updateOperations = DBHolder.ds.createUpdateOperations(Quote.class);
-        UpdateOperations<Quote> quoteUpdateOperations = updateOperations.inc("voteCount").add("voteIpList", ipAddress);
+        UpdateOperations<Quote> quoteUpdateOperations = updateOperations.inc("voteCount").add("voteIpList", ipAddress, true);
 
         Query<Quote> selectByIdApprovedForVoting =
                                 DBHolder.ds.createQuery(Quote.class)
