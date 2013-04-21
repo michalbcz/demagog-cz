@@ -15,7 +15,6 @@ import org.bson.types.ObjectId;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
 import utils.ReCaptchaService;
@@ -110,7 +109,7 @@ public class Application extends Controller {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 
-		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAllreadyVotedIds()));
+		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result showQuoteDetail(String id) {
@@ -126,7 +125,7 @@ public class Application extends Controller {
 			return notFound();
 		}
 
-		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
+		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result upVote(QuotesListContent content) {
@@ -161,16 +160,14 @@ public class Application extends Controller {
 
 
 	/**
-	 * Find ids of quotes user allready voted on. (from cookie)
-	 *
-	 * @return
+	 * @return ids of quotes user already voted on (from cookies).
 	 */
-	private static List<String> getAllreadyVotedIds() {
-		List<String> allreadyVoted = new ArrayList<String>();
+	private static List<String> getAlreadyVotedQuotesByUser() {
+		List<String> alreadyVoted = new ArrayList<String>();
 
 		Cookie cookie = null;
 
-		// first looak after the cookies from the response
+		// first look after the cookies from the response
 		for (Cookie responseCookie : response().cookies()) {
 			if (responseCookie.name().equals(COOKIE_NAME)) {
 				cookie = responseCookie;
@@ -183,9 +180,9 @@ public class Application extends Controller {
 		if (cookie != null && cookie.value() != null) {
 			String votes = cookie.value();
 
-			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
+			alreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
 		}
 
-		return allreadyVoted;
+		return alreadyVoted;
 	}
 }
