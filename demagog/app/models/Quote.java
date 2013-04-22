@@ -6,18 +6,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.code.morphia.Key;
+import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
+import org.springframework.util.Assert;
 
 import play.Logger;
 import play.data.validation.Constraints;
 import utils.DBHolder;
 
+import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 
-@Entity
+@Entity(concern = "safe")
 public class Quote {
 
 	public static final String AUTHOR_EMPTY_FILTER = "";
@@ -41,7 +43,7 @@ public class Quote {
 
     @Constraints.MaxLength(15)
 	public String userIp;
-
+    
 	public Date creationDate = new Date(); /* sensible default */
 
 	public QuoteState quoteState = QuoteState.NEW; /* sensible default */
@@ -59,9 +61,13 @@ public class Quote {
      */
     public String demagogBacklinkUrl;
 
+    public List<String> voteIpList = new ArrayList<String>();
+    
 	public int voteCount;
 
 	public boolean deleted;
+
+    public boolean addedFromBookmarklet = false;
 
     /**
      * State transitions:
@@ -119,9 +125,21 @@ public class Quote {
                         .set("approvalDate", new Date()));
 	}
 
-	public static void upVote(ObjectId id) {
-        Logger.info("Upvote for quote id: " + id);
-		DBHolder.ds.update(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id), DBHolder.ds.createUpdateOperations(Quote.class).inc("voteCount"));
+	public static void upVote(ObjectId id, String ipAddress) {
+		Assert.notNull(id);
+		Assert.hasText(ipAddress);
+
+        Logger.info("Upvote for quote id: " + id + "from ip: " + ipAddress);
+        UpdateOperations<Quote> updateOperations = DBHolder.ds.createUpdateOperations(Quote.class);
+        UpdateOperations<Quote> quoteUpdateOperations = updateOperations.inc("voteCount").add("voteIpList", ipAddress, true);
+
+        Query<Quote> selectByIdApprovedForVoting =
+                                DBHolder.ds.createQuery(Quote.class)
+                                                    .field("_id").equal(id)
+                                                    .field("voteCount").lessThanOrEq(10000) // can't vote for more than 10 000 times
+                                                    .field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
+
+        DBHolder.ds.update(selectByIdApprovedForVoting, quoteUpdateOperations);
 	}
 
 	public static Quote findById(ObjectId id) {
@@ -149,7 +167,7 @@ public class Quote {
                 .asList();
     }
 
-    //TODO michalb_cz 16.04.2013: permanent what? well i think it should be possible to delete permanently through application
+    //TODO michalb_cz 16.04.2013: permanent what? well i think it shouldn't be possible to delete permanently through application
 	public static void delete(ObjectId id, boolean permanent) {
 		if (permanent) {
 			DBHolder.ds.delete(DBHolder.ds.createQuery(Quote.class).field("_id").equal(id));

@@ -1,27 +1,29 @@
 package controllers;
 
-import com.google.code.morphia.Key;
-import models.Quote;
-import models.Quote.QuoteState;
-import models.QuotesListContent;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.bson.types.ObjectId;
-import play.Logger;
-import play.data.Form;
-import play.libs.F;
-import play.mvc.Controller;
-import play.mvc.Http.Cookie;
-import play.mvc.Result;
-import scala.Option;
-import utils.ReCaptchaService;
-import views.html.quote_detail;
-import views.html.quote_new;
-import views.html.quotes_list;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import models.Quote;
+import models.Quote.QuoteState;
+import models.QuotesListContent;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
+import org.bson.types.ObjectId;
+
+import play.Logger;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Http.Cookie;
+import play.mvc.Result;
+import utils.ReCaptchaService;
+import utils.RequestUtils;
+import views.html.quote_detail;
+import views.html.quote_new;
+import views.html.quotes_list;
+
+import com.google.code.morphia.Key;
 
 public class Application extends Controller {
 
@@ -107,7 +109,7 @@ public class Application extends Controller {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 
-		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAllreadyVotedIds()));
+		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result showQuoteDetail(String id) {
@@ -123,32 +125,26 @@ public class Application extends Controller {
 			return notFound();
 		}
 
-		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
+		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result upVote(QuotesListContent content) {
-		String id = request().body().asFormUrlEncoded().get("id")[0];
-
-		Quote.upVote(new ObjectId(id));
-
-		Cookie cookie = request().cookies().get(COOKIE_NAME);
-		String votes = "";
-		if (cookie != null && cookie.value() != null) {
-			votes = cookie.value();
-			votes += COOKIE_VALUE_SEPARATOR;
-		}
-
-		votes += id;
-
-		response().setCookie(COOKIE_NAME, votes);
+        String id = request().body().asFormUrlEncoded().get("id")[0];
+        upVoteQuote(id);
 
 		return showQuotes(content);
 	}
 
     public static Result upVoteAjax(QuotesListContent content) {
         String id = request().body().asFormUrlEncoded().get("id")[0];
+        upVoteQuote(id);
 
-        Quote.upVote(new ObjectId(id));
+        return ok();
+    }
+
+    private static void upVoteQuote(String id) {
+
+        Quote.upVote(new ObjectId(id), RequestUtils.getRemoteAddress(request()));
 
         Cookie cookie = request().cookies().get(COOKIE_NAME);
         String votes = "";
@@ -160,21 +156,18 @@ public class Application extends Controller {
         votes += id;
 
         response().setCookie(COOKIE_NAME, votes);
-
-        return ok();
     }
 
+
 	/**
-	 * Find ids of quotes user allready voted on. (from cookie)
-	 *
-	 * @return
+	 * @return ids of quotes user already voted on (from cookies).
 	 */
-	private static List<String> getAllreadyVotedIds() {
-		List<String> allreadyVoted = new ArrayList<String>();
+	private static List<String> getAlreadyVotedQuotesByUser() {
+		List<String> alreadyVoted = new ArrayList<String>();
 
 		Cookie cookie = null;
 
-		// first looak after the cookies from the response
+		// first look after the cookies from the response
 		for (Cookie responseCookie : response().cookies()) {
 			if (responseCookie.name().equals(COOKIE_NAME)) {
 				cookie = responseCookie;
@@ -187,9 +180,9 @@ public class Application extends Controller {
 		if (cookie != null && cookie.value() != null) {
 			String votes = cookie.value();
 
-			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
+			alreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
 		}
 
-		return allreadyVoted;
+		return alreadyVoted;
 	}
 }
