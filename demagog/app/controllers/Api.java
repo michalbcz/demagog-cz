@@ -19,6 +19,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import utils.ReCaptchaService;
+import utils.RequestUtils;
 import views.html.quote_new;
 
 public class Api extends Controller {
@@ -47,7 +48,7 @@ public class Api extends Controller {
 
         JsonNode jsonNode = request().body().asJson();
 
-        Form<Quote> quoteForm = form(Quote.class).bindFromRequest();
+        Form<Quote> quoteForm = form(Quote.class).bindFromRequest("quoteText", "url", "addedFromBookmarklet", "recaptchaChallenge", "recaptchaResponse");
 
         String recaptchaResponse = jsonNode.get("recaptchaResponse").asText();
         String recaptchaChallenge = jsonNode.get("recaptchaChallenge").asText();
@@ -87,7 +88,9 @@ public class Api extends Controller {
         } else {
 
             Quote quote = quoteForm.get();
-            quote.userIp = remoteAddress;
+            quote.userIp = RequestUtils.getRemoteAddress(request());
+
+
 
             Key savedQuoteKey = quote.save(); //TODO: what happend when save failed ? (btw activate safe save!)
 

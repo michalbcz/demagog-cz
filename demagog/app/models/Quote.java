@@ -67,6 +67,8 @@ public class Quote {
 
 	public boolean deleted;
 
+    public boolean addedFromBookmarklet = false;
+
     /**
      * State transitions:
      *    NEW -> APPROVED_FOR_VOTING -> ANALYSIS_IN_PROGRESS -> CHECKED

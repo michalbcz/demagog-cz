@@ -491,7 +491,8 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
             url: paramsToSend.sourceUrl,
             quoteText: paramsToSend.selectedText,
             recaptchaResponse: paramsToSend.recaptchaResponse,
-            recaptchaChallenge: paramsToSend.recaptchaChallenge
+            recaptchaChallenge: paramsToSend.recaptchaChallenge,
+            addedFromBookmarklet: true
         };
 
         var apiUrl = Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl + "/api/v1/quote/save"
