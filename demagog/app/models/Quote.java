@@ -19,7 +19,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
 
-@Entity
+@Entity(concern = "safe")
 public class Quote {
 
 	public static final String AUTHOR_EMPTY_FILTER = "";
