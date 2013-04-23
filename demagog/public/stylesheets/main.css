@@ -277,17 +277,22 @@ a:hover {
 	margin-bottom: 2px;
 }
 
-#new-quote #quote-text {
+#new-quote table {
 	width: 100%;
-	height: 10em;
+	border-spacing: 10px;
 }
 
-#new-quote .input-section input {
-	width: 100%;
+#new-quote col:FIRST-CHILD {
+	width: 150px;
 }
 
-#new-quote .input-section {
-	margin-bottom: 0.5em;
+#new-quote td {
+	vertical-align: top;
+}
+
+#new-quote td.right {
+	text-align: right;
+	padding-right: 10px;
 }
 
 #new-quote label {
@@ -295,8 +300,20 @@ a:hover {
 	color: #555;
 }
 
-#new-quote #buttons {
-	text-align: right;
+#new-quote .text {
+	width: 100%;
+}
+
+#new-quote textarea {
+	height: 10em;
+}
+
+#bookmarklet-instructions.ui-panel {
+	padding: 20px;
+}
+
+#new-quote.ui-panel {
+	padding: 15px;
 }
 
 #bookmarklet-instructions {
@@ -304,12 +321,19 @@ a:hover {
 }
 
 #bookmarklet-instructions p {
-	margin: 5px 0px 10px 0px;
+	margin: 5px 0px 20px 0px;
 }
 
 #bookmarklet-instructions h4 {
 	margin-top: 3px;
 	margin-bottom: 8px;
+}
+
+#bookmarklet-help .ui-accordion-content {
+    padding: 0.5em 1em 0 1em;
+    font-family: Arial;
+    font-size: 0.9em;
+    line-height: 1;
 }
 
 #bookmarklet-help img {
@@ -322,6 +346,24 @@ a:hover {
 
 #bookmarklet-help li:FIRST-CHILD {
 	margin-top: 10px;
+}
+
+#bookmarklet-dnd {
+	margin-top: 22px;
+	margin-bottom: 26px;
+}
+
+#bookmarklet-dnd-button {
+	padding: 0.5em 1em;
+	background-color: #2D2D2D;
+	border: 1px solid #515151;
+	color: #FFFFFF;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+#browser-bookmark-help {
+	margin: 20px 0 10px 0;
 }
 
 #browser-bookmark-help li {
@@ -352,31 +394,12 @@ li.chrome {
 
 li.opera {
 	list-style-type: none;
-	background: url("../images/opera.gif") no-repeat top left;
-}
-
-#bookmarklet-help-label {
-	cursor: pointer;
-}
-
-#bookmarklet-dnd {
-	float: right;
-	height: 70px;
-    line-height: 30px;
-}
-#bookmarklet-dnd-button {
-	padding: 0.5em 1em;
-	background-color: #2D2D2D;
-	border: 1px solid #515151;
-	color: #FFFFFF;
-	cursor: pointer;
-	text-decoration: none;
+	background: url("../images/opera.gif") no-repeat 2px top;
 }
 
 #login-panel {
 	width: 300px;
-	margin: 0 auto;
-	margin-top: 100px;
+	margin: 80px auto 80px;
 }
 
 #login-panel .input-section {
