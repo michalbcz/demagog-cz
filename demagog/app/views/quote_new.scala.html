@@ -70,7 +70,8 @@
 	                </script>
 	            </div>
         	</div> <!-- bookmarklet-link -->
-			<div id="bookmarklet-help">
+        	<span class="blue-bar"><span class="leftArrow"></span>Toto přetáhněte do horní lišty</span>
+			<div id="bookmarklet-help" class="clearfix">
 				<h3>Podrobný návod naleznete zde</h3>
 				<div>
 					<ol>
@@ -187,16 +188,6 @@
 				binded: false, 
 				autoHidePrompt: true, 
 				autoHideDelay: 6000
-			});
-			
-			// init tooltip for bookmarklet
-			$('#bookmarklet-dnd-button').tooltip({
-				show: "fadeIn", 
-				hide: "puff",
-				position: { 
-					my: "left center", 
-					at: "right+20 center" 
-				}
 			});
 		});
 	</script>

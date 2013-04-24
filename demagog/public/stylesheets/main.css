@@ -231,6 +231,25 @@ a:hover {
     margin-right: 10px;
 }
 
+.blue-bar {
+    color: #FFFFFF;
+    background-color: #3A87AD;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 2px 4px;
+    border-radius: 3px 3px 3px 3px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.leftArrow {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: transparent url('images/ui-icons_ffffff_256x240.png') no-repeat -96px -48px;
+}
+
 .state.new {
 	background-color: #3A87AD;
 }
@@ -283,7 +302,7 @@ a:hover {
 }
 
 #new-quote col:FIRST-CHILD {
-	width: 150px;
+	width: 132px;
 }
 
 #new-quote td {
@@ -292,12 +311,6 @@ a:hover {
 
 #new-quote td.right {
 	text-align: right;
-	padding-right: 10px;
-}
-
-#new-quote label {
-	font-weight: bold;
-	color: #555;
 }
 
 #new-quote .text {
@@ -314,6 +327,19 @@ a:hover {
 
 #new-quote.ui-panel {
 	padding: 15px;
+}
+
+#bookmarklet-instructions .blue-bar {
+	position: relative;
+	top: 8px;
+	left: 22px;
+    padding-left: 17px;
+}
+
+#bookmarklet-instructions .blue-bar .leftArrow {
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 #bookmarklet-instructions {
@@ -349,8 +375,9 @@ a:hover {
 }
 
 #bookmarklet-dnd {
-	margin-top: 22px;
-	margin-bottom: 26px;
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 30px;
 }
 
 #bookmarklet-dnd-button {
@@ -445,6 +472,10 @@ textarea {
     color: #A0A0A0;
     font-weight: bolder;
     font-size: 18px;
+}
+
+.clearfix {
+	clear: both;
 }
 
 /* support for alerts copy pasted from bootstrap - see http://twitter.github.com/bootstrap/components.html#alerts */
