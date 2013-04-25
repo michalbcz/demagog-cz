@@ -43,16 +43,26 @@
 }
 
 @footer(quote: Quote) = {
-	<div class="footer">
-		<span class="author">Autor: 
-			@if(quote.author == null) {
-				"neznámý"
-			} else {
-				@quote.author
-			}
-		</span>
-		<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
-	</div>	
+	<table class="footer">
+		<tbody>
+			<tr>
+	    		<td><label>Autor:</label></td>
+	    		<td>
+	    			@if(quote.author == null) {
+						"neznámý"
+					} else {
+						@quote.author
+					}
+				</td>
+	  		</tr>
+	  		<tr>
+	    		<td><label>Zdroj:</label></td>
+	    		<td>
+	    			<a href="@{quote.url}">@{quote.url}</a>
+				</td>
+	  		</tr>
+		</tbody>
+	</table>	
 }
 
 @quoteAlreadyVotedImage() = {
@@ -89,24 +99,45 @@
 				<img src="@routes.Assets.at("images/24x24/delete.png")" />
 			</a>
 		</div>
-		<div class="approval">
-			<label><span>Schválit citát k hlasování</span><input name="approved" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.NEW) "" else "checked") /></label><br>
-			<label><span>Citát je publikovaný na demagog.cz</span><input name="published" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.CHECKED_AND_PUBLISHED) "checked" else "") /></label>
-		</div>
-		<div class="footer">
-			<span class="author">Autor: </span>
-			<input name="author" type="text" value="@{quote.author}" />
-
-			<span class="url">Zdroj:
-                <input name="url" type="text" size="80" value="@{quote.url}" />
-                <a href="@{quote.url}" target="_blank">Otevřít</a>
-            </span>
-
-            <div class="demagogBacklinkUrl">
-                <span class="label">Zpětný odkaz na demagog.cz: &nbsp;&nbsp;</span>
-                <input name="demagogBacklinkUrl" type="text" size="80" value="@{quote.demagogBacklinkUrl}" />
-            </div>
-		</div>
+		<table class="approve">
+			<colgroup>
+    			<col class="labels" />
+    			<col class="fields" />
+  			</colgroup>
+			<tbody>
+				<tr>
+			    	<td class="right"><label>Schválit citát k hlasování</label></td>
+			    	<td>
+			    		<input name="approved" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.NEW) "" else "checked") />
+	 				</td>
+			  	</tr>
+			  	<tr>
+			    	<td class="right"><label>Citát je publikovaný na demagog.cz</label></td>
+			    	<td>
+			    		<input name="published" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.CHECKED_AND_PUBLISHED) "checked" else "") />
+	 				</td>
+			  	</tr>
+			  	<tr>
+			    	<td class="right"><label>Autor</label></td>
+			    	<td>
+			    		<input name="author" type="text" value="@{quote.author}" />
+	 				</td>
+			  	</tr>
+			  	<tr>
+			    	<td class="right"><label>Zdroj</label></td>
+			    	<td>
+			    		<input name="url" type="text" size="80" value="@{quote.url}" />
+			    		<a href="@{quote.url}" target="_blank">Otevřít</a>
+	 				</td>
+			  	</tr>
+			  	<tr>
+			    	<td class="right"><label>Zpětný odkaz na demagog.cz</label></td>
+			    	<td>
+			    		<input name="demagogBacklinkUrl" type="text" size="80" value="@{quote.demagogBacklinkUrl}" />
+	 				</td>
+			  	</tr>
+			</tbody>
+		</table>
 	</form>
 	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />		

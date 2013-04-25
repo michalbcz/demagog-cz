@@ -136,7 +136,7 @@ a:hover {
 	margin: 15px 0;
 	background-color: #FFFFFF;
 	color: #212121;
-	padding: 0.5em;
+	padding: 12px;
 	border-radius: 5px;
 	-moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
 	-webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
@@ -174,28 +174,16 @@ a:hover {
 	color: #555;
 }
 
-.url {
-	margin-left: 0.5em;
-}
-
 .quote .text {
 	margin-right: 50px;
+	margin-bottom: 5px;
 }
 
 .quote .actions {
 	position: absolute;
-	top: 0.5em;
-	right: 0.5em;
+	top: 12px;
+	right: 12px;
 	height: 100%;
-}
-
-.quote .approval {
-	margin: 6px 0;
-	font-size: 0.9em;
-}
-
-.quote .approval input {
-	margin-left: 10px;
 }
 
 .vote-count {
@@ -205,7 +193,7 @@ a:hover {
 	vertical-align: top;
 }
 
-.quote .actions input[type="submit"]{
+.quote .actions input[type=submit]{
 	width: 24px;
 	height: 24px;
 	background-image: url('../images/24x24/add.png');
@@ -213,6 +201,26 @@ a:hover {
 
 .quote .fb-like {
 	margin-top: 0.5em;
+}
+
+table.approve label {
+	font-size: 0.8em;
+}
+
+table.approve {
+	width: 805px;
+}
+
+table.approve input[type=text] {
+	width: 532px;
+}
+
+table.approve td {
+	white-space: nowrap;
+}
+
+table.approve col.labels {
+	width: 143px;
 }
 
 .orange-bar {
@@ -286,7 +294,7 @@ a:hover {
 }
 
 .admin_textarea {
-	width: 810px;
+	width: 805px;
 	height: 100px;
 }
 
@@ -298,23 +306,22 @@ a:hover {
 
 #new-quote table {
 	width: 100%;
-	border-spacing: 10px;
-}
-
-#new-quote col:FIRST-CHILD {
-	width: 132px;
 }
 
 #new-quote td {
 	vertical-align: top;
 }
 
-#new-quote td.right {
+td.right {
 	text-align: right;
 }
 
 #new-quote .text {
 	width: 100%;
+}
+
+#new-quote label {
+	font-size: 0.9em;
 }
 
 #new-quote textarea {
@@ -323,10 +330,6 @@ a:hover {
 
 #bookmarklet-instructions.ui-panel {
 	padding: 20px;
-}
-
-#new-quote.ui-panel {
-	padding: 15px;
 }
 
 #bookmarklet-instructions .blue-bar {
@@ -433,8 +436,7 @@ li.opera {
 	margin-bottom: 0.5em;
 }
 
-
-#login-panel label {
+#login-panel label, #new-quote label {
 	font-weight: bold;
 	color: #555;
 	margin-bottom: 3px;
@@ -443,6 +445,7 @@ li.opera {
 
 #login-panel input,
 #login-panel button {
+	margin-top: 5px;
 	width: 100%;
 }
 
@@ -452,20 +455,38 @@ li.opera {
 	margin-top: 30px;
 }
 
+form table {
+	border-spacing: 6px;
+}
+
+form table label {
+	color: #555555;
+}
+
 input[type=checkbox], input[type=radio] {
 	vertical-align: middle;
     position: relative;
     bottom: 1px;
 }
   
-input, textarea {
+input[type=text], input[type=password], textarea {
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 4px 4px !important;
+    font-family: Arial;
+    font-size: 11pt !important;
+    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 textarea {
     resize: none;
+    text-align: justify;
+}
+
+input[type=text]:FOCUS, input[type=password]:FOCUS, textarea:FOCUS {
+	box-shadow: 0 0 4px 1px #9C9C9C;
 }
 
 #logo-sublogo {

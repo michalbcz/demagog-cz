@@ -123,14 +123,10 @@
 
 		<form action="@{controllers.routes.Application.submitQuote()}" id="new-quote-form" method="POST">
 			<table>
-			 	<colgroup>
-    				<col />
-    				<col />
-  				</colgroup>
 				<tbody>
 					<tr>
-			    		<td class="right"><label for="quote-text">Citát</label></td>
 			    		<td>
+			    			<label for="quote-text">Citát</label>
 			    			<textarea id="quote-text"
 	                          		  name="quoteText"
 	                                  class="text validate[required]"
@@ -140,8 +136,8 @@
 	 					</td>
 			  		</tr>
 			  		<tr>
-			    		<td class="right"><label for="url">Zdroj citátu</label></td>
 			    		<td>
+			    			<label for="url">Zdroj citátu</label>
 			    			<input id="url" name="url"
 	                       		   tabindex="2" type="text"
 	                       		   @value(quote.url)
@@ -151,8 +147,8 @@
 	 					</td>
 			  		</tr>
 			  		<tr>
-			    		<td class="right"><label for="author">Autor citátu</label></td>
 			    		<td>
+			    			<label for="author">Autor citátu</label>
 			    			<input type="text" id="author" 
 			    			       class="text" name="author" 
 			    			       @value(quote.author) tabindex="3"
@@ -161,14 +157,13 @@
 	 					</td>
 			  		</tr>
 			  		<tr>
-			    		<td class="right"><label>Prosím opište text</label></td>
 			    		<td>
+			    			<label>Prosím opište text</label>
 			    			<div style="width:100px">@recaptcha(tabindex = "4")</div>
 	 					</td>
 			  		</tr>
 			  		<tr>
-			  			<td></td>
-			    		<td class="button"><input type="submit" id="submit" tabindex="5" value="Odeslat" /></td>
+			    		<td class="right"><input type="submit" id="submit" tabindex="5" value="Odeslat" /></td>
 			  		</tr>
 				</tbody>
 			</table>
