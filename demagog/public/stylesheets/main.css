@@ -472,12 +472,17 @@ input[type=checkbox], input[type=radio] {
 input[type=text], input[type=password], textarea {
     border: 1px solid #555555;
     border-radius: 4px;
-    padding: 4px 4px !important;
+    padding: 4px 4px;
     font-family: Arial;
-    font-size: 11pt !important;
+    font-size: 11pt;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+
+#recaptcha_area input[type=text] {
+	padding: 4px 4px !important;
+	font-size: 10pt !important;
 }
 
 textarea {
