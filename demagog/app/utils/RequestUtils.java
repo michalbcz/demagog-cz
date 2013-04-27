@@ -6,6 +6,13 @@ import org.springframework.util.Assert;
 import play.mvc.Http.Request;
 
 public class RequestUtils {
+	
+	private static final String HEROKU_FORWARDED_HEADER = "x-forwarded-for";
+	
+	/**
+	 * Represents unknown ip address
+	 */
+	public static final String UNKNOWN_IP = "n/a";
 
 	private RequestUtils() {}
 	
@@ -14,12 +21,12 @@ public class RequestUtils {
 	 * 
 	 * @param request
 	 *            the HTTP request, can't be <code>null</code>
-	 * @return the remote ip address, never returns <code>null</code>
+	 * @return the remote ip address, or {@link #UNKNOWN_IP}
 	 */
 	public static String getRemoteAddress(Request request) {
 		Assert.notNull(request);
 		
-		String header = request.getHeader("x-forwarded-for");
+		String header = request.getHeader(HEROKU_FORWARDED_HEADER);
 		if (StringUtils.isBlank(header)) {
 			header = request.remoteAddress();
 		}
@@ -27,7 +34,7 @@ public class RequestUtils {
 		if (split != null && split.length > 0) {
 			return StringUtils.trimToEmpty(split[0]);
 		} else {
-			return "";
+			return UNKNOWN_IP;
 		}
 	}
 }

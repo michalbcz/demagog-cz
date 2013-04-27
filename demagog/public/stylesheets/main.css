@@ -3,7 +3,7 @@ html {
 }
 
 body {
-	font-family: Arial;
+	font-family: "Open Sans", Arial, sans-serif;
 }
 
 img {
@@ -29,7 +29,7 @@ img {
 
 #footer {
     color: white;
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
 }
 
@@ -64,6 +64,7 @@ a:hover {
     padding: 0 !important;
     position: relative;
     top: 0;
+    font-family: "Trebuchet MS", "Verdana", sans-serif;
 }
 #navigation ul {
 	-moz-box-shadow: 0px 1px 10px rgba(0, 0, 0, .4);
@@ -136,7 +137,7 @@ a:hover {
 	margin: 15px 0;
 	background-color: #FFFFFF;
 	color: #212121;
-	padding: 0.5em;
+	padding: 12px;
 	border-radius: 5px;
 	-moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
 	-webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
@@ -145,7 +146,6 @@ a:hover {
 
 .filter-container {
 	margin-bottom: 0.5em;
-	font-weight:bold;
 	color: white;
 	text-align: right;
 	line-height: 30px;
@@ -174,38 +174,30 @@ a:hover {
 	color: #555;
 }
 
-.url {
-	margin-left: 0.5em;
+p, .text {
+	text-align: justify;;
 }
 
 .quote .text {
-	margin-right: 50px;
+	margin-right: 60px;
+	margin-bottom: 5px;
 }
 
 .quote .actions {
 	position: absolute;
-	top: 0.5em;
-	right: 0.5em;
-	height: 100%;
-}
-
-.quote .approval {
-	margin: 6px 0;
-	font-size: 0.9em;
-}
-
-.quote .approval input {
-	margin-left: 10px;
+	top: 12px;
+	right: 12px;
 }
 
 .vote-count {
+	position: relative;
+	top: -3px;
 	font-size: 22px;
 	font-weight: bold;
 	color: #555;
-	vertical-align: top;
 }
 
-.quote .actions input[type="submit"]{
+.quote .actions input[type=submit]{
 	width: 24px;
 	height: 24px;
 	background-image: url('../images/24x24/add.png');
@@ -213,6 +205,26 @@ a:hover {
 
 .quote .fb-like {
 	margin-top: 0.5em;
+}
+
+table.approve label {
+	font-size: 0.8em;
+}
+
+table.approve {
+	width: 805px;
+}
+
+table.approve input[type=text] {
+	width: 532px;
+}
+
+table.approve td {
+	white-space: nowrap;
+}
+
+table.approve col.labels {
+	width: 143px;
 }
 
 .orange-bar {
@@ -229,6 +241,25 @@ a:hover {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.blue-bar {
+    color: #FFFFFF;
+    background-color: #3A87AD;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 2px 4px;
+    border-radius: 3px 3px 3px 3px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.leftArrow {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: transparent url('images/ui-icons_ffffff_256x240.png') no-repeat -96px -48px;
 }
 
 .state.new {
@@ -264,10 +295,11 @@ a:hover {
 
 .imglink {
 	text-decoration: none;
+	display: inline-block;
 }
 
 .admin_textarea {
-	width: 810px;
+	width: 805px;
 	height: 100px;
 }
 
@@ -277,26 +309,45 @@ a:hover {
 	margin-bottom: 2px;
 }
 
-#new-quote #quote-text {
-	width: 100%;
-	height: 10em;
-}
-
-#new-quote .input-section input {
+#new-quote table {
 	width: 100%;
 }
 
-#new-quote .input-section {
-	margin-bottom: 0.5em;
+#new-quote td {
+	vertical-align: top;
+}
+
+td.right {
+	text-align: right;
+}
+
+#new-quote .text {
+	width: 100%;
 }
 
 #new-quote label {
-	font-weight: bold;
-	color: #555;
+	font-size: 0.9em;
 }
 
-#new-quote #buttons {
-	text-align: right;
+#new-quote textarea {
+	height: 10em;
+}
+
+#bookmarklet-instructions.ui-panel {
+	padding: 20px;
+}
+
+#bookmarklet-instructions .blue-bar {
+	position: relative;
+	top: 8px;
+	left: 22px;
+    padding-left: 17px;
+}
+
+#bookmarklet-instructions .blue-bar .leftArrow {
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 #bookmarklet-instructions {
@@ -304,12 +355,19 @@ a:hover {
 }
 
 #bookmarklet-instructions p {
-	margin: 5px 0px 10px 0px;
+	margin: 5px 0px 20px 0px;
 }
 
 #bookmarklet-instructions h4 {
 	margin-top: 3px;
 	margin-bottom: 8px;
+}
+
+#bookmarklet-help .ui-accordion-content {
+    padding: 0.5em 1em 0 1em;
+	font-family: "Open Sans", Arial, sans-serif;
+    font-size: 0.9em;
+    line-height: 1;
 }
 
 #bookmarklet-help img {
@@ -322,6 +380,25 @@ a:hover {
 
 #bookmarklet-help li:FIRST-CHILD {
 	margin-top: 10px;
+}
+
+#bookmarklet-dnd {
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+#bookmarklet-dnd-button {
+	padding: 0.5em 1em;
+	background-color: #2D2D2D;
+	border: 1px solid #515151;
+	color: #FFFFFF;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+#browser-bookmark-help {
+	margin: 20px 0 10px 0;
 }
 
 #browser-bookmark-help li {
@@ -352,39 +429,19 @@ li.chrome {
 
 li.opera {
 	list-style-type: none;
-	background: url("../images/opera.gif") no-repeat top left;
-}
-
-#bookmarklet-help-label {
-	cursor: pointer;
-}
-
-#bookmarklet-dnd {
-	float: right;
-	height: 70px;
-    line-height: 30px;
-}
-#bookmarklet-dnd-button {
-	padding: 0.5em 1em;
-	background-color: #2D2D2D;
-	border: 1px solid #515151;
-	color: #FFFFFF;
-	cursor: pointer;
-	text-decoration: none;
+	background: url("../images/opera.gif") no-repeat 2px top;
 }
 
 #login-panel {
 	width: 300px;
-	margin: 0 auto;
-	margin-top: 100px;
+	margin: 80px auto 80px;
 }
 
 #login-panel .input-section {
 	margin-bottom: 0.5em;
 }
 
-
-#login-panel label {
+#login-panel label, #new-quote label {
 	font-weight: bold;
 	color: #555;
 	margin-bottom: 3px;
@@ -393,6 +450,7 @@ li.opera {
 
 #login-panel input,
 #login-panel button {
+	margin-top: 5px;
 	width: 100%;
 }
 
@@ -402,26 +460,76 @@ li.opera {
 	margin-top: 30px;
 }
 
+form table {
+	border-spacing: 6px;
+}
+
+form table label {
+	color: #555555;
+}
+
 input[type=checkbox], input[type=radio] {
 	vertical-align: middle;
     position: relative;
     bottom: 1px;
 }
   
-input, textarea {
+input[type=text], input[type=password], textarea {
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 4px 4px;
+	font-family: "Opane Sans", Arial, sans-serif ;
+    font-size: 11pt;
+    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+}
+
+#recaptcha_area input[type=text] {
+	padding: 4px 4px !important;
+	font-size: 10pt !important;
 }
 
 textarea {
     resize: none;
+    text-align: justify;
+}
+
+input[type=text]:FOCUS, input[type=password]:FOCUS, textarea:FOCUS {
+	box-shadow: 0 0 4px 1px #9C9C9C;
 }
 
 #logo-sublogo {
-    color: #A0A0A0;
-    font-weight: bolder;
-    font-size: 18px;
+    color: #FFFFFF;
+}
+
+#logo-sublogo-text {
+	letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.error-400, .error-404, .error-500 {
+    background: transparent url("../images/128x128/broken.png") no-repeat scroll center top;
+    margin: 0 auto;
+    margin-top: 120px;
+    padding-top: 180px;
+    text-align: center;
+}
+
+.error-400 h2, .error-404 h2, .error-500 h2 {
+    color: #FFFFFF;
+    font-size: 22pt;
+}
+
+.error-400 p, .error-404 p, .error-500 p {
+	margin: 0 auto;
+    width: 340px;
+    color: #CACACA;
+    text-align: center;
+}
+
+.clearfix {
+	clear: both;
 }
 
 /* support for alerts copy pasted from bootstrap - see http://twitter.github.com/bootstrap/components.html#alerts */

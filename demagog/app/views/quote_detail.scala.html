@@ -24,7 +24,7 @@
 				<span class="vote-count">@{quote.voteCount}</span>
 				
 				@if(QuoteState.APPROVED_FOR_VOTING == quote.quoteState && !allreadyVoted.contains(quote.id)) {
-					<a href="javascript:$('#@{quote.id}').submit(); void(0);">
+					<a class="imglink" href="javascript:$('#@{quote.id}').submit(); void(0);">
 						<img src="@routes.Assets.at("images/24x24/add.png")" />
 					</a>
 				} else {
@@ -36,24 +36,33 @@
 			@{LabelProvider.getLabel(quote.quoteState)}
 		</span>
 		
-		<div class="footer">
-			<span class="author">Autor: 
-				@if(quote.author == null) {
-					"neznámý"
-				} else {
-					@quote.author
-				}
-			</span>
-			<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
-
-            @if(quote.demagogBacklinkUrl != null) {
-
-                <div class="demagogBacklinkUrl">
-                    <a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
-                </div>
-
-            }
-		</div>
+		<table class="footer">
+			<tbody>
+				<tr>
+		    		<td><label>Autor:</label></td>
+		    		<td>
+		    			@if(quote.author == null) {
+							"neznámý"
+						} else {
+							@quote.author
+						}
+					</td>
+		  		</tr>
+		  		<tr>
+		    		<td><label>Zdroj:</label></td>
+		    		<td>
+		    			<a href="@{quote.url}">@{quote.url}</a>
+					</td>
+		  		</tr>
+		  		@if(quote.demagogBacklinkUrl != null) {
+					<tr>
+			    		<td colspan="2">
+			    			<a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
+						</td>
+		  			</tr>
+	            }
+			</tbody>
+		</table>
 		<div class="fb-like" data-href="@utils.Settings.getUrl("quote/" + quote.id.toString())" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
 	</div>
 }
