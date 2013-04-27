@@ -58,6 +58,9 @@
 
                 <div id="footer-menu">
                     <a href="http://www.demagog.cz">© Demagog.cz @{new Date().getYear() + 1900 /* as current year */}</a>
+                    <span class="applicationVersion" @if(play.Play.application().isProd()){style="display:none"}>
+                    	v@play.Play.application().configuration().getString("app.version")
+                    </span>
                 </div>
 			
                 <div id="logo-restart">
