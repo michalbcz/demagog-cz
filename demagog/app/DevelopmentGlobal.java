@@ -2,6 +2,8 @@ import models.Quote;
 import models.Quote.QuoteState;
 import models.User;
 import play.Application;
+import play.mvc.Http.RequestHeader;
+import play.mvc.Result;
 
 /**
  * Development specific settings
@@ -10,7 +12,7 @@ import play.Application;
  *
  */
 public class DevelopmentGlobal extends BaseGlobal {
-
+	
 	@Override
 	public void onStart(Application application) {
 		super.onStart(application);
@@ -18,6 +20,24 @@ public class DevelopmentGlobal extends BaseGlobal {
 		initDeveloperData();
 	}
 
+	@Override
+	public Result onError(RequestHeader request, Throwable t) {
+		// to get default play behaviour
+		return null;
+	}
+
+	@Override
+	public Result onHandlerNotFound(RequestHeader request) {
+		// to get default play behaviour
+		return null;
+	} 
+
+	@Override
+	public Result onBadRequest(RequestHeader request, String error) {
+		// to get default play behaviour
+		return null;
+	} 
+	
     @Override
     protected User createAdminUser() {
         return new User("test", "test");

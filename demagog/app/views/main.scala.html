@@ -1,5 +1,6 @@
 @(title : String = "", menuType: String = "menu-main")(content : Html)
 @import java.util.Date
+@import tags._
 
 <!DOCTYPE html>
 
@@ -13,6 +14,9 @@
 
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 		
@@ -20,19 +24,18 @@
         <script src="@routes.Assets.at("javascripts/main.js?v=1")" type="text/javascript"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui-1.10.2.custom.min.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery.selectbox.css")">
-
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+		
     </head>
     <body>
     	<div id="body">
     	    <div id="header">
     	    @if(UserAuthenticator.isUserLoggedIn()) {
     	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
-                    @logo_header
+                    @logo()
         		</a> 
     	    } else {
     	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
-                    @logo_header
+                    @logo()
         		</a> 
         	}    		
             </div>
@@ -135,11 +138,3 @@
 	</div>
 }
 
-@logo_header = {
-    <div id="logo-container">
-    </div>
-    <div id="logo-sublogo">
-        <span>ověřto.demagog.cz - řekni nám, co chceš ověřit!</span>
-        <span class="orange-bar">BETA</span>
-    </div>
-}

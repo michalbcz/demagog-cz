@@ -10,19 +10,22 @@ import org.bson.types.ObjectId;
 import play.Application;
 import play.GlobalSettings;
 import play.Play;
-import play.api.mvc.Codec;
-import play.api.templates.Txt;
 import play.data.format.Formatters;
-
-import com.google.code.morphia.logging.MorphiaLoggerFactory;
-import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import play.mvc.Action;
 import play.mvc.Http;
+import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
 import play.mvc.Results;
 
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
+
 public class BaseGlobal extends GlobalSettings {
 
+	private static final int CODE_NOT_FOUND = 404;
+	private static final int CODE_BAD_REQUEST = 400;
+	private static final int CODE_INTERNAL_ERROR = 500;
+	
 	@Override
 	public void onStart(Application application) {
 		try {
@@ -39,19 +42,32 @@ public class BaseGlobal extends GlobalSettings {
 
 		initAdminUser();
 	}
+	
+	@Override
+	public Result onError(RequestHeader request, Throwable t) {
+		return Results.internalServerError(views.html.system.error.render(request, CODE_INTERNAL_ERROR));
+	}
+
+	@Override
+	public Result onHandlerNotFound(RequestHeader request) {
+		return Results.notFound(views.html.system.error.render(request, CODE_NOT_FOUND));
+	} 
+
+	@Override
+	public Result onBadRequest(RequestHeader request, String error) {
+		return Results.badRequest(views.html.system.error.render(request, CODE_BAD_REQUEST));
+	}
 
     @Override
-    public Action onRequest(Http.Request request, Method method) {
-
+    public Action<?> onRequest(Http.Request request, Method method) {
         return new Action.Simple() {
-            public Result call(Http.Context context) throws Throwable {
+            @Override
+			public Result call(Http.Context context) throws Throwable {
                 Http.Response response = context.response();
                 enableCors(response);
                 return delegate.call(context);
             }
         };
-
-
     }
 
     /**

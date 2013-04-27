@@ -76,7 +76,7 @@
 			<input type="hidden" name="id" value="@{quote.id}" />
 			<span class="vote-count">@{quote.voteCount}</span>
 			@if(QuoteState.APPROVED_FOR_VOTING == quote.quoteState && !allreadyVoted.contains(quote.id)) {
-				<a class="upVoteButton" href="javascript:voteOnServer('@{quote.id}');">
+				<a class="imglink upVoteButton" href="javascript:voteOnServer('@{quote.id}');">
 					<img src="@routes.Assets.at("images/24x24/add.png")" />
 				</a>
 			} else {

@@ -1,0 +1,57 @@
+@(request: play.mvc.Http.RequestHeader, code: Int)
+
+@import tags._
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Demagog.cz - Ověř to! - @errorTitle(code)</title>
+
+		<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+		<link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+	</head>
+<body>
+	<div id="body">
+		<div id="header">
+			<a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
+				@logo()
+			</a>
+		</div>
+		@code match {
+  			case 400 => {@errorBadRequest}
+  			case 404 => {@errorNotFound}
+  			case 500 => {@errorInternalError}
+		}
+	</div>
+</body>
+</html>
+
+@errorTitle(code: Int) = {
+	code match {
+  		case 400 => "Neplatný odkaz"
+  		case 404 => "Stránka nenalezena"
+  		case 500 => "Chyba v systému"
+	}
+}
+
+@errorBadRequest = {
+	<div class="error-400">
+		<h2>400: URL adresa je ve špatném formátu.</h2>
+		<p>Pravděpodobně došlo k nechtěné změně URL adresy.</p>
+	</div>
+}
+
+@errorNotFound = {
+	<div class="error-404">
+		<h2>404: Požadovaná stránka bohužel neexistuje.</h2>
+		<p>Pravděpodobně byla špatně zadána adresa, nebo byla stránka přemístěna.</p>
+	</div>
+}
+
+@errorInternalError = {
+	<div class="error-500">
+		<h2>500: Omlouváme se, došlo k chybě v systému.</h2>
+		<p>Zkuste dotaz opakovat později, nebo kontaktujte administrátora.</p>
+	</div>
+}
