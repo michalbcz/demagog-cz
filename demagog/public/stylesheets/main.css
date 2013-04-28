@@ -4,10 +4,15 @@ html {
 
 body {
 	font-family: "Open Sans", Arial, sans-serif;
+	font-size: 14px;
 }
 
 img {
 	border: 0px;
+}
+
+h4 {
+	font-size: 1.1em;
 }
 
 #body {
@@ -170,7 +175,7 @@ a:hover {
 }
 
 .footer {
-	font-size: smaller;
+	font-size: 0.9em;
 	color: #555;
 }
 
@@ -207,24 +212,27 @@ p, .text {
 	margin-top: 0.5em;
 }
 
-table.approve label {
-	font-size: 0.8em;
+.approve .boxes {
+	margin-top: 10px;
 }
 
-table.approve {
+.approve .sourceURL input[type=text], .approve .demagogURL input[type=text] {
 	width: 805px;
 }
 
-table.approve input[type=text] {
-	width: 532px;
+.approve .sourceURL a {
+	margin-left: 10px;
 }
 
-table.approve td {
-	white-space: nowrap;
+.approve label {
+	font-size: 0.9em;
+	margin-right: 1em;
 }
 
-table.approve col.labels {
-	width: 143px;
+.author label span, .sourceURL label span, .demagogURL label span {
+	display: block;
+	margin-top: 4px;
+	margin-bottom: 2px;
 }
 
 .orange-bar {
@@ -323,10 +331,6 @@ td.right {
 
 #new-quote .text {
 	width: 100%;
-}
-
-#new-quote label {
-	font-size: 0.9em;
 }
 
 #new-quote textarea {
@@ -451,8 +455,12 @@ li.opera {
 
 #login-panel input,
 #login-panel button {
-	margin-top: 5px;
+	margin-top: 2px;
 	width: 100%;
+}
+
+#login-panel button {
+	margin-top: 5px;
 }
 
 #login-container .error {
@@ -465,7 +473,7 @@ form table {
 	border-spacing: 6px;
 }
 
-form table label {
+label {
 	color: #555555;
 }
 
@@ -480,7 +488,7 @@ input[type=text], input[type=password], textarea {
     border-radius: 4px;
     padding: 4px 4px;
 	font-family: "Opane Sans", Arial, sans-serif ;
-    font-size: 11pt;
+    font-size: 1em;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -536,7 +544,7 @@ input[type=text]:FOCUS, input[type=password]:FOCUS, textarea:FOCUS {
 /* support for alerts copy pasted from bootstrap - see http://twitter.github.com/bootstrap/components.html#alerts */
 .alert {
   padding: 8px 35px 8px 14px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;
