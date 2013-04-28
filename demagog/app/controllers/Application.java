@@ -30,6 +30,12 @@ public class Application extends Controller {
 	private static final String COOKIE_NAME = "demagog.cz-votes";
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
 
+	public static Result untrail(String path) {
+		//trailing slash workaround
+		// viz http://stackoverflow.com/questions/13189095/play-framework2-remove-trailing-slash-from-urls
+		return movedPermanently("/" + path);
+	}
+	
 	public static Result showNewQuoteForm() {
 		return ok(quote_new.render(new Quote()));
 	}
