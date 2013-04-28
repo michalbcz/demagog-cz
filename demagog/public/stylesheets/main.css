@@ -432,9 +432,10 @@ li.opera {
 	background: url("../images/opera.gif") no-repeat 2px top;
 }
 
-#login-panel {
-	width: 300px;
+#login-container {
 	margin: 80px auto 80px;
+	width: 300px;
+	position: relative;
 }
 
 #login-panel .input-section {
@@ -454,10 +455,10 @@ li.opera {
 	width: 100%;
 }
 
-.error {
+#login-container .error {
+	position: absolute;
+	width: 100%;
 	text-align: center;
-	margin: 0 auto;
-	margin-top: 30px;
 }
 
 form table {
