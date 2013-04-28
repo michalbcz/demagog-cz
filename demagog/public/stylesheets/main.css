@@ -155,10 +155,15 @@ a:hover {
 	text-align: right;
 	line-height: 30px;
 }
+
 .filter-container .sbHolder {
 	float: right;
 	text-align: left;
 	margin-left: 0.5em;
+}
+
+.filter-container label {
+	color: white;
 }
 
 .quotes-container {
