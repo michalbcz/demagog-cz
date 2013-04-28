@@ -156,7 +156,7 @@
 		<input type="hidden" name="id" value="@{quote.id}" />
 		<span class="vote-count">Votes: @{quote.voteCount}</span>
 		<div class="actions">
-			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void(0);">
+			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void(0);" title="Zařadit k analýze">
 				<img src="@routes.Assets.at("images/24x24/accept.png")" />
 			</a>
 		</div>

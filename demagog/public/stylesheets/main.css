@@ -170,11 +170,8 @@ a:hover {
 	position: relative;	
 }
 
-.quote .footer {
-	margin-top: 0.5em;
-}
-
-.footer {
+table.footer {
+	border-collapse: collapse;
 	font-size: 0.9em;
 	color: #555;
 }
