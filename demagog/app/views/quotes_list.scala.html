@@ -146,6 +146,71 @@
 			});
 		});
 	</script>
+
+
+    <script type="text/javascript">
+            $(function() {
+                $("#rejectApproval").dialog({
+                    autoOpen : false,
+                    modal: true,
+                    resizable: false,
+                    draggable: false,
+                    width: 360,
+                    show: {
+                        effect: "size",
+                        duration: 300
+                    },
+                    hide:  {
+                        effect: "size",
+                        duration: 300
+                    }
+                 });
+            });
+    </script>
+
+    <script type="text/javascript">
+        function voteOnServer(quoteId) {
+
+            /* disable clicking on voting button */
+            var $form = $("#" + quoteId);
+            var $formsUpVoteButton = $form.find(".upVoteButton");
+            var $disabledUpVoteButton = $formsUpVoteButton.replaceWith('@Html(StringUtils.normalizeSpace(quoteAlreadyVotedImage().toString()))');
+
+            var $quoteForm = $("#" + quoteId);
+            var $authorFilter = $("#filterByAuthor select option:selected").val();
+
+            $quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
+
+            var upVoteAjaxUrl = '@{controllers.routes.Application.upVote(content)}';
+            console.debug("Sending vote request for form", $quoteForm, " on ", upVoteAjaxUrl);
+            jQuery.ajax(upVoteAjaxUrl, {
+            type : "POST",
+            data : $quoteForm.serialize(),
+            success : function(response, textStatus) {
+            console.log("up vote was successful");
+
+            console.debug("adding +1 to vote count number")
+            var $voteCounts = $form.find(".vote-count")
+            var voteCounts = parseInt($voteCounts.text(), 10 /* radix */);
+            voteCounts = voteCounts + 1
+            $voteCounts.text(voteCounts.toString(10));
+
+            },
+            error : function(jqXhr, textStatus, errorThrown) {
+            console.error("up vote failed with an error :", errorThrown)
+            $disabledUpVoteButton.replaceWith($formsUpVoteButton);
+            }
+            });
+
+            }
+    </script>
+
+    <script type="text/javascript">
+            $(function () {
+                $("#filterByAuthorSelect").selectbox();
+            });
+    </script>
+
 }
 
 @adminFormChecking(quote: Quote) = {
@@ -163,66 +228,3 @@
 	</form>
 	@footer(quote)
 }
-
-<script type="text/javascript">
-	$(function() {
-		$("#rejectApproval").dialog({
-			autoOpen : false,
-			modal: true,
-			resizable: false,
-			draggable: false,
-			width: 360,
-			show: {
-				effect: "size", 
-				duration: 300
-			},
-			hide:  {
-				effect: "size", 
-				duration: 300
-			}
-		});
-	});
-</script>
-
-<script type="text/javascript">
-	function voteOnServer(quoteId) {
-
-        /* disable clicking on voting button */
-        var $form = $("#" + quoteId);
-        var $formsUpVoteButton = $form.find(".upVoteButton");
-        var $disabledUpVoteButton = $formsUpVoteButton.replaceWith('@Html(StringUtils.normalizeSpace(quoteAlreadyVotedImage().toString()))');
-
-		var $quoteForm = $("#" + quoteId);
-		var $authorFilter = $("#filterByAuthor select option:selected").val();
-	
-		$quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
-
-        var upVoteAjaxUrl = '@{controllers.routes.Application.upVote(content)}';
-        console.debug("Sending vote request for form", $quoteForm, " on ", upVoteAjaxUrl);
-        jQuery.ajax(upVoteAjaxUrl, {
-            type : "POST",
-            data : $quoteForm.serialize(),
-            success : function(response, textStatus) {
-                console.log("up vote was successful");
-
-                console.debug("adding +1 to vote count number")
-                var $voteCounts = $form.find(".vote-count")
-                var voteCounts = parseInt($voteCounts.text(), 10 /* radix */);
-                voteCounts = voteCounts + 1
-                $voteCounts.text(voteCounts.toString(10));
-
-            },
-            error : function(jqXhr, textStatus, errorThrown) {
-                console.error("up vote failed with an error :", errorThrown)
-                $disabledUpVoteButton.replaceWith($formsUpVoteButton);
-            }
-        });
-
-	}
-</script>
-
-<script type="text/javascript">
-	$(function () {
-	    $("#filterByAuthorSelect").selectbox();
-	});
-</script>
