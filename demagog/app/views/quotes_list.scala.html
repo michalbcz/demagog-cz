@@ -5,6 +5,23 @@
 
 @main("", utils.MenuUtils.getMenuType(admin)) {
     @if(!admin && quotes.size() > 0) {
+    	<div id="invitation" class="ui-panel" style="display:none">
+    		<div class="invitation-header ui-widget-header ui-corner-all">
+    			<span class="invitation-title ui-dialog-title">Vítejte ve službě ověřto.demagog.cz</span>
+    			<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" title="Permanentně zavřít">
+					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+					<span class="ui-button-text">Permanentně zavřít</span>
+				</button>
+    		</div>
+    		<div class="invitation-content">
+    			<p>Cílem této služby je umožňit uživatelům vkládat politické výroky z veřejných informačních zdrojů pomocí <em>formuláře</em> nebo pomocí <em>bookmarkletu</em>.
+    			Uživatelé mohou hlasovat a vybrat si tak výroky, které jim připadají nejzajímavější a které by si přáli ověřit.
+    			Tým demagog.cz postupně výroky s nejvíce hlasy analyzuje. Po ověření, zda je zvolený výrok pravdivý či nepravdivý, je pak publikován na serveru <a href="http://demagog.cz/" target="_blank">demagog.cz</a>.</p> 
+    			<p>Pokud budete mít nějaký zajímavý nápad jak tuto službu vylepšit, můžete využít tlačítko <span>Váš názor</span>, které je umístěno na pravém okraji prohlížeče.
+    			Neváhejte nás kontaktovat ani v případě, že objevíte v aplikaci chybu. Co nejdříve ji opravíme a určitě to ocení i ostatní uživatelé.</p>
+    			<p class="last">Nenechte si od politiků lhát! Váš demagog.cz</p>
+    		</div>
+    	</div>
 		<div class="filter-container">
 			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
 				<label for="filterByAuthorSelect">Filtrovat podle autora:</label>
@@ -44,9 +61,44 @@
 	
 	<script type="text/javascript">
 		$(function () {
-		     $("#filterByAuthorSelect").selectbox();
+			$("#filterByAuthorSelect").selectbox();
 		});
-    </script>
+	</script>
+	
+	<script type="text/javascript">
+		$(function() {
+			// invitation
+			
+			var visited_cookie_name = "demagog_invitation_closed";
+			var visited_cookie = $.cookie(visited_cookie_name);
+			
+			if (typeof visited_cookie == "undefined") {
+				// the user was not here yet or didn't close the invitation, show it
+				
+				var $invitation = $("#invitation");
+				
+				setTimeout(function() {
+					$invitation.slideDown();
+				}, 400);
+
+				$invitation.on("mouseover mouseout", "button", function(){
+				    $(this).toggleClass("ui-state-hover");
+				});
+				$invitation.on("mousedown mouseup", "button", function(){
+				    $(this).toggleClass("ui-state-active");
+				});
+				
+				$invitation.find("button").click(function() {
+					// close it
+					$invitation.slideUp();
+					
+					// save the cookie about the user was here 
+					// and has closed the invitation for e.g. 100 years?
+					$.cookie(visited_cookie_name, "1", { expires: 36500 });
+				});
+			}
+		});
+	</script>
 }
 
 @footer(quote: Quote) = {

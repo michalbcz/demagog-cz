@@ -175,6 +175,55 @@ a:hover {
 	position: relative;	
 }
 
+#invitation {
+	padding: 3px 0 0 0;
+	vertical-align: middle;
+}
+
+.invitation-header {
+	margin: 0 3px 3px 3px;
+	padding-left: 7px;
+	position: relative;
+	font-size: 1.1em;
+}
+
+.invitation-title {
+	display: inline-block;
+	background: transparent url('../images/favicon.png') no-repeat left center;
+	padding: 5px 8px 5px 23px;
+}
+
+.invitation-content {
+	padding: 14px 12px 12px 12px;
+}
+
+.invitation-content p {
+	margin: 0 0 1em;
+}
+
+.invitation-content p.last {
+	margin-bottom: 0;
+}
+
+.invitation-content p span {
+	font-weight: bold;
+	color: #CC6D00;
+}
+
+#invitation .ui-button {
+	position: absolute;
+	top: 0.1em;
+	right: 0.1em;
+}
+
+#invitation .ui-button-text {
+	padding: 0.1em;
+}
+
+#invitation button.ui-button-icon-only {
+    width: 1.7em;
+}
+
 table.footer {
 	border-collapse: collapse;
 	font-size: 0.9em;
