@@ -41,6 +41,12 @@
 	}
 	<div id="rejectApproval" title="Smazat citát" style="display:none">Opravdu si přejete smazat tento citát?</div>
 	</div>
+	
+	<script type="text/javascript">
+		$(function () {
+		     $("#filterByAuthorSelect").selectbox();
+		});
+    </script>
 }
 
 @footer(quote: Quote) = {
@@ -204,13 +210,6 @@
 
             }
     </script>
-
-    <script type="text/javascript">
-            $(function () {
-                $("#filterByAuthorSelect").selectbox();
-            });
-    </script>
-
 }
 
 @adminFormChecking(quote: Quote) = {
