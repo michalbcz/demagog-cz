@@ -181,6 +181,10 @@ table.footer {
 	color: #555;
 }
 
+table.footer td {
+	padding: 0 0.2em;
+}
+
 p, .text {
 	text-align: justify;;
 }
