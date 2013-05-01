@@ -13,6 +13,7 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.bson.types.ObjectId;
 
 import play.Logger;
+import play.api.http.Status$;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
@@ -128,7 +129,8 @@ public class Application extends Controller {
 		}
 
 		if (quote == null) {
-			return notFound();
+            //TODO mbernhard 01.05.2013 : it should be best when just notFound is enough and handling (ie. showing appropriate error page) would be on one place (like BaseGlobal)
+			return notFound(views.html.system.error.render(request(), NOT_FOUND));
 		}
 
 		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser()));
