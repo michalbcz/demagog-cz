@@ -124,7 +124,7 @@ public class Application extends Controller {
 		try {
 			quote = Quote.findById(new ObjectId(id));
 		} catch (IllegalArgumentException e) {
-			Logger.warn("Nekdo zadal shitovy quote id.", e);
+			Logger.warn("Quote with id " + id + " doesn't exist!", e);
 			quote = null;
 		}
 
