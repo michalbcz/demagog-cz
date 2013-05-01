@@ -240,7 +240,9 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         jQuery("#demagogBookmarkletQuoteTooLongDialog").dialog({
             title: "overto.Demagog.cz - Vybraný text je příliš dlouhý",
-            dialogClass: "bookmarkletDialog"
+            dialogClass: "bookmarkletDialog",
+            width: 436,
+            height: "auto"
         });
 
     };
