@@ -107,8 +107,8 @@
 			<tr>
 	    		<td><label>Autor:</label></td>
 	    		<td>
-	    			@if(quote.author == null) {
-						"neznámý"
+	    			@if(StringUtils.isBlank(quote.author)) {
+						neznámý
 					} else {
 						@quote.author
 					}
