@@ -33,7 +33,7 @@
 				}
 			</form>
 		</div>
-		<span class="state @{quote.quoteState.toString().toLowerCase()}">
+		<span class="state @{quote.quoteState.toString().toLowerCase()}" title="@{LabelProvider.getDescription(quote.quoteState)}">
 			@{LabelProvider.getLabel(quote.quoteState)}
 		</span>
 		
