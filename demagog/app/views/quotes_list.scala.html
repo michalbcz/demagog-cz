@@ -117,7 +117,7 @@
 	  		<tr>
 	    		<td><label>Zdroj:</label></td>
 	    		<td>
-	    			<a href="@{quote.url}">@{quote.url}</a>
+	    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
 				</td>
 	  		</tr>
 		</tbody>

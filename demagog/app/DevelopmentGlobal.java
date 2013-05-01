@@ -70,12 +70,22 @@ public class DevelopmentGlobal extends BaseGlobal {
 				QuoteState.NEW
 		).save();
 
+
+        new Quote(
+                "citat s dlouhym zdrojovim url - url by melo byt zkraceno",
+                "http://www.lidovky.cz/nikdo-uz-snad-nemuze-spekulovat-ze-mi-jde-o-funkce-rika-k-odchodu-stastny-14e-/zpravy-domov.aspx?c=A130425_121736_ln_domov_ogo",
+                "AutorovoJmeno AutorovoPrijmeni",
+                QuoteState.APPROVED_FOR_VOTING
+        ).save();
+
 		Quote quote = new Quote(
-				"Dokud byly smartphony a tablety používány tak, jak je Pán Jobs stvořiti ráčil, tedy v pazouře, to se nám to smálo. Jenomže čím dál tím více se objevují šílenci, kteří je používají zvráceným a Bohu se příčícím způsobem, jako náhradu televize, media playerů, obrázkových rámečků, laptopů a dokonce i desktopů.",
+				"Dokud byly smartphony a tablety používány tak, jak je Pán Jobs stvořiti ráčil, tedy v pazouře, to se nám to smálo. Jenomže čím dál tím více se objevují šílenci, kteří je používají zvráceným a Bohu se příčícím způsobem, jako náhradu televize, media " +
+                "playerů, obrázkových rámečků, laptopů a dokonce i desktopů.",
 				"http://pctuning.tyden.cz/hardware/notebooky-pda/26828-ocima-uzivatele-srovnani-stojanku-pro-tablety-a-mobily",
 				"Michal Rybka",
 				QuoteState.APPROVED_FOR_VOTING
 		);
+
 		calendar.add(Calendar.MONTH, -5);
 		quote.approvalDate = calendar.getTime();
 		quote.save();
