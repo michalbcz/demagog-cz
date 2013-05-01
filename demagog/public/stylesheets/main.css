@@ -452,7 +452,7 @@ td.right {
 	background-color: #2D2D2D;
 	border: 1px solid #515151;
 	color: #FFFFFF;
-	cursor: pointer;
+	cursor: move;
 	text-decoration: none;
 }
 
