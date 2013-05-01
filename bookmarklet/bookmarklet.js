@@ -278,7 +278,9 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         jQuery("#demagogBookmarkletQuoteTextEmptyDialog").dialog({
             title: "overto.Demagog.cz - Není výbrán text citátu",
-            dialogClass: "bookmarkletDialog"
+            dialogClass: "bookmarkletDialog",
+            width: 350,
+            height: "auto"
         });
 
     };
@@ -313,7 +315,9 @@ if (typeof(Demagog.Bookmarklet.Events) === "undefined") {
 
         jQuery("#demagogBookmarkletErrorDialog").dialog({
             title: "overto.Demagog.cz - Chyba při odesílání",
-            dialogClass: "bookmarkletDialog"
+            dialogClass: "bookmarkletDialog",
+            width: "auto",
+            height: "auto"
         });
 
     };
