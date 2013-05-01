@@ -12,6 +12,7 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.bson.types.ObjectId;
 
+import org.springframework.util.Assert;
 import play.Logger;
 import play.api.http.Status$;
 import play.data.Form;
@@ -120,6 +121,9 @@ public class Application extends Controller {
 	}
 
 	public static Result showQuoteDetail(String id) {
+
+        Assert.hasText(id, "Quote's id cannot be empty.");
+
 		Quote quote;
 		try {
 			quote = Quote.findById(new ObjectId(id));
