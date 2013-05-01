@@ -22,10 +22,6 @@ import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 
 public class BaseGlobal extends GlobalSettings {
 
-	private static final int CODE_NOT_FOUND = 404;
-	private static final int CODE_BAD_REQUEST = 400;
-	private static final int CODE_INTERNAL_ERROR = 500;
-	
 	@Override
 	public void onStart(Application application) {
 		try {
@@ -45,17 +41,17 @@ public class BaseGlobal extends GlobalSettings {
 	
 	@Override
 	public Result onError(RequestHeader request, Throwable t) {
-		return Results.internalServerError(views.html.system.error.render(request, CODE_INTERNAL_ERROR));
+		return Results.internalServerError(views.html.system.error.render(request, Http.Status.INTERNAL_SERVER_ERROR));
 	}
 
 	@Override
 	public Result onHandlerNotFound(RequestHeader request) {
-		return Results.notFound(views.html.system.error.render(request, CODE_NOT_FOUND));
+		return Results.notFound(views.html.system.error.render(request, Http.Status.NOT_FOUND));
 	} 
 
 	@Override
 	public Result onBadRequest(RequestHeader request, String error) {
-		return Results.badRequest(views.html.system.error.render(request, CODE_BAD_REQUEST));
+		return Results.badRequest(views.html.system.error.render(request, Http.Status.BAD_REQUEST));
 	}
 
     @Override

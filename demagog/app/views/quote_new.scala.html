@@ -63,8 +63,13 @@
 	                        var compiledTemplate = Handlebars.compile(javascriptBookmarkletTemplate);
 	                        var context = {demagogApiBaseUrl : currentUrl};
 	                        var renderedTemplate = compiledTemplate(context);
-	
-	                        jQuery("#bookmarklet-dnd-button").attr("href", renderedTemplate);
+
+                            var $bookmarkletLink = jQuery("#bookmarklet-dnd-button")
+                            $bookmarkletLink.attr("href", renderedTemplate);
+                            $bookmarkletLink.click(function(e) {
+                                e.preventDefault(); /* prevent from running bookmarklet by clicking on link on the page */
+                            });
+
 	                    });
 	
 	                </script>

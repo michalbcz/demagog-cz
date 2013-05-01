@@ -12,7 +12,9 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.bson.types.ObjectId;
 
+import org.springframework.util.Assert;
 import play.Logger;
+import play.api.http.Status$;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
@@ -30,6 +32,12 @@ public class Application extends Controller {
 	private static final String COOKIE_NAME = "demagog.cz-votes";
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
 
+	public static Result untrail(String path) {
+		//trailing slash workaround
+		// viz http://stackoverflow.com/questions/13189095/play-framework2-remove-trailing-slash-from-urls
+		return movedPermanently("/" + path);
+	}
+	
 	public static Result showNewQuoteForm() {
 		return ok(quote_new.render(new Quote()));
 	}
@@ -113,16 +121,20 @@ public class Application extends Controller {
 	}
 
 	public static Result showQuoteDetail(String id) {
+
+        Assert.hasText(id, "Quote's id cannot be empty.");
+
 		Quote quote;
 		try {
 			quote = Quote.findById(new ObjectId(id));
 		} catch (IllegalArgumentException e) {
-			Logger.warn("Nekdo zadal shitovy quote id.", e);
+			Logger.warn("Quote with id " + id + " doesn't exist!", e);
 			quote = null;
 		}
 
 		if (quote == null) {
-			return notFound();
+            //TODO mbernhard 01.05.2013 : it should be best when just notFound is enough and handling (ie. showing appropriate error page) would be on one place (like BaseGlobal)
+			return notFound(views.html.system.error.render(request(), NOT_FOUND));
 		}
 
 		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser()));

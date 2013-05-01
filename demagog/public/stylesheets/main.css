@@ -4,10 +4,15 @@ html {
 
 body {
 	font-family: "Open Sans", Arial, sans-serif;
+	font-size: 14px;
 }
 
 img {
 	border: 0px;
+}
+
+h4 {
+	font-size: 1.1em;
 }
 
 #body {
@@ -150,10 +155,15 @@ a:hover {
 	text-align: right;
 	line-height: 30px;
 }
+
 .filter-container .sbHolder {
 	float: right;
 	text-align: left;
 	margin-left: 0.5em;
+}
+
+.filter-container label {
+	color: white;
 }
 
 .quotes-container {
@@ -165,13 +175,63 @@ a:hover {
 	position: relative;	
 }
 
-.quote .footer {
-	margin-top: 0.5em;
+#invitation {
+	padding: 3px 0 0 0;
+	vertical-align: middle;
 }
 
-.footer {
-	font-size: smaller;
+.invitation-header {
+	margin: 0 3px 3px 3px;
+	padding-left: 7px;
+	position: relative;
+	font-size: 1.1em;
+}
+
+.invitation-title {
+	display: inline-block;
+	background: transparent url('../images/favicon.png') no-repeat left center;
+	padding: 5px 8px 5px 23px;
+}
+
+.invitation-content {
+	padding: 14px 12px 12px 12px;
+}
+
+.invitation-content p {
+	margin: 0 0 1em;
+}
+
+.invitation-content p.last {
+	margin-bottom: 0;
+}
+
+.invitation-content p span {
+	font-weight: bold;
+	color: #CC6D00;
+}
+
+#invitation .ui-button {
+	position: absolute;
+	top: 0.1em;
+	right: 0.1em;
+}
+
+#invitation .ui-button-text {
+	padding: 0.1em;
+}
+
+#invitation button.ui-button-icon-only {
+    width: 1.7em;
+}
+
+table.footer {
+	border-collapse: collapse;
+	font-size: 0.9em;
 	color: #555;
+}
+
+table.footer td {
+	padding: 0 0.2em;
 }
 
 p, .text {
@@ -179,7 +239,7 @@ p, .text {
 }
 
 .quote .text {
-	margin-right: 60px;
+	margin-right: 100px;
 	margin-bottom: 5px;
 }
 
@@ -207,24 +267,27 @@ p, .text {
 	margin-top: 0.5em;
 }
 
-table.approve label {
-	font-size: 0.8em;
+.approve .boxes {
+	margin-top: 10px;
 }
 
-table.approve {
+.approve .sourceURL input[type=text], .approve .demagogURL input[type=text] {
 	width: 805px;
 }
 
-table.approve input[type=text] {
-	width: 532px;
+.approve .sourceURL a {
+	margin-left: 10px;
 }
 
-table.approve td {
-	white-space: nowrap;
+.approve label {
+	font-size: 0.9em;
+	margin-right: 1em;
 }
 
-table.approve col.labels {
-	width: 143px;
+.author label span, .sourceURL label span, .demagogURL label span {
+	display: block;
+	margin-top: 4px;
+	margin-bottom: 2px;
 }
 
 .orange-bar {
@@ -325,10 +388,6 @@ td.right {
 	width: 100%;
 }
 
-#new-quote label {
-	font-size: 0.9em;
-}
-
 #new-quote textarea {
 	height: 10em;
 }
@@ -393,7 +452,7 @@ td.right {
 	background-color: #2D2D2D;
 	border: 1px solid #515151;
 	color: #FFFFFF;
-	cursor: pointer;
+	cursor: move;
 	text-decoration: none;
 }
 
@@ -432,9 +491,10 @@ li.opera {
 	background: url("../images/opera.gif") no-repeat 2px top;
 }
 
-#login-panel {
-	width: 300px;
+#login-container {
 	margin: 80px auto 80px;
+	width: 300px;
+	position: relative;
 }
 
 #login-panel .input-section {
@@ -450,21 +510,25 @@ li.opera {
 
 #login-panel input,
 #login-panel button {
-	margin-top: 5px;
+	margin-top: 2px;
 	width: 100%;
 }
 
-.error {
+#login-panel button {
+	margin-top: 5px;
+}
+
+#login-container .error {
+	position: absolute;
+	width: 100%;
 	text-align: center;
-	margin: 0 auto;
-	margin-top: 30px;
 }
 
 form table {
 	border-spacing: 6px;
 }
 
-form table label {
+label {
 	color: #555555;
 }
 
@@ -479,7 +543,7 @@ input[type=text], input[type=password], textarea {
     border-radius: 4px;
     padding: 4px 4px;
 	font-family: "Opane Sans", Arial, sans-serif ;
-    font-size: 11pt;
+    font-size: 1em;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -535,7 +599,7 @@ input[type=text]:FOCUS, input[type=password]:FOCUS, textarea:FOCUS {
 /* support for alerts copy pasted from bootstrap - see http://twitter.github.com/bootstrap/components.html#alerts */
 .alert {
   padding: 8px 35px 8px 14px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;

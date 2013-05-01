@@ -22,6 +22,8 @@ import com.google.code.morphia.query.Query;
 @Entity(concern = "safe")
 public class Quote {
 
+    public static final int URL_VIEWABLE_SIZE_LIMIT = 120;
+
 	public static final String AUTHOR_EMPTY_FILTER = "";
 
 	@Id

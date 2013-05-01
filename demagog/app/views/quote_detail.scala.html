@@ -2,6 +2,7 @@
 
 @import utils.LabelProvider
 @import models.Quote.QuoteState
+@import org.apache.commons.lang3.StringUtils
 
 @main("") {
 	<div id="fb-root"></div>
@@ -32,7 +33,7 @@
 				}
 			</form>
 		</div>
-		<span class="state @{quote.quoteState.toString().toLowerCase()}">
+		<span class="state @{quote.quoteState.toString().toLowerCase()}" title="@{LabelProvider.getDescription(quote.quoteState)}">
 			@{LabelProvider.getLabel(quote.quoteState)}
 		</span>
 		
@@ -41,8 +42,8 @@
 				<tr>
 		    		<td><label>Autor:</label></td>
 		    		<td>
-		    			@if(quote.author == null) {
-							"neznámý"
+		    			@if(StringUtils.isBlank(quote.author)) {
+							neznámý
 						} else {
 							@quote.author
 						}
@@ -51,10 +52,10 @@
 		  		<tr>
 		    		<td><label>Zdroj:</label></td>
 		    		<td>
-		    			<a href="@{quote.url}">@{quote.url}</a>
+		    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
 					</td>
 		  		</tr>
-		  		@if(quote.demagogBacklinkUrl != null) {
+		  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
 					<tr>
 			    		<td colspan="2">
 			    			<a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
