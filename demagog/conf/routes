@@ -33,6 +33,10 @@ GET     /admin/login                controllers.Admin.login()
 POST    /admin/login                controllers.Admin.authenticate()
 GET     /admin/logout               controllers.Admin.logout()
 
+GET   /oauth2callback               org.pac4j.play.CallbackController.callback()
+POST  /oauth2callback               org.pac4j.play.CallbackController.callback()
+GET   /logout		                org.pac4j.play.CallbackController.logoutAndRedirect()
+
 # Quotes
 GET     /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
 POST    /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)

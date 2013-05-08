@@ -6,20 +6,20 @@ import java.util.Locale;
 import models.User;
 
 import org.bson.types.ObjectId;
+import org.pac4j.core.client.Clients;
+import org.pac4j.oauth.client.Google2Client;
+import org.pac4j.play.Config;
 
 import play.Application;
 import play.GlobalSettings;
 import play.Play;
-import play.api.mvc.Codec;
-import play.api.templates.Txt;
 import play.data.format.Formatters;
-
-import com.google.code.morphia.logging.MorphiaLoggerFactory;
-import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.Results;
+
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 
 public class BaseGlobal extends GlobalSettings {
 
@@ -35,6 +35,8 @@ public class BaseGlobal extends GlobalSettings {
 
 		MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
 
+		initOAuth();
+
 		initCustomFormatters();
 
 		initAdminUser();
@@ -44,7 +46,8 @@ public class BaseGlobal extends GlobalSettings {
     public Action onRequest(Http.Request request, Method method) {
 
         return new Action.Simple() {
-            public Result call(Http.Context context) throws Throwable {
+            @Override
+			public Result call(Http.Context context) throws Throwable {
                 Http.Response response = context.response();
                 enableCors(response);
                 return delegate.call(context);
@@ -69,7 +72,17 @@ public class BaseGlobal extends GlobalSettings {
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
     }
 
-    private void initAdminUser() {
+	private void initOAuth() {
+		// OAuth
+//		  FacebookClient facebookClient = new FacebookClient("fb_key", "fb_secret");
+		  Google2Client googleClient = new Google2Client("514697974066-rvf8s83h65uhhv40f46aeukgn59756ul.apps.googleusercontent.com", "ROQUI8qFY_ofC-Hu4-xV13Yy");
+//		  TwitterClient twitterClient = new TwitterClient("tw_key", "tw_secret");
+
+		  final Clients clients = new Clients("http://localhost:9000/oauth2callback", googleClient);
+		  Config.setClients(clients);
+	}
+
+	private void initAdminUser() {
 		createAdminUser().save();
 	}
 

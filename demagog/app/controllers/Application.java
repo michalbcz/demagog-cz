@@ -1,29 +1,30 @@
 package controllers;
 
-import com.google.code.morphia.Key;
-import models.Quote;
-import models.Quote.QuoteState;
-import models.QuotesListContent;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.bson.types.ObjectId;
-import play.Logger;
-import play.data.Form;
-import play.libs.F;
-import play.mvc.Controller;
-import play.mvc.Http.Cookie;
-import play.mvc.Result;
-import scala.Option;
-import utils.ReCaptchaService;
-import views.html.quote_detail;
-import views.html.quote_new;
-import views.html.quotes_list;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Application extends Controller {
+import models.Quote;
+import models.Quote.QuoteState;
+import models.QuotesListContent;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
+import org.bson.types.ObjectId;
+import org.pac4j.play.java.JavaController;
+
+import play.Logger;
+import play.data.Form;
+import play.mvc.Http.Cookie;
+import play.mvc.Result;
+import utils.ReCaptchaService;
+import views.html.quote_detail;
+import views.html.quote_new;
+import views.html.quotes_list;
+
+import com.google.code.morphia.Key;
+
+public class Application extends JavaController {
 
 	private static final String COOKIE_NAME = "demagog.cz-votes";
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
@@ -75,8 +76,7 @@ public class Application extends Controller {
 
 	}
 
-
-	public static Result showApprovedQuotes() {
+   	public static Result showApprovedQuotes() {
 		return showQuotes(QuotesListContent.APPROVED);
 	}
 
@@ -123,6 +123,7 @@ public class Application extends Controller {
 			return notFound();
 		}
 
+//		CommonProfile profile = getUserProfile(); // returns null if user is not authenticated
 		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
 	}
 
