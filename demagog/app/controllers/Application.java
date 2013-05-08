@@ -12,12 +12,14 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.bson.types.ObjectId;
 import org.pac4j.play.java.JavaController;
+import org.springframework.util.Assert;
 
 import play.Logger;
 import play.data.Form;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
 import utils.ReCaptchaService;
+import utils.RequestUtils;
 import views.html.quote_detail;
 import views.html.quote_new;
 import views.html.quotes_list;
@@ -28,6 +30,12 @@ public class Application extends JavaController {
 
 	private static final String COOKIE_NAME = "demagog.cz-votes";
 	private static final String COOKIE_VALUE_SEPARATOR = "_";
+
+	public static Result untrail(String path) {
+		//trailing slash workaround
+		// viz http://stackoverflow.com/questions/13189095/play-framework2-remove-trailing-slash-from-urls
+		return movedPermanently("/" + path);
+	}
 
 	public static Result showNewQuoteForm() {
 		return ok(quote_new.render(new Quote()));
@@ -107,49 +115,47 @@ public class Application extends JavaController {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 
-		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAllreadyVotedIds()));
+		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result showQuoteDetail(String id) {
+
+        Assert.hasText(id, "Quote's id cannot be empty.");
+
 		Quote quote;
 		try {
 			quote = Quote.findById(new ObjectId(id));
 		} catch (IllegalArgumentException e) {
-			Logger.warn("Nekdo zadal shitovy quote id.", e);
+			Logger.warn("Quote with id " + id + " doesn't exist!", e);
 			quote = null;
 		}
 
 		if (quote == null) {
-			return notFound();
+            //TODO mbernhard 01.05.2013 : it should be best when just notFound is enough and handling (ie. showing appropriate error page) would be on one place (like BaseGlobal)
+			return notFound(views.html.system.error.render(request(), NOT_FOUND));
 		}
 
 //		CommonProfile profile = getUserProfile(); // returns null if user is not authenticated
-		return ok(quote_detail.render(quote, getAllreadyVotedIds()));
+		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result upVote(QuotesListContent content) {
-		String id = request().body().asFormUrlEncoded().get("id")[0];
-
-		Quote.upVote(new ObjectId(id));
-
-		Cookie cookie = request().cookies().get(COOKIE_NAME);
-		String votes = "";
-		if (cookie != null && cookie.value() != null) {
-			votes = cookie.value();
-			votes += COOKIE_VALUE_SEPARATOR;
-		}
-
-		votes += id;
-
-		response().setCookie(COOKIE_NAME, votes);
+        String id = request().body().asFormUrlEncoded().get("id")[0];
+        upVoteQuote(id);
 
 		return showQuotes(content);
 	}
 
     public static Result upVoteAjax(QuotesListContent content) {
         String id = request().body().asFormUrlEncoded().get("id")[0];
+        upVoteQuote(id);
 
-        Quote.upVote(new ObjectId(id));
+        return ok();
+    }
+
+    private static void upVoteQuote(String id) {
+
+        Quote.upVote(new ObjectId(id), RequestUtils.getRemoteAddress(request()));
 
         Cookie cookie = request().cookies().get(COOKIE_NAME);
         String votes = "";
@@ -161,21 +167,18 @@ public class Application extends JavaController {
         votes += id;
 
         response().setCookie(COOKIE_NAME, votes);
-
-        return ok();
     }
 
+
 	/**
-	 * Find ids of quotes user allready voted on. (from cookie)
-	 *
-	 * @return
+	 * @return ids of quotes user already voted on (from cookies).
 	 */
-	private static List<String> getAllreadyVotedIds() {
-		List<String> allreadyVoted = new ArrayList<String>();
+	private static List<String> getAlreadyVotedQuotesByUser() {
+		List<String> alreadyVoted = new ArrayList<String>();
 
 		Cookie cookie = null;
 
-		// first looak after the cookies from the response
+		// first look after the cookies from the response
 		for (Cookie responseCookie : response().cookies()) {
 			if (responseCookie.name().equals(COOKIE_NAME)) {
 				cookie = responseCookie;
@@ -188,9 +191,9 @@ public class Application extends JavaController {
 		if (cookie != null && cookie.value() != null) {
 			String votes = cookie.value();
 
-			allreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
+			alreadyVoted = Arrays.asList(votes.split(COOKIE_VALUE_SEPARATOR));
 		}
 
-		return allreadyVoted;
+		return alreadyVoted;
 	}
 }

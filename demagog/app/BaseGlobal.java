@@ -16,7 +16,9 @@ import play.Play;
 import play.data.format.Formatters;
 import play.mvc.Action;
 import play.mvc.Http;
+import play.mvc.Http.RequestHeader;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
@@ -42,9 +44,23 @@ public class BaseGlobal extends GlobalSettings {
 		initAdminUser();
 	}
 
-    @Override
-    public Action onRequest(Http.Request request, Method method) {
+	@Override
+	public Result onError(RequestHeader request, Throwable t) {
+		return Results.internalServerError(views.html.system.error.render(request, Http.Status.INTERNAL_SERVER_ERROR));
+	}
 
+	@Override
+	public Result onHandlerNotFound(RequestHeader request) {
+		return Results.notFound(views.html.system.error.render(request, Http.Status.NOT_FOUND));
+	}
+
+	@Override
+	public Result onBadRequest(RequestHeader request, String error) {
+		return Results.badRequest(views.html.system.error.render(request, Http.Status.BAD_REQUEST));
+	}
+
+    @Override
+    public Action<?> onRequest(Http.Request request, Method method) {
         return new Action.Simple() {
             @Override
 			public Result call(Http.Context context) throws Throwable {
@@ -53,8 +69,6 @@ public class BaseGlobal extends GlobalSettings {
                 return delegate.call(context);
             }
         };
-
-
     }
 
     /**

@@ -15,91 +15,96 @@
 	<div id="bookmarklet-instructions" class="ui-panel">
 		<div>
 			<h4>Co to je:</h4>
-			<p><em>Bookmarklet je nástroj, který si snadno přidáte mezi záložky ve vašem prohlížeči a pomocí kterého pak můžete snadno a rychle zadávat výroky k ověření do systému Demagog.cz</em></p>
+			<p>Bookmarklet je nástroj, který si snadno přidáte mezi záložky ve vašem prohlížeči a pomocí kterého pak můžete snadno a rychle zadávat výroky k ověření do systému Demagog.cz</p>
 			<h4>Jak se používá:</h4>
-			<p><em>Následující odkaz si přetáhněte do lišty záložek ve vašem prohlížeči. Poté kdekoliv na kterékoliv stránce označte výrok, který chcete ověřit a klikněte na záložku bookmarkletu.</em></p>
-			<div id="bookmarklet-help-label">
-				Podrobný návod naleznete zde...
+			<p>Následující odkaz si přetáhněte do lišty záložek ve vašem prohlížeči. Poté kdekoliv na kterékoliv stránce označte výrok, který chcete ověřit a klikněte na záložku bookmarkletu.</p>
+			<div id="bookmarklet-dnd">
+	            <div>
+	                @defining(play.api.Play.current.configuration.getString("demagog.bookmarkletSourcesBaseUrl").get) { baseUrl =>
+	                    <!-- template for bookmarklet using templating library handlebars.js when {{variableName}} is
+	                         replaced by value of variableName (passed to context when rendering tempalte) -->
+	                    <div id="bookmarklet-link-template" type="text/x-handlebars-template" style="display: none">
+	                            javascript:
+	                            var Demagog = Demagog || {};
+	                            Demagog.Bookmarklet = Demagog.Bookmarklet || {};
+	                            Demagog.Bookmarklet.Settings = Demagog.Bookmarklet.Settings || {};
+	
+	                            Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl = '{{demagogApiBaseUrl}}';
+	
+	                            /* where resides bookmarklet.js and bookmarklet.css files */
+	                            var bookmarkletSourcesBaseUrl = '@{Html(baseUrl)}';
+	                            Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl = bookmarkletSourcesBaseUrl;
+	
+	                            var script = document.createElement('script');
+	                            script.src = bookmarkletSourcesBaseUrl + '/bookmarklet.js';
+	                            script.type = 'text/javascript';
+	                            document.getElementsByTagName('head')[0].appendChild(script);
+	                            void(0);
+	                    </div>
+	                }
+	
+	                <a id="bookmarklet-dnd-button" href="#" title="Toto přetáhněte do horní lišty">Ověřit výrok!</a>
+	
+	                <script type="text/javascript">
+	
+	                    /* Dynamic generation of bookmarklet's settings for url of overto.demagog.cz api where it send
+	                    * selected quote data. We use current url which is demagog page from where you drag'n'drop bookmarklet.
+	                    * With this each dragged bookmarklet is deployment specific so you can easily use and test bookmarklets
+	                    * for local dev server, staging, production..etc.
+	                    */
+	                    jQuery(document).ready(function() {
+	                        var re = new RegExp('(https{0,1})://(.*?)/');
+	                        var matcher = re.exec(window.location.href);
+	                        var baseUri = matcher[2];
+	
+	                        var currentUrl = 'http://' + baseUri;
+	
+	                        var javascriptBookmarkletTemplate = jQuery("#bookmarklet-link-template").text();
+	                        var compiledTemplate = Handlebars.compile(javascriptBookmarkletTemplate);
+	                        var context = {demagogApiBaseUrl : currentUrl};
+	                        var renderedTemplate = compiledTemplate(context);
+
+                            var $bookmarkletLink = jQuery("#bookmarklet-dnd-button")
+                            $bookmarkletLink.attr("href", renderedTemplate);
+                            $bookmarkletLink.click(function(e) {
+                                e.preventDefault(); /* prevent from running bookmarklet by clicking on link on the page */
+                            });
+
+	                    });
+	
+	                </script>
+	            </div>
+        	</div> <!-- bookmarklet-link -->
+        	<span class="blue-bar"><span class="leftArrow"></span>Toto přetáhněte do horní lišty</span>
+			<div id="bookmarklet-help" class="clearfix">
+				<h3>Podrobný návod naleznete zde</h3>
+				<div>
+					<ol>
+						<li>
+							<b>Ověřte, že máte zapnutou lištu záložek</b>
+							<ul id="browser-bookmark-help">						
+								<li class="firefox"><span>Firefox:<em> Možnosti -&gt; Lišta záložek</em> nebo <em>Zobrazení -&gt; Nástrojové lišty -&gt; Lišta záložek</em></span></li>
+								<li class="chrome"><span>Chrome:<em> Záložky -&gt; Zobrazit lištu záložek</em></span></li>
+								<li class="ie"><span>Internet Explorer 9:<em> Pravým tlačítkem klikněte na horní lištu -&gt; Panel Oblíbené položky</em></span></li>
+								<li class="opera"><span>Opera:<em> Zobrazit -&gt; Lišty -&gt; Lišta záložek</em></span></li>
+							</ul>
+						</li>
+						<li>
+							<b>Přetáhněte bookmarklet do lišty záložek</b><br>
+							<img src="@routes.Assets.at("images/bookmarklet-help-1.png")" />
+						</li>
+						<li>
+							<b>Označte výrok, který chcete ověřit a klikněte na vytvořený bookmarklet</b><br>
+							<img src="@routes.Assets.at("images/bookmarklet-help-2.png")"/>
+						</li>
+					</ol>
+				</div>
 			</div>
-			<div id="bookmarklet-help" style="display: none;">
-				<ol>
-					<li>
-						<b>Ověřte, že máte zapnutou lištu záložek</b>
-						<ul id="browser-bookmark-help">						
-							<li class="firefox"><span>Firefox:<em> Možnosti -&gt; Lišta záložek</em> nebo <em>Zobrazení -&gt; Nástrojové lišty -&gt; Lišta záložek</em></span></li>
-							<li class="chrome"><span>Chrome:<em> Záložky -&gt; Zobrazit lištu záložek</em></span></li>
-							<li class="ie"><span>Internet Explorer 9:<em> Pravým tlačítkem klikněte na horní lištu -&gt; Panel Oblíbené položky</em></span></li>
-							<li class="opera"><span>Opera:<em> Zobrazit -&gt; Lišty -&gt; Lišta záložek</em></span></li>
-						</ul>
-					</li>
-					<li>
-						<b>Přetáhněte bookmarklet do lišty záložek</b><br>
-						<img src="@routes.Assets.at("images/bookmarklet-help-1.png")" />
-					</li>
-					<li>
-						<b>Označte výrok, který chcete ověřit a klikněte na vytvořený bookmarklet</b><br>
-						<img src="@routes.Assets.at("images/bookmarklet-help-2.png")" />
-					</li>
-				</ol>
-			</div>
+			<script type="text/javascript">
+				// init accordion on the bookmarklet help section
+				$("#bookmarklet-help").accordion({collapsible: true, active: false});
+			</script>
 		</div>
-
-        <div id="bookmarklet-dnd">
-            <div>
-                    Toto přetáhněte do horní lišty
-            </div>
-            <div>
-                @defining(play.api.Play.current.configuration.getString("demagog.bookmarkletSourcesBaseUrl").get) { baseUrl =>
-                    <!-- template for bookmarklet using templating library handlebars.js when {{variableName}} is
-                         replaced by value of variableName (passed to context when rendering tempalte) -->
-                    <div id="bookmarklet-link-template" type="text/x-handlebars-template" style="display: none">
-                            javascript:
-                            var Demagog = Demagog || {};
-                            Demagog.Bookmarklet = Demagog.Bookmarklet || {};
-                            Demagog.Bookmarklet.Settings = Demagog.Bookmarklet.Settings || {};
-
-                            Demagog.Bookmarklet.Settings.demagogVotingAppApiBaseUrl = '{{demagogApiBaseUrl}}';
-
-                            /* where resides bookmarklet.js and bookmarklet.css files */
-                            var bookmarkletSourcesBaseUrl = '@{Html(baseUrl)}';
-                            Demagog.Bookmarklet.Settings.bookmarkletSourceBaseUrl = bookmarkletSourcesBaseUrl;
-
-                            var script = document.createElement('script');
-                            script.src = bookmarkletSourcesBaseUrl + '/bookmarklet.js';
-                            script.type = 'text/javascript';
-                            document.getElementsByTagName('head')[0].appendChild(script);
-                            void(0);
-                    </div>
-                }
-
-
-                <a id="bookmarklet-dnd-button" href="#">Ověřit výrok!</a>
-
-                <script type="text/javascript">
-
-                    /* Dynamic generation of bookmarklet's settings for url of overto.demagog.cz api where it send
-                    * selected quote data. We use current url which is demagog page from where you drag'n'drop bookmarklet.
-                    * With this each dragged bookmarklet is deployment specific so you can easily use and test bookmarklets
-                    * for local dev server, staging, production..etc.
-                    */
-                    jQuery(document).ready(function() {
-                        var re = new RegExp('(https{0,1})://(.*?)/');
-                        var matcher = re.exec(window.location.href);
-                        var baseUri = matcher[2];
-
-                        var currentUrl = 'http://' + baseUri;
-
-                        var javascriptBookmarkletTemplate = jQuery("#bookmarklet-link-template").text();
-                        var compiledTemplate = Handlebars.compile(javascriptBookmarkletTemplate);
-                        var context = {demagogApiBaseUrl : currentUrl};
-                        var renderedTemplate = compiledTemplate(context);
-
-                        jQuery("#bookmarklet-dnd-button").attr("href", renderedTemplate);
-                    });
-
-                </script>
-            </div>
-        </div> <!-- bookmarklet-link -->
      </div> <!-- #bookmarklet-instructions -->
 
 	<h2>2. Formulář</h2>
@@ -122,40 +127,51 @@
         }
 
 		<form action="@{controllers.routes.Application.submitQuote()}" id="new-quote-form" method="POST">
-			<div class="input-section">
-				<label for="quote-text">Citát</label>
-				<textarea id="quote-text"
-                          name="quoteText"
-                          class="validate[required]"
-                          placeholder="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;"
-                          tabindex="1">@quote.quoteText</textarea>
-			</div>
-			
-			<div class="input-section">
-				<label for="url">Zdroj citátu</label>
-				<input id="url" name="url"
-                       tabindex="2" type="text"
-                       @value(quote.url)
-                       class="validate[required,custom[url]]"
-                       placeholder="url, kde jste na citát narazili - např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" />
-			</div>	
-			
-			<div class="input-section">
-				<label for="author">Autor citátu</label>
-				<input type="text" id="author" name="author" @value(quote.author) tabindex="3" placeholder="např. Jiří Paroubek" />
-			</div>
-
-            <div class="input-section">
-                <label>Prosím opište text</label>
-                <div>
-                    @recaptcha(tabindex = "4")
-                </div>
-            </div>
-
-            <div id="buttons">
-				<input type="submit" id="submit" tabindex="5" value="Odeslat" />
-			</div>
-
+			<table>
+				<tbody>
+					<tr>
+			    		<td>
+			    			<label for="quote-text">Citát</label>
+			    			<textarea id="quote-text"
+	                          		  name="quoteText"
+	                                  class="text validate[required]"
+	                                  placeholder="citovaný text"
+	                                  title="např. &quot;Peníze jsem dostal darem od sestry mé milované ženy, můžete si to ověřit...&quot;"
+	                                  tabindex="1">@quote.quoteText</textarea>
+	 					</td>
+			  		</tr>
+			  		<tr>
+			    		<td>
+			    			<label for="url">Zdroj citátu</label>
+			    			<input id="url" name="url"
+	                       		   tabindex="2" type="text"
+	                       		   @value(quote.url)
+	                       		   class="text validate[required,custom[url]]"
+	                       		   placeholder="url, kde se citát nachází"
+	                               title="např. http://aktualne.centrum.cz/prezidentske-volby/clanek.phtml?id=775128" />
+	 					</td>
+			  		</tr>
+			  		<tr>
+			    		<td>
+			    			<label for="author">Autor citátu</label>
+			    			<input type="text" id="author" 
+			    			       class="text" name="author" 
+			    			       @value(quote.author) tabindex="3"
+			    			       placeholder="jméno autora citátu" 
+			    			       title="např. Jiří Paroubek" />
+	 					</td>
+			  		</tr>
+			  		<tr>
+			    		<td>
+			    			<label>Prosím opište text</label>
+			    			<div style="width:100px">@recaptcha(tabindex = "4")</div>
+	 					</td>
+			  		</tr>
+			  		<tr>
+			    		<td class="right"><input type="submit" id="submit" tabindex="5" value="Odeslat" /></td>
+			  		</tr>
+				</tbody>
+			</table>
 		</form>
 	</div>
 	
@@ -164,16 +180,15 @@
     <script src="@routes.Assets.at("javascripts/handlebars-1.0.0.rc3.js")" type="text/javascript"></script>
 
 	<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/validationEngine.jquery.css")">
-
 	
-	<script>
+	<script type="text/javascript">
 		$(function(){
 			// binds form submission and fields to the validation engine
-			$("#new-quote-form").validationEngine();
-			
-			$('#bookmarklet-help-label').click(function() {
-				$('#bookmarklet-help').slideToggle();
+			$("#new-quote-form").validationEngine({
+				binded: false, 
+				autoHidePrompt: true, 
+				autoHideDelay: 6000
 			});
-		});		
+		});
 	</script>
 }

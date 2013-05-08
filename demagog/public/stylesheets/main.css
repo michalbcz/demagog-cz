@@ -3,11 +3,16 @@ html {
 }
 
 body {
-	font-family: Arial;
+	font-family: "Open Sans", Arial, sans-serif;
+	font-size: 14px;
 }
 
 img {
 	border: 0px;
+}
+
+h4 {
+	font-size: 1.1em;
 }
 
 #body {
@@ -29,23 +34,29 @@ img {
 
 #footer {
     color: white;
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
 }
 
 #footer a  {
-    text-decoration: none;
     color: white;
 }
 
 #footer a:visited {
-    text-decoration: none;
     color: white;
 }
 
-a, a:visited {
+a:link, a:visited {
     text-decoration: none;
     color: rgb(0, 0, 238);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#header a, a.imglink {
+	text-decoration: none;
 }
 
 #navigation {
@@ -58,6 +69,7 @@ a, a:visited {
     padding: 0 !important;
     position: relative;
     top: 0;
+    font-family: "Trebuchet MS", "Verdana", sans-serif;
 }
 #navigation ul {
 	-moz-box-shadow: 0px 1px 10px rgba(0, 0, 0, .4);
@@ -130,8 +142,7 @@ a, a:visited {
 	margin: 15px 0;
 	background-color: #FFFFFF;
 	color: #212121;
-	border: 1px solid #555;
-	padding: 0.5em;
+	padding: 12px;
 	border-radius: 5px;
 	-moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
 	-webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, .6);
@@ -140,15 +151,19 @@ a, a:visited {
 
 .filter-container {
 	margin-bottom: 0.5em;
-	font-weight:bold;
 	color: white;
 	text-align: right;
 	line-height: 30px;
 }
+
 .filter-container .sbHolder {
 	float: right;
 	text-align: left;
 	margin-left: 0.5em;
+}
+
+.filter-container label {
+	color: white;
 }
 
 .quotes-container {
@@ -160,47 +175,89 @@ a, a:visited {
 	position: relative;	
 }
 
-.quote .footer {
-	margin-top: 0.5em;
+#invitation {
+	padding: 3px 0 0 0;
+	vertical-align: middle;
 }
 
-.footer {
-	font-size: smaller;
+.invitation-header {
+	margin: 0 3px 3px 3px;
+	padding-left: 7px;
+	position: relative;
+	font-size: 1.1em;
+}
+
+.invitation-title {
+	display: inline-block;
+	background: transparent url('../images/favicon.png') no-repeat left center;
+	padding: 5px 8px 5px 23px;
+}
+
+.invitation-content {
+	padding: 14px 12px 12px 12px;
+}
+
+.invitation-content p {
+	margin: 0 0 1em;
+}
+
+.invitation-content p.last {
+	margin-bottom: 0;
+}
+
+.invitation-content p span {
+	font-weight: bold;
+	color: #CC6D00;
+}
+
+#invitation .ui-button {
+	position: absolute;
+	top: 0.1em;
+	right: 0.1em;
+}
+
+#invitation .ui-button-text {
+	padding: 0.1em;
+}
+
+#invitation button.ui-button-icon-only {
+    width: 1.7em;
+}
+
+table.footer {
+	border-collapse: collapse;
+	font-size: 0.9em;
 	color: #555;
 }
 
-.url {
-	margin-left: 0.5em;
+table.footer td {
+	padding: 0 0.2em;
+}
+
+p, .text {
+	text-align: justify;;
 }
 
 .quote .text {
-	margin-right: 50px;
+	margin-right: 100px;
+	margin-bottom: 5px;
 }
 
 .quote .actions {
 	position: absolute;
-	top: 0.5em;
-	right: 0.5em;
-	height: 100%;
-}
-
-.quote .approval {
-	margin: 6px 0;
-	font-size: 0.9em;
-}
-
-.quote .approval input {
-	margin-left: 10px;
+	top: 12px;
+	right: 12px;
 }
 
 .vote-count {
+	position: relative;
+	top: -3px;
 	font-size: 22px;
 	font-weight: bold;
 	color: #555;
-	vertical-align: top;
 }
 
-.quote .actions input[type="submit"]{
+.quote .actions input[type=submit]{
 	width: 24px;
 	height: 24px;
 	background-image: url('../images/24x24/add.png');
@@ -208,6 +265,29 @@ a, a:visited {
 
 .quote .fb-like {
 	margin-top: 0.5em;
+}
+
+.approve .boxes {
+	margin-top: 10px;
+}
+
+.approve .sourceURL input[type=text], .approve .demagogURL input[type=text] {
+	width: 805px;
+}
+
+.approve .sourceURL a {
+	margin-left: 10px;
+}
+
+.approve label {
+	font-size: 0.9em;
+	margin-right: 1em;
+}
+
+.author label span, .sourceURL label span, .demagogURL label span {
+	display: block;
+	margin-top: 4px;
+	margin-bottom: 2px;
 }
 
 .orange-bar {
@@ -224,6 +304,25 @@ a, a:visited {
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.blue-bar {
+    color: #FFFFFF;
+    background-color: #3A87AD;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 2px 4px;
+    border-radius: 3px 3px 3px 3px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.leftArrow {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: transparent url('images/ui-icons_ffffff_256x240.png') no-repeat -96px -48px;
 }
 
 .state.new {
@@ -259,10 +358,11 @@ a, a:visited {
 
 .imglink {
 	text-decoration: none;
+	display: inline-block;
 }
 
 .admin_textarea {
-	width: 810px;
+	width: 805px;
 	height: 100px;
 }
 
@@ -272,26 +372,41 @@ a, a:visited {
 	margin-bottom: 2px;
 }
 
-#new-quote #quote-text {
+#new-quote table {
 	width: 100%;
+}
+
+#new-quote td {
+	vertical-align: top;
+}
+
+td.right {
+	text-align: right;
+}
+
+#new-quote .text {
+	width: 100%;
+}
+
+#new-quote textarea {
 	height: 10em;
 }
 
-#new-quote .input-section input {
-	width: 100%;
+#bookmarklet-instructions.ui-panel {
+	padding: 20px;
 }
 
-#new-quote .input-section {
-	margin-bottom: 0.5em;
+#bookmarklet-instructions .blue-bar {
+	position: relative;
+	top: 8px;
+	left: 22px;
+    padding-left: 17px;
 }
 
-#new-quote label {
-	font-weight: bold;
-	color: #555;
-}
-
-#new-quote #buttons {
-	text-align: right;
+#bookmarklet-instructions .blue-bar .leftArrow {
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 #bookmarklet-instructions {
@@ -299,12 +414,19 @@ a, a:visited {
 }
 
 #bookmarklet-instructions p {
-	margin: 5px 0px 10px 0px;
+	margin: 5px 0px 20px 0px;
 }
 
 #bookmarklet-instructions h4 {
 	margin-top: 3px;
 	margin-bottom: 8px;
+}
+
+#bookmarklet-help .ui-accordion-content {
+    padding: 0.5em 1em 0 1em;
+	font-family: "Open Sans", Arial, sans-serif;
+    font-size: 0.9em;
+    line-height: 1;
 }
 
 #bookmarklet-help img {
@@ -317,6 +439,25 @@ a, a:visited {
 
 #bookmarklet-help li:FIRST-CHILD {
 	margin-top: 10px;
+}
+
+#bookmarklet-dnd {
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+#bookmarklet-dnd-button {
+	padding: 0.5em 1em;
+	background-color: #2D2D2D;
+	border: 1px solid #515151;
+	color: #FFFFFF;
+	cursor: move;
+	text-decoration: none;
+}
+
+#browser-bookmark-help {
+	margin: 20px 0 10px 0;
 }
 
 #browser-bookmark-help li {
@@ -347,39 +488,20 @@ li.chrome {
 
 li.opera {
 	list-style-type: none;
-	background: url("../images/opera.gif") no-repeat top left;
+	background: url("../images/opera.gif") no-repeat 2px top;
 }
 
-#bookmarklet-help-label {
-	cursor: pointer;
-}
-
-#bookmarklet-dnd {
-	float: right;
-	height: 70px;
-    line-height: 30px;
-}
-#bookmarklet-dnd-button {
-	padding: 0.5em 1em;
-	background-color: #2D2D2D;
-	border: 1px solid #515151;
-	color: #FFFFFF;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-#login-panel {
+#login-container {
+	margin: 80px auto 80px;
 	width: 300px;
-	margin: 0 auto;
-	margin-top: 100px;
+	position: relative;
 }
 
 #login-panel .input-section {
 	margin-bottom: 0.5em;
 }
 
-
-#login-panel label {
+#login-panel label, #new-quote label {
 	font-weight: bold;
 	color: #555;
 	margin-bottom: 3px;
@@ -388,13 +510,26 @@ li.opera {
 
 #login-panel input,
 #login-panel button {
+	margin-top: 2px;
 	width: 100%;
 }
 
-.error {
+#login-panel button {
+	margin-top: 5px;
+}
+
+#login-container .error {
+	position: absolute;
+	width: 100%;
 	text-align: center;
-	margin: 0 auto;
-	margin-top: 30px;
+}
+
+form table {
+	border-spacing: 6px;
+}
+
+label {
+	color: #555555;
 }
 
 input[type=checkbox], input[type=radio] {
@@ -403,26 +538,68 @@ input[type=checkbox], input[type=radio] {
     bottom: 1px;
 }
   
-input, textarea {
+input[type=text], input[type=password], textarea {
+    border: 1px solid #555555;
+    border-radius: 4px;
+    padding: 4px 4px;
+	font-family: "Opane Sans", Arial, sans-serif ;
+    font-size: 1em;
+    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+}
+
+#recaptcha_area input[type=text] {
+	padding: 4px 4px !important;
+	font-size: 10pt !important;
 }
 
 textarea {
     resize: none;
+    text-align: justify;
+}
+
+input[type=text]:FOCUS, input[type=password]:FOCUS, textarea:FOCUS {
+	box-shadow: 0 0 4px 1px #9C9C9C;
 }
 
 #logo-sublogo {
-    color: #A0A0A0;
-    font-weight: bolder;
-    font-size: 18px;
+    color: #FFFFFF;
+}
+
+#logo-sublogo-text {
+	letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.error-400, .error-404, .error-500 {
+    background: transparent url("../images/128x128/broken.png") no-repeat scroll center top;
+    margin: 0 auto;
+    margin-top: 120px;
+    padding-top: 180px;
+    text-align: center;
+}
+
+.error-400 h2, .error-404 h2, .error-500 h2 {
+    color: #FFFFFF;
+    font-size: 22pt;
+}
+
+.error-400 p, .error-404 p, .error-500 p {
+	margin: 0 auto;
+    width: 340px;
+    color: #CACACA;
+    text-align: center;
+}
+
+.clearfix {
+	clear: both;
 }
 
 /* support for alerts copy pasted from bootstrap - see http://twitter.github.com/bootstrap/components.html#alerts */
 .alert {
   padding: 8px 35px 8px 14px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   background-color: #fcf8e3;
   border: 1px solid #fbeed5;

@@ -28,7 +28,6 @@ GET     /admin/settings             controllers.Admin.showSettings()
 
 # Authentication
 GET		/admin 						controllers.Admin.login()
-GET		/admin/						controllers.Admin.login()
 GET     /admin/login                controllers.Admin.login()
 POST    /admin/login                controllers.Admin.authenticate()
 GET     /admin/logout               controllers.Admin.logout()
@@ -42,6 +41,8 @@ GET     /quotes/:content            controllers.Application.showQuotes(content: 
 POST    /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
 POST    /upVote/:content            controllers.Application.upVote(content: models.QuotesListContent)
 
+# trailing slashes workaround
+GET  	/*path/  					controllers.Application.untrail(path: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path = "/public", file)

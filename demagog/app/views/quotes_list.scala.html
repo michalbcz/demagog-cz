@@ -5,6 +5,23 @@
 
 @main("", utils.MenuUtils.getMenuType(admin)) {
     @if(!admin && quotes.size() > 0) {
+    	<div id="invitation" class="ui-panel" style="display:none">
+    		<div class="invitation-header ui-widget-header ui-corner-all">
+    			<span class="invitation-title ui-dialog-title">Vítejte ve službě ověřto.demagog.cz</span>
+    			<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" title="Permanentně zavřít">
+					<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>
+					<span class="ui-button-text">Permanentně zavřít</span>
+				</button>
+    		</div>
+    		<div class="invitation-content">
+    			<p>Cílem této služby je umožňit uživatelům vkládat politické výroky z veřejných informačních zdrojů pomocí <em>formuláře</em> nebo pomocí <em>bookmarkletu</em>.
+    			Uživatelé mohou hlasovat a vybrat si tak výroky, které jim připadají nejzajímavější a které by si přáli ověřit.
+    			Tým demagog.cz postupně výroky s nejvíce hlasy analyzuje. Po ověření, zda je zvolený výrok pravdivý či nepravdivý, je pak publikován na serveru <a href="http://demagog.cz/" target="_blank">demagog.cz</a>.</p> 
+    			<p>Pokud budete mít nějaký zajímavý nápad jak tuto službu vylepšit, můžete využít tlačítko <span>Váš názor</span>, které je umístěno na pravém okraji prohlížeče.
+    			Neváhejte nás kontaktovat ani v případě, že objevíte v aplikaci chybu. Co nejdříve ji opravíme a určitě to ocení i ostatní uživatelé.</p>
+    			<p class="last">Nenechte si od politiků lhát! Váš demagog.cz</p>
+    		</div>
+    	</div>
 		<div class="filter-container">
 			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
 				<label for="filterByAuthorSelect">Filtrovat podle autora:</label>
@@ -39,20 +56,116 @@
 			}		
 		</div>
 	}
+	<div id="rejectApproval" title="Smazat citát" style="display:none">Opravdu si přejete smazat tento citát?</div>
 	</div>
+	
+	<script type="text/javascript">
+		$(function () {
+			$("#filterByAuthorSelect").selectbox();
+		});
+	</script>
+	
+	<script type="text/javascript">
+		$(function() {
+			// invitation
+			
+			var visited_cookie_name = "demagog_invitation_closed";
+			var visited_cookie = $.cookie(visited_cookie_name);
+			
+			if (typeof visited_cookie == "undefined") {
+				// the user was not here yet or didn't close the invitation, show it
+				
+				var $invitation = $("#invitation");
+				
+				setTimeout(function() {
+					$invitation.slideDown();
+				}, 400);
+
+				$invitation.on("mouseover mouseout", "button", function(){
+				    $(this).toggleClass("ui-state-hover");
+				});
+				$invitation.on("mousedown mouseup", "button", function(){
+				    $(this).toggleClass("ui-state-active");
+				});
+				
+				$invitation.find("button").click(function() {
+					// close it
+					$invitation.slideUp();
+					
+					// save the cookie about the user was here 
+					// and has closed the invitation for e.g. 100 years?
+					$.cookie(visited_cookie_name, "1", { expires: 36500 });
+				});
+			}
+		});
+	</script>
+
+    <script type="text/javascript">
+            function voteOnServer(quoteId) {
+
+                /* disable clicking on voting button */
+                var $form = $("#" + quoteId);
+                var $formsUpVoteButton = $form.find(".upVoteButton");
+                var $disabledUpVoteButton = $formsUpVoteButton.replaceWith('@Html(StringUtils.normalizeSpace(quoteAlreadyVotedImage().toString()))');
+
+                var $quoteForm = $("#" + quoteId);
+                var $authorFilter = $("#filterByAuthor select option:selected").val();
+
+                $quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
+
+                var upVoteAjaxUrl = '@{controllers.routes.Application.upVote(content)}';
+                console.debug("Sending vote request for form", $quoteForm, " on ", upVoteAjaxUrl);
+                jQuery.ajax(upVoteAjaxUrl, {
+                    type : "POST",
+                    data : $quoteForm.serialize(),
+                    success : function(response, textStatus) {
+                        console.log("up vote was successful");
+
+                        console.debug("adding +1 to vote count number")
+                        var $voteCounts = $form.find(".vote-count")
+                        var voteCounts = parseInt($voteCounts.text(), 10 /* radix */);
+                        voteCounts = voteCounts + 1
+                        $voteCounts.text(voteCounts.toString(10));
+
+                    },
+                    error : function(jqXhr, textStatus, errorThrown) {
+                        console.error("up vote failed with an error :", errorThrown)
+                        $disabledUpVoteButton.replaceWith($formsUpVoteButton);
+                    }
+                });
+
+            }
+    </script>
 }
 
 @footer(quote: Quote) = {
-	<div class="footer">
-		<span class="author">Autor: 
-			@if(quote.author == null) {
-				"neznámý"
-			} else {
-				@quote.author
-			}
-		</span>
-		<span class="url">Zdroj: <a href="@{quote.url}">@{quote.url}</a></span>
-	</div>	
+	<table class="footer">
+		<tbody>
+			<tr>
+	    		<td><label>Autor:</label></td>
+	    		<td>
+	    			@if(StringUtils.isBlank(quote.author)) {
+						neznámý
+					} else {
+						@quote.author
+					}
+				</td>
+	  		</tr>
+	  		<tr>
+	    		<td><label>Zdroj:</label></td>
+	    		<td>
+	    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
+				</td>
+	  		</tr>
+            @if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
+                <tr>
+                    <td colspan="2">
+                        <a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
+                    </td>
+                </tr>
+            }
+		</tbody>
+	</table>	
 }
 
 @quoteAlreadyVotedImage() = {
@@ -66,7 +179,7 @@
 			<input type="hidden" name="id" value="@{quote.id}" />
 			<span class="vote-count">@{quote.voteCount}</span>
 			@if(QuoteState.APPROVED_FOR_VOTING == quote.quoteState && !allreadyVoted.contains(quote.id)) {
-				<a class="upVoteButton" href="javascript:voteOnServer('@{quote.id}');">
+				<a class="imglink upVoteButton" href="javascript:voteOnServer('@{quote.id}');">
 					<img src="@routes.Assets.at("images/24x24/add.png")" />
 				</a>
 			} else {
@@ -78,39 +191,85 @@
 }
 
 @adminFormApproval(quote: Quote) = {
-	<form id="update_@{quote.id}" action="@{controllers.routes.Admin.updateQuote()}" method="POST">
+	<form id="update_@{quote.id}" action="@{controllers.routes.Admin.updateQuote()}" class="approve" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />
 		<textarea name="quoteText" class="admin_textarea">@{quote.quoteText}</textarea>
 		<div class="actions">
 			<a class="imglink" title="Uložit" href="javascript:$('#update_@{quote.id}').submit(); void(0);">
 				<img src="@routes.Assets.at("images/24x24/save.png")" />
 			</a>
-            <a class="imglink" title="Odstranit" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
+            <a id="rejectLink_@{quote.id}" class="imglink" title="Odstranit" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
 				<img src="@routes.Assets.at("images/24x24/delete.png")" />
 			</a>
 		</div>
-		<div class="approval">
-			<label><span>Schválit citát k hlasování</span><input name="approved" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.NEW) "" else "checked") /></label><br>
-			<label><span>Citát je publikovaný na demagog.cz</span><input name="published" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.CHECKED_AND_PUBLISHED) "checked" else "") /></label>
+    	<div class="author">
+    		<label><span>Autor</span>
+    			<input name="author" type="text" size="40" value="@{quote.author}" />
+    		</label>
 		</div>
-		<div class="footer">
-			<span class="author">Autor: </span>
-			<input name="author" type="text" value="@{quote.author}" />
-
-			<span class="url">Zdroj:
-                <input name="url" type="text" size="80" value="@{quote.url}" />
-                <a href="@{quote.url}" target="_blank">Otevřít</a>
-            </span>
-
-            <div class="demagogBacklinkUrl">
-                <span class="label">Zpětný odkaz na demagog.cz: &nbsp;&nbsp;</span>
-                <input name="demagogBacklinkUrl" type="text" size="80" value="@{quote.demagogBacklinkUrl}" />
-            </div>
+    	<div class="sourceURL">
+    		<label><span>Zdroj</span>
+    			<input name="url" type="text" value="@{quote.url}" />
+    			<a href="@{quote.url}" target="_blank">Otevřít</a>
+    		</label>
+		</div>
+    	<div class="demagogURL">
+    		<label><span>Zpětný odkaz na demagog.cz</span>
+    			<input name="demagogBacklinkUrl" type="text" value="@{quote.demagogBacklinkUrl}" />
+    		</label>
+		</div>
+		<div class="boxes">
+    		<label><span>Schválit citát k hlasování</span>
+    			<input name="approved" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.NEW) "" else "checked") />
+    		</label>
+    		<label><span>Citát je publikovaný na demagog.cz</span>
+    			<input name="published" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.CHECKED_AND_PUBLISHED) "checked" else "") />
+    		</label>
 		</div>
 	</form>
 	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
 		<input type="hidden" name="id" value="@{quote.id}" />		
 	</form>
+	
+	<script type="text/javascript">
+		$(function() {
+			$("#rejectLink_@{quote.id}").click(function(e) {
+				e.preventDefault();
+				
+				$("#rejectApproval").dialog("option", "buttons", {
+					"Ano" : function() {
+						$("#reject_@{quote.id}").submit();
+					},
+					"Ne" : function() {
+						$(this).dialog("close");
+					}
+				});
+				$("#rejectApproval").dialog("open");
+			});
+		});
+	</script>
+
+
+    <script type="text/javascript">
+            $(function() {
+                $("#rejectApproval").dialog({
+                    autoOpen : false,
+                    modal: true,
+                    resizable: false,
+                    draggable: false,
+                    width: 360,
+                    show: {
+                        effect: "size",
+                        duration: 300
+                    },
+                    hide:  {
+                        effect: "size",
+                        duration: 300
+                    }
+                 });
+            });
+    </script>
+
 }
 
 @adminFormChecking(quote: Quote) = {
@@ -121,53 +280,10 @@
 		<input type="hidden" name="id" value="@{quote.id}" />
 		<span class="vote-count">Votes: @{quote.voteCount}</span>
 		<div class="actions">
-			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void(0);">
+			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void(0);" title="Zařadit k analýze">
 				<img src="@routes.Assets.at("images/24x24/accept.png")" />
 			</a>
 		</div>
 	</form>
 	@footer(quote)
 }
-
-<script type="text/javascript">
-	function voteOnServer(quoteId) {
-
-        /* disable clicking on voting button */
-        var $form = $("#" + quoteId);
-        var $formsUpVoteButton = $form.find(".upVoteButton");
-        var $disabledUpVoteButton = $formsUpVoteButton.replaceWith('@Html(StringUtils.normalizeSpace(quoteAlreadyVotedImage().toString()))');
-
-		var $quoteForm = $("#" + quoteId);
-		var $authorFilter = $("#filterByAuthor select option:selected").val();
-	
-		$quoteForm.append('<input type="hidden" name="author" value="' + $authorFilter + '"/>');
-
-        var upVoteAjaxUrl = '@{controllers.routes.Application.upVote(content)}';
-        console.debug("Sending vote request for form", $quoteForm, " on ", upVoteAjaxUrl);
-        jQuery.ajax(upVoteAjaxUrl, {
-            type : "POST",
-            data : $quoteForm.serialize(),
-            success : function(response, textStatus) {
-                console.log("up vote was successful");
-
-                console.debug("adding +1 to vote count number")
-                var $voteCounts = $form.find(".vote-count")
-                var voteCounts = parseInt($voteCounts.text(), 10 /* radix */);
-                voteCounts = voteCounts + 1
-                $voteCounts.text(voteCounts.toString(10));
-
-            },
-            error : function(jqXhr, textStatus, errorThrown) {
-                console.error("up vote failed with an error :", errorThrown)
-                $disabledUpVoteButton.replaceWith($formsUpVoteButton);
-            }
-        });
-
-	}
-</script>
-
-<script type="text/javascript">
-	$(function () {
-	    $("#filterByAuthorSelect").selectbox();
-	});
-</script>

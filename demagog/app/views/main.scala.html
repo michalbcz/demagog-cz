@@ -1,5 +1,6 @@
 @(title : String = "", menuType: String = "menu-main")(content : Html)
 @import java.util.Date
+@import tags._
 
 <!DOCTYPE html>
 
@@ -11,26 +12,37 @@
         	<title>Demagog.cz - Ověř to!</title>
         }
 
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/jquery-ui-1.9.2.custom.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/jquery.selectbox-0.2.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("javascripts/main.js?v=1")" type="text/javascript"></script>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui-1.9.2.custom.min.css")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery.selectbox.css")">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+
+        <!-- YOU CAN SEE THAT URL OMITS PROTOCOL PART (HTTP) - THERE IS A REASON FOR THAT SEE http://blog.httpwatch.com/2010/02/10/using-protocol-relative-urls-to-switch-between-http-and-https/ -->
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+
+        <!-- YOU CAN SEE THAT URL OMITS PROTOCOL PART (HTTP) - THERE IS A REASON FOR THAT SEE http://blog.httpwatch.com/2010/02/10/using-protocol-relative-urls-to-switch-between-http-and-https/ -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+		
+        <script src="@routes.Assets.at("javascripts/jquery.selectbox-0.2.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery.cookie.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/main.js?v=1")" type="text/javascript"></script>
+        
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui-1.10.2.custom.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery.selectbox.css")">
+		
     </head>
     <body>
     	<div id="body">
     	    <div id="header">
     	    @if(UserAuthenticator.isUserLoggedIn()) {
     	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
-                    @logo_header
+                    @logo()
         		</a> 
     	    } else {
     	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
-                    @logo_header
+                    @logo()
         		</a> 
         	}    		
             </div>
@@ -53,6 +65,9 @@
 
                 <div id="footer-menu">
                     <a href="http://www.demagog.cz">© Demagog.cz @{new Date().getYear() + 1900 /* as current year */}</a>
+                    <span class="applicationVersion" @if(play.Play.application().isProd()){style="display:none"}>
+                    	v@play.Play.application().configuration().getString("app.version")
+                    </span>
                 </div>
 			
                 <div id="logo-restart">
@@ -66,47 +81,11 @@
 		</div>
 
         <!-- Google Analytics -->
-            <script type="text/javascript">
-              var _gaq = _gaq || [];
-              _gaq.push(['_setAccount', '@play.Play.application().configuration().getString("demagog.analytics.key")']);
-              _gaq.push(['_trackPageview']);
-
-              (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-              })();
-            </script>
+        @tags.google_analytics()
         <!-- Google Analytics - END -->
 
         <!-- Uservoice.com Widget -->
-            <!-- UserVoice JavaScript SDK (only needed once on a page) -->
-            <script>
-                (function(){
-                    var uv=document.createElement('script');
-                    uv.type='text/javascript';
-                    uv.async=true;
-                    uv.src='//widget.uservoice.com/zhJyl9kxbUMtiJqJkM6w.js';
-                    var s=document.getElementsByTagName('script')[0];
-                    s.parentNode.insertBefore(uv,s)
-                })();
-            </script>
-
-            <!-- A tab to launch the Classic Widget -->
-            <script>
-                    UserVoice = window.UserVoice || [];
-                    UserVoice.push(['showTab', 'classic_widget', {
-                        mode: 'full',
-                        primary_color: '#cc6d00',
-                        link_color: '#007dbf',
-                        default_mode: 'feedback',
-                        forum_id: 202667,
-                        tab_label: 'Váš názor',
-                        tab_color: '#cc6d00',
-                        tab_position: 'middle-right',
-                        tab_inverted: false
-                    }]);
-            </script>
+        @tags.uservoice()
         <!-- Uservoice.com Widget - END -->
 
     </body>
@@ -134,11 +113,3 @@
 	</div>
 }
 
-@logo_header = {
-    <div id="logo-container">
-    </div>
-    <div id="logo-sublogo">
-        <span>ověřto.demagog.cz - řekni nám, co chceš ověřit!</span>
-        <span class="orange-bar">BETA</span>
-    </div>
-}
