@@ -1,5 +1,5 @@
 @(title : String = "", menuType: String = "menu-main")(content : Html)
-@import java.util.Date
+@import java.util.Calendar
 @import tags._
 
 <!DOCTYPE html>
@@ -31,30 +31,30 @@
         
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui-1.10.2.custom.min.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery.selectbox.css")">
-		
+        
     </head>
     <body>
     	<div id="body">
-    	    <div id="header">
-    	    @if(UserAuthenticator.isUserLoggedIn()) {
-    	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
-                    @logo()
-        		</a> 
-    	    } else {
-    	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
-                    @logo()
-        		</a> 
-        	}    		
-            </div>
-            
-           	@if(menuType.equals("menu-main")) {
-           		@main_menu
-       	    } else {
+			<div id="header">
+	    	    @if(UserAuthenticator.isUserLoggedIn()) {
+	    	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
+	                    @logo()
+	        		</a> 
+	    	    } else {
+	    	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
+	                    @logo()
+	        		</a> 
+	        	}   
+	        </div>
+	            
+	        @if(menuType.equals("menu-main")) {
+	           	@main_menu
+	       	} else {
        	    	@if(menuType.equals("menu-admin")) {
    	        		@admin_menu
    	        	}
             }
-            
+    		
     		<div id="content">    		    
 				@content
 			</div>
@@ -62,19 +62,24 @@
             <hr/>
 
             <div id="footer">
-
                 <div id="footer-menu">
-                    <a href="http://www.demagog.cz">© Demagog.cz @{new Date().getYear() + 1900 /* as current year */}</a>
-                    <span class="applicationVersion" @if(play.Play.application().isProd()){style="display:none"}>
+                	©&nbsp;@{Calendar.getInstance().get(Calendar.YEAR) /* as current year */}&nbsp;<a href="http://www.demagog.cz">Demagog.cz</a>
+                	<span class="applicationVersion" @if(play.Play.application().isProd()){style="display:none"}>
                     	v@play.Play.application().configuration().getString("app.version")
+                    </span>
+                    &nbsp;|&nbsp;
+                    <a href="@{controllers.routes.Admin.login()}">Admin</a>
+                    &nbsp;|&nbsp;
+                    <span class="contribute">
+						<a href="https://github.com/michalbcz/demagog-cz" target="_blank" title="Pomozte nám s vývojem">Chci se zapojit</a>
                     </span>
                 </div>
 			
                 <div id="logo-restart">
-                    Realizace projektu byla podpořena programem ReStart Česko – 3. cena<br>
                     <a href="http://www.restartcesko.cz/" title="ReStart Česko" target="_blank">
                         <img width="400" alt="ReStart Česko" src="/assets/images/logo_restart.jpg" />
                     </a>
+                    <div>Realizace projektu byla podpořena programem ReStart Česko – 3. cena</div>
                 </div>
 
             </div>
