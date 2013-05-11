@@ -10,6 +10,7 @@ public class Settings {
 	private static final String applicationBaseUrl;
 
 	static {
+		//TODO: change properties name to demagog.environment and demagog.baseUrl - as soon as this will be changed in code, it must be also changed in heroku configuration
 		environment = System.getProperty("DEMAGOG_ENVIRONMENT", "development");
 
 		String url = System.getProperty("DEMAGOG_BASE_URL");

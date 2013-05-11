@@ -11,10 +11,9 @@ import models.QuotesListContent;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.bson.types.ObjectId;
-
 import org.springframework.util.Assert;
+
 import play.Logger;
-import play.api.http.Status$;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
@@ -37,7 +36,7 @@ public class Application extends Controller {
 		// viz http://stackoverflow.com/questions/13189095/play-framework2-remove-trailing-slash-from-urls
 		return movedPermanently("/" + path);
 	}
-	
+
 	public static Result showNewQuoteForm() {
 		return ok(quote_new.render(new Quote()));
 	}
@@ -167,7 +166,7 @@ public class Application extends Controller {
 
         votes += id;
 
-        response().setCookie(COOKIE_NAME, votes);
+        response().setCookie(COOKIE_NAME, votes, 315360000); // maxAge = 10years
     }
 
 
