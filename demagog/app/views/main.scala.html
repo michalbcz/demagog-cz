@@ -31,30 +31,43 @@
         
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui-1.10.2.custom.min.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery.selectbox.css")">
+        
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/gh-fork-ribbon.css")">
+    	<!--[if IE]>
+        	<link rel="stylesheet" href="@routes.Assets.at("gh-fork-ribbon.ie.css")">
+    	<![endif]-->
 		
     </head>
     <body>
     	<div id="body">
-    	    <div id="header">
-    	    @if(UserAuthenticator.isUserLoggedIn()) {
-    	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
-                    @logo()
-        		</a> 
-    	    } else {
-    	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
-                    @logo()
-        		</a> 
-        	}    		
-            </div>
-            
-           	@if(menuType.equals("menu-main")) {
-           		@main_menu
-       	    } else {
+			
+			<!-- fork -->
+			<div class="github-fork-ribbon-wrapper right">
+				<div class="github-fork-ribbon">
+					<a href="https://github.com/michalbcz/demagog-cz" target="_blank" title="Pomozte nám s vývojem">Fork me on GitHub</a>
+				</div>
+			</div>
+
+			<div id="header">
+	    	    @if(UserAuthenticator.isUserLoggedIn()) {
+	    	    	<a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">
+	                    @logo()
+	        		</a> 
+	    	    } else {
+	    	    	 <a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">
+	                    @logo()
+	        		</a> 
+	        	}   
+	        </div>
+	            
+	        @if(menuType.equals("menu-main")) {
+	           	@main_menu
+	       	} else {
        	    	@if(menuType.equals("menu-admin")) {
    	        		@admin_menu
    	        	}
             }
-            
+    		
     		<div id="content">    		    
 				@content
 			</div>
@@ -62,7 +75,6 @@
             <hr/>
 
             <div id="footer">
-
                 <div id="footer-menu">
                     <a href="http://www.demagog.cz">© Demagog.cz @{new Date().getYear() + 1900 /* as current year */}</a>
                     <span class="applicationVersion" @if(play.Play.application().isProd()){style="display:none"}>
