@@ -1,7 +1,8 @@
-@(quotes: List[Quote], admin: Boolean, content: models.QuotesListContent, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
+@(quotes: List[Quote], admin: Boolean, fullEditable: Boolean = false, content: models.QuotesListContent, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
 
 @import models.Quote.QuoteState
 @import org.apache.commons.lang3.StringUtils
+@import tags._
 
 @main("", utils.MenuUtils.getMenuType(admin)) {
     @if(!admin && quotes.size() > 0) {
@@ -42,11 +43,7 @@
 	@for(quote <- quotes) {
 		<div class="ui-panel quote">			
 			@if(admin) {
-				@if(quote.quoteState == Quote.QuoteState.APPROVED_FOR_VOTING) {
-					@adminFormChecking(quote)
-				} else {
-					@adminFormApproval(quote)
-				}
+				@quote_admin(quote, fullEditable)
 			} else {
 				<div class="text">
 					&bdquo;@{quote.quoteText}&ldquo;
@@ -187,103 +184,5 @@
 			}
 		</form>
 	</div>
-	@footer(quote)
-}
-
-@adminFormApproval(quote: Quote) = {
-	<form id="update_@{quote.id}" action="@{controllers.routes.Admin.updateQuote()}" class="approve" method="POST">
-		<input type="hidden" name="id" value="@{quote.id}" />
-		<textarea name="quoteText" class="admin_textarea">@{quote.quoteText}</textarea>
-		<div class="actions">
-			<a class="imglink" title="Uložit" href="javascript:$('#update_@{quote.id}').submit(); void(0);">
-				<img src="@routes.Assets.at("images/24x24/save.png")" />
-			</a>
-            <a id="rejectLink_@{quote.id}" class="imglink" title="Odstranit" href="javascript:$('#reject_@{quote.id}').submit(); void(0);">
-				<img src="@routes.Assets.at("images/24x24/delete.png")" />
-			</a>
-		</div>
-    	<div class="author">
-    		<label><span>Autor</span>
-    			<input name="author" type="text" size="40" value="@{quote.author}" />
-    		</label>
-		</div>
-    	<div class="sourceURL">
-    		<label><span>Zdroj</span>
-    			<input name="url" type="text" value="@{quote.url}" />
-    			<a href="@{quote.url}" target="_blank">Otevřít</a>
-    		</label>
-		</div>
-    	<div class="demagogURL">
-    		<label><span>Zpětný odkaz na demagog.cz</span>
-    			<input name="demagogBacklinkUrl" type="text" value="@{quote.demagogBacklinkUrl}" />
-    		</label>
-		</div>
-		<div class="boxes">
-    		<label><span>Schválit citát k hlasování</span>
-    			<input name="approved" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.NEW) "" else "checked") />
-    		</label>
-    		<label><span>Citát je publikovaný na demagog.cz</span>
-    			<input name="published" type="checkbox" @(if(quote.quoteState == Quote.QuoteState.CHECKED_AND_PUBLISHED) "checked" else "") />
-    		</label>
-		</div>
-	</form>
-	<form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
-		<input type="hidden" name="id" value="@{quote.id}" />		
-	</form>
-	
-	<script type="text/javascript">
-		$(function() {
-			$("#rejectLink_@{quote.id}").click(function(e) {
-				e.preventDefault();
-				
-				$("#rejectApproval").dialog("option", "buttons", {
-					"Ano" : function() {
-						$("#reject_@{quote.id}").submit();
-					},
-					"Ne" : function() {
-						$(this).dialog("close");
-					}
-				});
-				$("#rejectApproval").dialog("open");
-			});
-		});
-	</script>
-
-
-    <script type="text/javascript">
-            $(function() {
-                $("#rejectApproval").dialog({
-                    autoOpen : false,
-                    modal: true,
-                    resizable: false,
-                    draggable: false,
-                    width: 360,
-                    show: {
-                        effect: "size",
-                        duration: 300
-                    },
-                    hide:  {
-                        effect: "size",
-                        duration: 300
-                    }
-                 });
-            });
-    </script>
-
-}
-
-@adminFormChecking(quote: Quote) = {
-	<div class="text">
-		&bdquo;@{quote.quoteText}&ldquo;
-	</div>
-	<form id="check_@{quote.id}" action="@{controllers.routes.Admin.setChecked()}" method="POST">
-		<input type="hidden" name="id" value="@{quote.id}" />
-		<span class="vote-count">Votes: @{quote.voteCount}</span>
-		<div class="actions">
-			<a class="imglink" href="javascript:$('#check_@{quote.id}').submit(); void(0);" title="Zařadit k analýze">
-				<img src="@routes.Assets.at("images/24x24/accept.png")" />
-			</a>
-		</div>
-	</form>
 	@footer(quote)
 }

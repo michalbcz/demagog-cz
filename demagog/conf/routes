@@ -16,13 +16,13 @@ POST    /api/v1/quote/save          controllers.Api.saveQuote()
 OPTIONS /api/*rest                  controllers.Api.header(rest)
 
 # Admin
-GET		/admin/quotes				controllers.Admin.showNewlyAddedQuotes()
 POST	/admin/reject				controllers.Admin.reject()
 POST    /admin/update               controllers.Admin.updateQuote()
-POST	/admin/check				controllers.Admin.setChecked()
+GET		/admin/quotes				controllers.Admin.showNewlyAddedQuotes()
 GET		/admin/checkquotes			controllers.Admin.showApprovedQuotes()
 GET		/admin/inanalysis			controllers.Admin.showQuotesInAnalysis()
 GET		/admin/published			controllers.Admin.showPublishedQuotes()
+GET		/admin/all					controllers.Admin.showAllQuotes()
 
 GET     /admin/settings             controllers.Admin.showSettings()
 

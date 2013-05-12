@@ -116,7 +116,7 @@ public class Application extends Controller {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 
-		return ok(quotes_list.render(quotes, false, content, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
+		return ok(quotes_list.render(quotes, false, false, content, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result showQuoteDetail(String id) {

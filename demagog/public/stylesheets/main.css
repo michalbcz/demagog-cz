@@ -250,9 +250,8 @@ p, .text {
 }
 
 .vote-count {
-	position: relative;
-	top: -3px;
-	font-size: 22px;
+	margin: 5px 0 -5px;
+	font-size: 1.3em;
 	font-weight: bold;
 	color: #555;
 }
@@ -275,7 +274,7 @@ p, .text {
 	width: 805px;
 }
 
-.approve .sourceURL a {
+.approve .sourceURL a, .approve .demagogURL a {
 	margin-left: 10px;
 }
 

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
 import org.springframework.util.Assert;
 
@@ -18,6 +17,7 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.UpdateOperations;
 
 @Entity(concern = "safe")
 public class Quote {
@@ -198,6 +198,14 @@ public class Quote {
 			query = query.field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
 		}
 		return query.order("-creationDate").asList();
+	}
+	
+	public static List<Quote> findAllSortedByStateAndCreationDate(boolean onlyApproved) {
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
+		if (onlyApproved) {
+			query = query.field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
+		}
+		return query.order("-quoteState, -creationDate").asList();
 	}
 
 	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, QuoteState state) {
