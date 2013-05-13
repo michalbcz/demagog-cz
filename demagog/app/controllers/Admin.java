@@ -2,12 +2,14 @@ package controllers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import models.Quote;
 import models.Quote.QuoteState;
 import models.QuotesListContent;
 import models.User;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.bson.types.ObjectId;
 
 import play.Configuration;
@@ -56,12 +58,18 @@ public class Admin extends Controller {
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result reject() {
-		String id = request().body().asFormUrlEncoded().get("id")[0];
-
-        Quote oldQuote = Quote.findById(new ObjectId(id));
+		final Map<String, String[]> requestContent = request().body().asFormUrlEncoded();
+		
+		String id = requestContent.get("id")[0];
 
 		Quote.delete(new ObjectId(id), false);
 
+		if (requestContent.containsKey("fullEditable") && BooleanUtils.toBoolean(requestContent.get("fullEditable")[0])) {
+        	return redirect(routes.Admin.showAllQuotes());
+        }
+		
+		Quote oldQuote = Quote.findById(new ObjectId(id));
+		
         return redirectByQuoteState(oldQuote.quoteState);
 	}
 
@@ -123,6 +131,10 @@ public class Admin extends Controller {
 
         DBHolder.ds.update(new Key<Quote>(Quote.class, quote.id), updateOperations);
 
+        final Map<String, String[]> requestContent = request().body().asFormUrlEncoded();
+        if (requestContent.containsKey("fullEditable") && BooleanUtils.toBoolean(requestContent.get("fullEditable")[0])) {
+        	return redirect(routes.Admin.showAllQuotes());
+        }
         return redirectByQuoteState(oldQuote.quoteState);
     }
 	

@@ -133,6 +133,26 @@
 
             }
     </script>
+    
+    <script type="text/javascript">
+	$(function() {
+	    $("#rejectApproval").dialog({
+	        autoOpen : false,
+	        modal: true,
+	        resizable: false,
+	        draggable: false,
+	        width: 360,
+	        show: {
+	            effect: "size",
+	            duration: 300
+	        },
+	        hide:  {
+	            effect: "size",
+	            duration: 300
+	        }
+	     });
+	});
+</script>
 }
 
 @footer(quote: Quote) = {

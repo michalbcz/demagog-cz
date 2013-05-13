@@ -11,6 +11,7 @@
 
 <form id="update_@{quote.id}" action="@{controllers.routes.Admin.updateQuote()}" class="approve" method="POST">
 	<input type="hidden" name="id" value="@{quote.id}" />
+	<input type="hidden" name="fullEditable" value="@{fullEditable}" />
 	<textarea name="quoteText" class="admin_textarea">@{quote.quoteText}</textarea>
 	<div class="actions">
 		<a class="imglink" title="Uložit" href="javascript:$('#update_@{quote.id}').submit(); void(0);">
@@ -65,7 +66,8 @@
 	</div>
 </form>
 <form id="reject_@{quote.id}" action="@{controllers.routes.Admin.reject()}" method="POST">
-	<input type="hidden" name="id" value="@{quote.id}" />		
+	<input type="hidden" name="id" value="@{quote.id}" />
+	<input type="hidden" name="fullEditable" value="@{fullEditable}" />		
 </form>
 
 <script type="text/javascript">
@@ -83,25 +85,5 @@
 			});
 			$("#rejectApproval").dialog("open");
 		});
-	});
-</script>
-
-<script type="text/javascript">
-	$(function() {
-	    $("#rejectApproval").dialog({
-	        autoOpen : false,
-	        modal: true,
-	        resizable: false,
-	        draggable: false,
-	        width: 360,
-	        show: {
-	            effect: "size",
-	            duration: 300
-	        },
-	        hide:  {
-	            effect: "size",
-	            duration: 300
-	        }
-	     });
 	});
 </script>
