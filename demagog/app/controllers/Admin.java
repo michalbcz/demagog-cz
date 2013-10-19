@@ -14,6 +14,7 @@ import org.bson.types.ObjectId;
 
 import play.Configuration;
 import play.Play;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Request;
 import play.mvc.Result;
@@ -35,7 +36,7 @@ public class Admin extends Controller {
 	}
 
 	public static Result authenticate() {
-        final User formUser = form(User.class).bindFromRequest().get();
+        final User formUser = Form.form(User.class).bindFromRequest().get();
         final User user = User.findByName(formUser.getUsername());
 
         if (user == null) {
@@ -75,7 +76,7 @@ public class Admin extends Controller {
 
 	@Authenticated(UserAuthenticator.class)
     public static Result updateQuote() {
-        Quote quote = form(Quote.class).bindFromRequest().get();
+        Quote quote = Form.form(Quote.class).bindFromRequest().get();
 
         final UpdateOperations<Quote> updateOperations = DBHolder.ds.createUpdateOperations(Quote.class);
         updateOperations.set("lastUpdateDate", new Date());

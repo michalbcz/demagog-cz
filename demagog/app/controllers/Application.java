@@ -49,7 +49,7 @@ public class Application extends Controller {
 
         /* binding concrete request fields to prevent attack - without this attacker could change for example
            quote state and directly publish it after save */
-		Form<Quote> quoteForm = form(Quote.class).bindFromRequest("quoteText", "url", "author");
+		Form<Quote> quoteForm = Form.form(Quote.class).bindFromRequest("quoteText", "url", "author");
         Quote quote = quoteForm.get();
 
         if (quoteForm.hasErrors()) {
@@ -78,7 +78,7 @@ public class Application extends Controller {
         if (quoteForm.hasErrors()) {
             return ok(quote_new.render(quote));
         } else {
-            Key savedQuoteKey = quote.save();
+            Key<Quote> savedQuoteKey = quote.save();
             return redirect(routes.Application.showQuoteDetail(savedQuoteKey.getId().toString()));
         }
 

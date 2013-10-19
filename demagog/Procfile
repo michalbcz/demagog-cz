@@ -1,1 +1,1 @@
-web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -Dconfig.resource=${DEMAGOG_ENVIRONMENT}.conf 
+web: target/universal/stage/bin/demagog -Dhttp.port=${PORT} -Dconfig.resource=${DEMAGOG_ENVIRONMENT}.conf
