@@ -111,7 +111,7 @@ public class Quote {
 		this.quoteState = state;
 	}
 
-	public Key save() {
+	public Key<Quote> save() {
 		return DBHolder.ds.save(this);
 	}
 
