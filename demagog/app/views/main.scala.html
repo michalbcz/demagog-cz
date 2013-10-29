@@ -1,4 +1,5 @@
-@(title : String = "", menuType: String = "menu-main")(content : Html)
+@(title : String = "", menuItems : List[utils.MenuUtils.IMenuItem])(content : Html)
+
 @import java.util.Calendar
 @import tags._
 
@@ -47,13 +48,8 @@
 	        	}   
 	        </div>
 	            
-	        @if(menuType.equals("menu-main")) {
-	           	@main_menu
-	       	} else {
-       	    	@if(menuType.equals("menu-admin")) {
-   	        		@admin_menu
-   	        	}
-            }
+	        <!-- Menu -->
+	        @menu(menuItems)
     		
     		<div id="content">    		    
 				@content
@@ -95,27 +91,3 @@
 
     </body>
 </html>
-
-@main_menu = {
-	<div id="navigation">
-    	<ul>
-    		<li><a href="@{controllers.routes.Application.showNewQuoteForm()}">Chci ověřit výrok</a></li>
-    	    <li><a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.APPROVED)}">Hlasování</a></li>
-    	    <li><a href="@{controllers.routes.Application.showQuotes(models.QuotesListContent.CHECKED)}">Ověřené citáty</a></li>
-    	</ul>
-	</div>
-}
-
-@admin_menu = {
-	<div id="navigation">
-    	<ul>
-			<li><a href="@{controllers.routes.Admin.showNewlyAddedQuotes()}">Nově přidané</a></li>
-			<li><a href="@{controllers.routes.Admin.showApprovedQuotes()}">V hlasování</a></li>
-			<li><a href="@{controllers.routes.Admin.showQuotesInAnalysis()}">Probíhá analýza</a></li>
-			<li><a href="@{controllers.routes.Admin.showPublishedQuotes()}">Publikované</a></li>
-			<li><a href="@{controllers.routes.Admin.showAllQuotes()}">Vše</a></li>
-			<li><a href="@{controllers.routes.Admin.logout()}">Odhlásit se</a></li>
-    	</ul>
-	</div>
-}
-

@@ -105,7 +105,8 @@ a:hover {
     padding: 10px 15px;
     text-decoration: none;
 }
-#navigation ul > li > a:hover {
+#navigation ul > li > a:hover,
+#navigation ul > li > a.active {
     color: #000000 !important;
 }
 #navigation ul > li > a.selected {

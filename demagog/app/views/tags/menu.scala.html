@@ -1,0 +1,15 @@
+@(menuItems: List[utils.MenuUtils.IMenuItem])
+
+@import org.apache.commons.collections.CollectionUtils
+
+@if(CollectionUtils.isNotEmpty(menuItems)) {
+	<div id="navigation">
+	    <ul>
+	    @for(menuItem <- menuItems) {
+	    	<li>
+	    		<a @if(menuItem.isActive()) {class = "active"} href="@{menuItem.getUrl()}">@{menuItem.getLabel()}</a>
+	    	</li>
+	    }
+	   	</ul>
+	</div>
+}

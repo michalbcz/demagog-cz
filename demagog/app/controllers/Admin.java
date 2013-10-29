@@ -20,6 +20,9 @@ import play.mvc.Http.Request;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
 import utils.DBHolder;
+import utils.MenuUtils;
+import utils.MenuUtils.IMenuItem;
+import utils.MenuUtils.MenuBuilder;
 import views.html.loginForm;
 import views.html.quotes_list;
 
@@ -32,7 +35,7 @@ public class Admin extends Controller {
 		if (UserAuthenticator.isUserLoggedIn()) {
 			return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
 		}
-		return ok(loginForm.render());
+		return ok(loginForm.render(null));
 	}
 
 	public static Result authenticate() {
@@ -167,7 +170,7 @@ public class Admin extends Controller {
 	}
 
 	@Authenticated(UserAuthenticator.class)
-	public static Result showQuotes(QuoteState state, boolean fullyEditable) {
+	public static Result showQuotes(QuoteState state, boolean fullyEditable, String activeMenuItemId) {
 		final List<Quote> quotes;
 		if (state == null) {
 			quotes = Quote.findAllSortedByStateAndCreationDate(false);
@@ -177,32 +180,33 @@ public class Admin extends Controller {
 
         // FIXME Michal Bernhard 26.03 : when instead of fourth parameter 'QuotesListContent.CHECKED' is null it
         // doesn't work, dunnno why
-		return ok(quotes_list.render(quotes, true, fullyEditable, QuotesListContent.CHECKED, null, null, null));
+		List<IMenuItem> menuItems = new MenuBuilder().createAdmin().activate(activeMenuItemId).toList();
+		return ok(quotes_list.render(quotes, true, fullyEditable, QuotesListContent.CHECKED, menuItems, null, null, null));
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showAllQuotes() {
-		return showQuotes(null, true);
+		return showQuotes(null, true, MenuUtils.ADMIN_QUOTES_ALL_ID);
 	}
 	
 	@Authenticated(UserAuthenticator.class)
 	public static Result showNewlyAddedQuotes() {
-		return showQuotes(QuoteState.NEW, false);
+		return showQuotes(QuoteState.NEW, false, MenuUtils.ADMIN_QUOTES_NEW_ID);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showApprovedQuotes() {
-		return showQuotes(QuoteState.APPROVED_FOR_VOTING, false);
+		return showQuotes(QuoteState.APPROVED_FOR_VOTING, false, MenuUtils.ADMIN_QUOTES_APPROVED_ID);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showQuotesInAnalysis() {
-		return showQuotes(QuoteState.ANALYSIS_IN_PROGRESS, false);
+		return showQuotes(QuoteState.ANALYSIS_IN_PROGRESS, false, MenuUtils.ADMIN_QUOTES_ANALYSIS_ID);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showPublishedQuotes() {
-		return showQuotes(QuoteState.CHECKED_AND_PUBLISHED, false);
+		return showQuotes(QuoteState.CHECKED_AND_PUBLISHED, false, MenuUtils.ADMIN_QUOTES_PUBLISHED_ID);
 	}
 
     @Authenticated(UserAuthenticator.class)

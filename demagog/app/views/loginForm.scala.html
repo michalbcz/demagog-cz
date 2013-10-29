@@ -1,4 +1,6 @@
-@main("Administrace", "menu-none") {
+@(menuItems : List[utils.MenuUtils.IMenuItem])
+
+@main("Administrace", menuItems) {
 	
 	<div id="login-container">
 		<div id="login-panel" class="ui-panel">

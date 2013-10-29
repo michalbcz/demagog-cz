@@ -1,10 +1,10 @@
-@(quotes: List[Quote], admin: Boolean, fullEditable: Boolean = false, content: models.QuotesListContent, filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
+@(quotes: List[Quote], admin: Boolean, fullEditable: Boolean = false, content: models.QuotesListContent, menuItems : List[utils.MenuUtils.IMenuItem], filterAuthorNames: List[String], selectedFilterAuthorName: String, allreadyVoted: List[String])
 
 @import models.Quote.QuoteState
 @import org.apache.commons.lang3.StringUtils
 @import tags._
 
-@main("", utils.MenuUtils.getMenuType(admin)) {
+@main("", menuItems) {
     @if(!admin && quotes.size() > 0) {
     	<div id="invitation" class="ui-panel" style="display:none">
     		<div class="invitation-header ui-widget-header ui-corner-all">

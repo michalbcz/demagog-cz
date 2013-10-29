@@ -18,8 +18,11 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
+import utils.MenuUtils;
+import utils.MenuUtils.IMenuItem;
 import utils.ReCaptchaService;
 import utils.RequestUtils;
+import utils.MenuUtils.MenuBuilder;
 import views.html.quote_detail;
 import views.html.quote_new;
 import views.html.quotes_list;
@@ -38,11 +41,11 @@ public class Application extends Controller {
 	}
 
 	public static Result showNewQuoteForm() {
-		return ok(quote_new.render(new Quote()));
+		return ok(quote_new.render(new Quote(), new MenuBuilder().createUser().activate(MenuUtils.USER_NEW_QUOTE_ID).toList()));
 	}
 
     public static Result showNewQuoteForm(Quote quote) {
-        return ok(quote_new.render(quote));
+        return ok(quote_new.render(quote, new MenuBuilder().createUser().activate(MenuUtils.USER_NEW_QUOTE_ID).toList()));
     }
 
    	public static Result submitQuote() {
@@ -54,7 +57,7 @@ public class Application extends Controller {
 
         if (quoteForm.hasErrors()) {
             flash().put("error", "Ve formuláři jsou chyby opravte je.");
-            return ok(quote_new.render(quote));
+            return ok(quote_new.render(quote, new MenuBuilder().createUser().activate(MenuUtils.USER_NEW_QUOTE_ID).toList()));
         }
 
         String remoteAddress = request().remoteAddress();
@@ -76,7 +79,7 @@ public class Application extends Controller {
         }
 
         if (quoteForm.hasErrors()) {
-            return ok(quote_new.render(quote));
+            return ok(quote_new.render(quote, new MenuBuilder().createUser().activate(MenuUtils.USER_NEW_QUOTE_ID).toList()));
         } else {
             Key<Quote> savedQuoteKey = quote.save();
             return redirect(routes.Application.showQuoteDetail(savedQuoteKey.getId().toString()));
@@ -103,10 +106,13 @@ public class Application extends Controller {
 		}
 
 		QuoteState state;
+		List<IMenuItem> menuItems;
 		if (QuotesListContent.APPROVED.equals(content)) {
 			state = QuoteState.APPROVED_FOR_VOTING;
+			menuItems = new MenuBuilder().createUser().activate(MenuUtils.USER_APPROVED_ID).toList();
 		} else {
 			state = QuoteState.CHECKED_AND_PUBLISHED;
+			menuItems = new MenuBuilder().createUser().activate(MenuUtils.USER_CHECKED_ID).toList();
 		}
 
 		final List<Quote> quotes;
@@ -116,7 +122,7 @@ public class Application extends Controller {
 			quotes = Quote.findAllSortedByVoteFilteredByAuthor(author, state);
 		}
 
-		return ok(quotes_list.render(quotes, false, false, content, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
+		return ok(quotes_list.render(quotes, false, false, content, menuItems, Quote.getAllAuthorNames(state), author, getAlreadyVotedQuotesByUser()));
 	}
 
 	public static Result showQuoteDetail(String id) {
@@ -136,7 +142,7 @@ public class Application extends Controller {
 			return notFound(views.html.system.error.render(request(), NOT_FOUND));
 		}
 
-		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser()));
+		return ok(quote_detail.render(quote, getAlreadyVotedQuotesByUser(), new MenuBuilder().createUser().toList()));
 	}
 
 	public static Result upVote(QuotesListContent content) {
