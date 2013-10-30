@@ -337,8 +337,11 @@ p, .text {
 	background-color: #EB726C;
 }
 
-.state.checked {
+.state.checked_and_published {
 	background-color: #468847;
+}
+a .state.checked_and_published:hover {
+	background-color: #519e53;
 }
 
 .state {
@@ -354,10 +357,6 @@ p, .text {
     padding: 3px 5px;
     border-radius: 3px 3px 3px 3px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-
-a .state:hover {
-	background-color: #A0A0A0;
 }
 
 .imglink {
