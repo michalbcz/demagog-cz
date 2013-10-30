@@ -27,7 +27,7 @@
 		<div class="filter-container">
 			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
 				<label for="filterByAuthorSelect">Filtrovat podle autora:</label>
-				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:$('#filterByAuthor').submit(); void(0);"> 
+				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:filterByAuthorSelectOnChange(); void(0);">
 					@for(authorName <- filterAuthorNames) {
 						@if(selectedFilterAuthorName.equals(authorName)) {
 							<option value="@{authorName}" selected>@{authorName}</option>
@@ -125,10 +125,16 @@
                         voteCounts = voteCounts + 1
                         $voteCounts.text(voteCounts.toString(10));
 
+                        var _gaq = _gaq || [];
+                        _gaq.push(['_trackEvent', 'Votes', 'Vote Quote Up', 'Quote: ' + quoteId]);
+
                     },
                     error : function(jqXhr, textStatus, errorThrown) {
-                        console.error("up vote failed with an error :", errorThrown)
+                        console.error("up vote failed with an error :", errorThrown);
                         $disabledUpVoteButton.replaceWith($formsUpVoteButton);
+
+                        var _gaq = _gaq || [];
+                        _gaq.push(['_trackEvent', 'Votes', 'Vote Quote Up - Error Occured', 'Quote: ' + quoteId + ', Error: ' + errorThrown]);
                     }
                 });
 
@@ -154,6 +160,9 @@
 	     });
 	});
 </script>
+
+@tags.google_analytics_quote_source_click_event_tracking()
+
 }
 
 @footer(quote: Quote) = {
@@ -184,11 +193,12 @@
 	  		<tr>
 	    		<td><label>Zdroj:</label></td>
 	    		<td>
-	    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
+	    			<a class="quoteSourceLink" href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
 				</td>
 	  		</tr>
 		</tbody>
-	</table>	
+	</table>
+
 }
 
 @quoteAlreadyVotedImage() = {

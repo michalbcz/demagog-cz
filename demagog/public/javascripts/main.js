@@ -10,6 +10,15 @@ console.error = console.error || function() {};
 console.warn = console.warn || function() {};
 console.debug = console.debug || console.info; // in later IE there is console but without debug method, so fallback to info
 
+/* functions */
+function filterByAuthorSelectOnChange() {
+    var _gaq = _gaq || [];
+    _gaq.push(['_trackEvent', 'Others', 'Quote List Filter Used']);
+
+    $('#filterByAuthor').submit();
+}
+
+/* jQuery stuff */
 jQuery(document).ready(function() {
     $("input[type='button']").button();
     $("input[type='submit']").button();

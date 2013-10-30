@@ -1,0 +1,14 @@
+<script type="text/javascript">
+/* Google Analytics tacking of clicking to source of quote */
+jQuery(document).ready(function($) {
+    $('a.quoteSourceLink' ).click(function() {
+        var targetUrlAsText = $(this).first().attr('href')
+        var _gaq = _gaq || [];
+        _gaq.push(['_trackEvent', 'External Links', 'Quote - Click On Source Of Quote', 'Url: ' + targetUrlAsText]);
+
+        var targetUrl = new URI(targetUrlAsText);
+        _gaq.push(['_trackEvent', 'External Links', 'Quote - Click On Source Of Quote - ' + targetUrl.domain(), 'Url: ' + targetUrlAsText]);
+
+    });
+});
+</script>

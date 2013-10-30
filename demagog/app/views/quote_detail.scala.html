@@ -3,6 +3,7 @@
 @import utils.LabelProvider
 @import models.Quote.QuoteState
 @import org.apache.commons.lang3.StringUtils
+@import tags._
 
 @main("", menuItems) {
 	<div id="fb-root"></div>
@@ -58,11 +59,13 @@
 		  		<tr>
 		    		<td><label>Zdroj:</label></td>
 		    		<td>
-		    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
+		    			<a class="quoteSourceLink" href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
 					</td>
 		  		</tr>
 			</tbody>
 		</table>
 		<div class="fb-like" data-href="@utils.Settings.getUrl("quote/" + quote.id.toString())" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
 	</div>
+
+    @tags.google_analytics_quote_source_click_event_tracking()
 }
