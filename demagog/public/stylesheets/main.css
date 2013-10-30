@@ -351,9 +351,13 @@ p, .text {
     font-size: 12px;
     font-weight: bold;
     line-height: 14px;
-    padding: 2px 4px;
+    padding: 3px 5px;
     border-radius: 3px 3px 3px 3px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+a .state:hover {
+	background-color: #A0A0A0;
 }
 
 .imglink {

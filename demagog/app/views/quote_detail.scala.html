@@ -33,9 +33,15 @@
 				}
 			</form>
 		</div>
+  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
+			<a href="@{quote.demagogBacklinkUrl}" target="_blank">
+		}
 		<span class="state @{quote.quoteState.toString().toLowerCase()}" title="@{LabelProvider.getDescription(quote.quoteState)}">
 			@{LabelProvider.getLabel(quote.quoteState)}
 		</span>
+  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
+			</a>
+		}
 		
 		<table class="footer">
 			<tbody>
@@ -55,13 +61,6 @@
 		    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
 					</td>
 		  		</tr>
-		  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
-					<tr>
-			    		<td colspan="2">
-			    			<a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
-						</td>
-		  			</tr>
-	            }
 			</tbody>
 		</table>
 		<div class="fb-like" data-href="@utils.Settings.getUrl("quote/" + quote.id.toString())" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
