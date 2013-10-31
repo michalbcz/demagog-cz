@@ -3,43 +3,53 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.showApprovedQuotes()
+GET            /                         controllers.Application.showApprovedQuotes()
 
 # New quote
-GET 	/quote/add				    controllers.Application.showNewQuoteForm()
-POST	/quote/save					controllers.Application.submitQuote()
+GET            /citat/pridat             controllers.Application.showNewQuoteForm()
+GET            /quote/add                controllers.Application.showNewQuoteForm()
 
-GET     /quote/:id                  controllers.Application.showQuoteDetail(id : String)
+
+POST           /quote/save               controllers.Application.submitQuote()
+
+#GET            /quote/:id                controllers.Application.showQuoteDetail(id : String)
+GET            /citat/:id                controllers.Application.showQuoteDetail(id : String)
 
 # Api
-POST    /api/v1/quote/save          controllers.Api.saveQuote()
-OPTIONS /api/*rest                  controllers.Api.header(rest)
+POST           /api/v1/quote/save        controllers.Api.saveQuote()
+OPTIONS        /api/*rest                controllers.Api.header(rest)
 
 # Admin
-POST	/admin/reject				controllers.Admin.reject()
-POST    /admin/update               controllers.Admin.updateQuote()
-GET		/admin/quotes				controllers.Admin.showNewlyAddedQuotes()
-GET		/admin/checkquotes			controllers.Admin.showApprovedQuotes()
-GET		/admin/inanalysis			controllers.Admin.showQuotesInAnalysis()
-GET		/admin/published			controllers.Admin.showPublishedQuotes()
-GET		/admin/all					controllers.Admin.showAllQuotes()
+POST           /admin/reject             controllers.Admin.reject()
+POST           /admin/update             controllers.Admin.updateQuote()
+GET            /admin/quotes             controllers.Admin.showNewlyAddedQuotes()
+GET            /admin/checkquotes        controllers.Admin.showApprovedQuotes()
+GET            /admin/inanalysis         controllers.Admin.showQuotesInAnalysis()
+GET            /admin/published          controllers.Admin.showPublishedQuotes()
+GET            /admin/all                controllers.Admin.showAllQuotes()
 
-GET     /admin/settings             controllers.Admin.showSettings()
+GET            /admin/settings           controllers.Admin.showSettings()
 
 # Authentication
-GET		/admin 						controllers.Admin.login()
-GET     /admin/login                controllers.Admin.login()
-POST    /admin/login                controllers.Admin.authenticate()
-GET     /admin/logout               controllers.Admin.logout()
+GET            /admin                    controllers.Admin.login()
+GET            /admin/login              controllers.Admin.login()
+POST           /admin/login              controllers.Admin.authenticate()
+GET            /admin/logout             controllers.Admin.logout()
 
 # Quotes
-GET     /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
-POST    /quotes/:content            controllers.Application.showQuotes(content: models.QuotesListContent)
-POST    /upVote/:content            controllers.Application.upVote(content: models.QuotesListContent)
+
+
+GET            /citaty/:content          controllers.Application.showQuotes(content: models.QuotesListContent)
+POST           /citaty/:content          controllers.Application.showQuotes(content: models.QuotesListContent)
+POST           /hlasovat/:content        controllers.Application.upVote(content: models.QuotesListContent)
+
+GET            /quotes/vote              controllers.Application.showQuotesApproved()
+GET            /quotes/list              controllers.Application.showQuotesChecked()
+
 
 # trailing slashes workaround
-GET  	/*path/  					controllers.Application.untrail(path: String)
+GET            /*path/                   controllers.Application.untrail(path: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path = "/public", file)
+GET            /assets/*file             controllers.Assets.at(path = "/public", file)
 

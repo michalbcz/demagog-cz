@@ -202,4 +202,12 @@ public class Application extends Controller {
 
 		return alreadyVoted;
 	}
+
+    public static Result showQuotesApproved() {
+        return showQuotes(QuotesListContent.APPROVED);
+    }
+
+    public static Result showQuotesChecked() {
+        return showQuotes(QuotesListContent.CHECKED);
+    }
 }
