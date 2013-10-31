@@ -13,12 +13,12 @@ public class QuotesListContent implements PathBindable<QuotesListContent> {
 	/**
 	 * All approved quotes prepared for voting
 	 */
-	public static final QuotesListContent APPROVED = new QuotesListContent("vote");
+	public static final QuotesListContent APPROVED = new QuotesListContent("hlasovani");
 	
 	/**
 	 * All checked quotes.
 	 */
-	public static final QuotesListContent CHECKED = new QuotesListContent("list");
+	public static final QuotesListContent CHECKED = new QuotesListContent("overene");
 	
 	public static final QuotesListContent[] VALUES = new QuotesListContent[] {APPROVED, CHECKED};
 

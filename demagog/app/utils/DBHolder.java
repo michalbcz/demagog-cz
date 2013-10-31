@@ -7,7 +7,6 @@ import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
-import com.typesafe.config.ConfigFactory;
 import play.Play;
 
 public class DBHolder {

@@ -2,24 +2,27 @@ package controllers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import models.Quote;
 import models.Quote.QuoteState;
 import models.QuotesListContent;
 import models.User;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.bson.types.ObjectId;
 
-import org.codehaus.jackson.node.ObjectNode;
 import play.Configuration;
-import play.Logger;
 import play.Play;
-import play.libs.Json;
+import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http.Request;
 import play.mvc.Result;
 import play.mvc.Security.Authenticated;
-import scala.util.parsing.json.JSON;
 import utils.DBHolder;
+import utils.MenuUtils;
+import utils.MenuUtils.IMenuItem;
+import utils.MenuUtils.MenuBuilder;
 import views.html.loginForm;
 import views.html.quotes_list;
 
@@ -32,11 +35,11 @@ public class Admin extends Controller {
 		if (UserAuthenticator.isUserLoggedIn()) {
 			return redirect(controllers.routes.Admin.showNewlyAddedQuotes());
 		}
-		return ok(loginForm.render());
+		return ok(loginForm.render(null));
 	}
 
 	public static Result authenticate() {
-        final User formUser = form(User.class).bindFromRequest().get();
+        final User formUser = Form.form(User.class).bindFromRequest().get();
         final User user = User.findByName(formUser.getUsername());
 
         if (user == null) {
@@ -59,50 +62,97 @@ public class Admin extends Controller {
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result reject() {
-		String id = request().body().asFormUrlEncoded().get("id")[0];
-
-        Quote oldQuote = Quote.findById(new ObjectId(id));
+		final Map<String, String[]> requestContent = request().body().asFormUrlEncoded();
+		
+		String id = requestContent.get("id")[0];
 
 		Quote.delete(new ObjectId(id), false);
 
+		if (requestContent.containsKey("fullEditable") && BooleanUtils.toBoolean(requestContent.get("fullEditable")[0])) {
+        	return redirect(routes.Admin.showAllQuotes());
+        }
+		
+		Quote oldQuote = Quote.findById(new ObjectId(id));
+		
         return redirectByQuoteState(oldQuote.quoteState);
-	}
-
-	@Authenticated(UserAuthenticator.class)
-	public static Result setChecked() {
-		String id = request().body().asFormUrlEncoded().get("id")[0];
-
-		Quote.setChecked(new ObjectId(id));
-
-		return redirect(controllers.routes.Admin.showApprovedQuotes());
 	}
 
 	@Authenticated(UserAuthenticator.class)
     public static Result updateQuote() {
+        Quote quote = Form.form(Quote.class).bindFromRequest().get();
 
-        Quote quote = form(Quote.class).bindFromRequest().get();
-
-        final UpdateOperations<Quote> updateOperations =
-                DBHolder.ds.createUpdateOperations(Quote.class)
-                        .set("quoteText", quote.quoteText)
-                        .set("demagogBacklinkUrl", quote.demagogBacklinkUrl)
-                        .set("author", quote.author)
-                        .set("url", quote.url)
-                        .set("lastUpdateDate", new Date());
+        final UpdateOperations<Quote> updateOperations = DBHolder.ds.createUpdateOperations(Quote.class);
+        updateOperations.set("lastUpdateDate", new Date());
+        
+        if (quote.quoteText != null) {
+        	updateOperations.set("quoteText", quote.quoteText);
+        }
+        if (quote.demagogBacklinkUrl != null) {
+        	updateOperations.set("demagogBacklinkUrl", quote.demagogBacklinkUrl);
+        }
+        if (quote.author != null) {
+        	updateOperations.set("author", quote.author);
+        }
+        if (quote.url != null) {
+        	updateOperations.set("url", quote.url);
+        }
 
         Quote oldQuote = Quote.findById(quote.id);
+        
+        final String stateProperty = "quoteState";
 
-        if (request().body().asFormUrlEncoded().containsKey("published") && oldQuote.quoteState != QuoteState.CHECKED_AND_PUBLISHED) {
-        	updateOperations.set("quoteState", QuoteState.CHECKED_AND_PUBLISHED).set("publishedDate", new Date());
+        if (isQuoteFormToGetApproved(request())) {
+        	updateOperations.set(stateProperty, QuoteState.APPROVED_FOR_VOTING);
+        	if (oldQuote.quoteState != QuoteState.APPROVED_FOR_VOTING) {
+        		updateOperations.set("approvalDate", new Date());
+        	}
+        } else {
+        	updateOperations.set(stateProperty, QuoteState.NEW);
         }
-        if (request().body().asFormUrlEncoded().containsKey("approved") && oldQuote.quoteState == QuoteState.NEW) {
-        	updateOperations.set("quoteState", QuoteState.APPROVED_FOR_VOTING).set("approvalDate", new Date());
+        if (isQuoteFormToGetAnalyze(request())) {
+        	updateOperations.set(stateProperty, QuoteState.ANALYSIS_IN_PROGRESS);
+        } else {
+        	if (isQuoteFormToGetApproved(request())) {
+        		updateOperations.set(stateProperty, QuoteState.APPROVED_FOR_VOTING);
+        	} else {
+        		updateOperations.set(stateProperty, QuoteState.NEW);
+        	}
+        }
+        if (isQuoteFormToGetPublished(request())) {
+        	updateOperations.set(stateProperty, QuoteState.CHECKED_AND_PUBLISHED);
+        	if (oldQuote.quoteState != QuoteState.CHECKED_AND_PUBLISHED) {
+        		updateOperations.set("publishedDate", new Date());
+        	}
+        } else {
+        	if (isQuoteFormToGetAnalyze(request())) {
+        		updateOperations.set(stateProperty, QuoteState.ANALYSIS_IN_PROGRESS);
+        	} else if (isQuoteFormToGetApproved(request())) {
+        		updateOperations.set(stateProperty, QuoteState.APPROVED_FOR_VOTING);
+        	} else {
+        		updateOperations.set(stateProperty, QuoteState.NEW);
+        	}
         }
 
         DBHolder.ds.update(new Key<Quote>(Quote.class, quote.id), updateOperations);
 
+        final Map<String, String[]> requestContent = request().body().asFormUrlEncoded();
+        if (requestContent.containsKey("fullEditable") && BooleanUtils.toBoolean(requestContent.get("fullEditable")[0])) {
+        	return redirect(routes.Admin.showAllQuotes());
+        }
         return redirectByQuoteState(oldQuote.quoteState);
     }
+	
+	private static boolean isQuoteFormToGetApproved(Request request) {
+		 return request.body().asFormUrlEncoded().containsKey("approved");
+	}
+	
+	private static boolean isQuoteFormToGetAnalyze(Request request) {
+		 return request.body().asFormUrlEncoded().containsKey("analyze");
+	}
+	
+	private static boolean isQuoteFormToGetPublished(Request request) {
+		 return request.body().asFormUrlEncoded().containsKey("published");
+	}
 
 	private static Result redirectByQuoteState(QuoteState quoteState) {
         switch (quoteState) {
@@ -120,32 +170,43 @@ public class Admin extends Controller {
 	}
 
 	@Authenticated(UserAuthenticator.class)
-	public static Result showQuotes(QuoteState state) {
-		List<Quote> quotes = Quote.findAllWithStateOrderedByCreationDate(state);
+	public static Result showQuotes(QuoteState state, boolean fullyEditable, String activeMenuItemId) {
+		final List<Quote> quotes;
+		if (state == null) {
+			quotes = Quote.findAllSortedByStateAndCreationDate(false);
+		} else {
+			quotes = Quote.findAllWithStateOrderedByCreationDate(state);
+		}
 
-        // FIXME Michal Bernhard 26.03 : when instead of third parameter 'QuotesListContent.CHECKED' is null it
+        // FIXME Michal Bernhard 26.03 : when instead of fourth parameter 'QuotesListContent.CHECKED' is null it
         // doesn't work, dunnno why
-		return ok(quotes_list.render(quotes, true, QuotesListContent.CHECKED, null, null, null));
+		List<IMenuItem> menuItems = new MenuBuilder().createAdmin().activate(activeMenuItemId).toList();
+		return ok(quotes_list.render(quotes, true, fullyEditable, QuotesListContent.CHECKED, menuItems, null, null, null));
 	}
 
 	@Authenticated(UserAuthenticator.class)
+	public static Result showAllQuotes() {
+		return showQuotes(null, true, MenuUtils.ADMIN_QUOTES_ALL_ID);
+	}
+	
+	@Authenticated(UserAuthenticator.class)
 	public static Result showNewlyAddedQuotes() {
-		return showQuotes(QuoteState.NEW);
+		return showQuotes(QuoteState.NEW, false, MenuUtils.ADMIN_QUOTES_NEW_ID);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showApprovedQuotes() {
-		return showQuotes(QuoteState.APPROVED_FOR_VOTING);
+		return showQuotes(QuoteState.APPROVED_FOR_VOTING, false, MenuUtils.ADMIN_QUOTES_APPROVED_ID);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showQuotesInAnalysis() {
-		return showQuotes(QuoteState.ANALYSIS_IN_PROGRESS);
+		return showQuotes(QuoteState.ANALYSIS_IN_PROGRESS, false, MenuUtils.ADMIN_QUOTES_ANALYSIS_ID);
 	}
 
 	@Authenticated(UserAuthenticator.class)
 	public static Result showPublishedQuotes() {
-		return showQuotes(QuoteState.CHECKED_AND_PUBLISHED);
+		return showQuotes(QuoteState.CHECKED_AND_PUBLISHED, false, MenuUtils.ADMIN_QUOTES_PUBLISHED_ID);
 	}
 
     @Authenticated(UserAuthenticator.class)

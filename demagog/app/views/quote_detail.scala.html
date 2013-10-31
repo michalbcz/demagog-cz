@@ -1,10 +1,11 @@
-@(quote: Quote, allreadyVoted: List[String])
+@(quote: Quote, allreadyVoted: List[String], menuItems : List[utils.MenuUtils.IMenuItem])
 
 @import utils.LabelProvider
 @import models.Quote.QuoteState
 @import org.apache.commons.lang3.StringUtils
+@import tags._
 
-@main("") {
+@main("", menuItems) {
 	<div id="fb-root"></div>
 	<script>(function(d, s, id) {
 	  var js, fjs = d.getElementsByTagName(s)[0];
@@ -33,9 +34,15 @@
 				}
 			</form>
 		</div>
+  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
+			<a href="@{quote.demagogBacklinkUrl}" target="_blank">
+		}
 		<span class="state @{quote.quoteState.toString().toLowerCase()}" title="@{LabelProvider.getDescription(quote.quoteState)}">
 			@{LabelProvider.getLabel(quote.quoteState)}
 		</span>
+  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
+			</a>
+		}
 		
 		<table class="footer">
 			<tbody>
@@ -52,18 +59,13 @@
 		  		<tr>
 		    		<td><label>Zdroj:</label></td>
 		    		<td>
-		    			<a href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
+		    			<a class="quoteSourceLink" href="@{quote.url}">@{StringUtils.abbreviate(quote.url, Quote.URL_VIEWABLE_SIZE_LIMIT)}</a>
 					</td>
 		  		</tr>
-		  		@if(QuoteState.CHECKED_AND_PUBLISHED == quote.quoteState && StringUtils.isNotBlank(quote.demagogBacklinkUrl)) {
-					<tr>
-			    		<td colspan="2">
-			    			<a href="@{quote.demagogBacklinkUrl}">Citát je ověřen na serveru demagog.cz</a>
-						</td>
-		  			</tr>
-	            }
 			</tbody>
 		</table>
 		<div class="fb-like" data-href="@utils.Settings.getUrl("quote/" + quote.id.toString())" data-send="false" data-width="700" data-show-faces="false" data-action="recommend"></div>
 	</div>
+
+    @tags.google_analytics_quote_source_click_event_tracking()
 }

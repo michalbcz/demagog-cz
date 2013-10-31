@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.code.morphia.query.UpdateOperations;
 import org.bson.types.ObjectId;
 import org.springframework.util.Assert;
 
@@ -18,6 +17,7 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.UpdateOperations;
 
 @Entity(concern = "safe")
 public class Quote {
@@ -111,7 +111,7 @@ public class Quote {
 		this.quoteState = state;
 	}
 
-	public Key save() {
+	public Key<Quote> save() {
 		return DBHolder.ds.save(this);
 	}
 
@@ -198,6 +198,14 @@ public class Quote {
 			query = query.field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
 		}
 		return query.order("-creationDate").asList();
+	}
+	
+	public static List<Quote> findAllSortedByStateAndCreationDate(boolean onlyApproved) {
+		Query<Quote> query = DBHolder.ds.find(Quote.class).field("deleted").equal(false);
+		if (onlyApproved) {
+			query = query.field("quoteState").equal(QuoteState.APPROVED_FOR_VOTING);
+		}
+		return query.order("-quoteState, -creationDate").asList();
 	}
 
 	public static List<Quote> findAllSortedByVoteFilteredByAuthor(String author, QuoteState state) {
@@ -289,4 +297,125 @@ public class Quote {
         result = 31 * result + (deleted ? 1 : 0);
         return result;
     }
+
+	public ObjectId getId() {
+		return id;
+	}
+
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getQuoteText() {
+		return quoteText;
+	}
+
+	public void setQuoteText(String quoteText) {
+		this.quoteText = quoteText;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getUserIp() {
+		return userIp;
+	}
+
+	public void setUserIp(String userIp) {
+		this.userIp = userIp;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public QuoteState getQuoteState() {
+		return quoteState;
+	}
+
+	public void setQuoteState(QuoteState quoteState) {
+		this.quoteState = quoteState;
+	}
+
+	public Date getApprovalDate() {
+		return approvalDate;
+	}
+
+	public void setApprovalDate(Date approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	public Date getPublishedDate() {
+		return publishedDate;
+	}
+
+	public void setPublishedDate(Date publishedDate) {
+		this.publishedDate = publishedDate;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public String getDemagogBacklinkUrl() {
+		return demagogBacklinkUrl;
+	}
+
+	public void setDemagogBacklinkUrl(String demagogBacklinkUrl) {
+		this.demagogBacklinkUrl = demagogBacklinkUrl;
+	}
+
+	public List<String> getVoteIpList() {
+		return voteIpList;
+	}
+
+	public void setVoteIpList(List<String> voteIpList) {
+		this.voteIpList = voteIpList;
+	}
+
+	public int getVoteCount() {
+		return voteCount;
+	}
+
+	public void setVoteCount(int voteCount) {
+		this.voteCount = voteCount;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean isAddedFromBookmarklet() {
+		return addedFromBookmarklet;
+	}
+
+	public void setAddedFromBookmarklet(boolean addedFromBookmarklet) {
+		this.addedFromBookmarklet = addedFromBookmarklet;
+	}
+    
 }

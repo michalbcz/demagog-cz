@@ -11,14 +11,16 @@ import play.Application;
 import play.GlobalSettings;
 import play.Play;
 import play.data.format.Formatters;
+import play.libs.F.Promise;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Http.RequestHeader;
-import play.mvc.Result;
-import play.mvc.Results;
+import play.mvc.SimpleResult;
 
 import com.google.code.morphia.logging.MorphiaLoggerFactory;
 import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
+
+import static play.mvc.Results.*;
 
 public class BaseGlobal extends GlobalSettings {
 
@@ -40,25 +42,32 @@ public class BaseGlobal extends GlobalSettings {
 	}
 	
 	@Override
-	public Result onError(RequestHeader request, Throwable t) {
-		return Results.internalServerError(views.html.system.error.render(request, Http.Status.INTERNAL_SERVER_ERROR));
+	public Promise<SimpleResult> onError(RequestHeader request, Throwable t) {
+		return Promise.<SimpleResult>pure(
+				internalServerError(views.html.system.error.render(request, Http.Status.INTERNAL_SERVER_ERROR))
+		);
 	}
 
 	@Override
-	public Result onHandlerNotFound(RequestHeader request) {
-		return Results.notFound(views.html.system.error.render(request, Http.Status.NOT_FOUND));
+	public Promise<SimpleResult> onHandlerNotFound(RequestHeader request) {
+		return Promise.<SimpleResult>pure(
+				notFound(views.html.system.error.render(request, Http.Status.NOT_FOUND))
+		);
 	} 
 
 	@Override
-	public Result onBadRequest(RequestHeader request, String error) {
-		return Results.badRequest(views.html.system.error.render(request, Http.Status.BAD_REQUEST));
+	public Promise<SimpleResult> onBadRequest(RequestHeader request, String error) {
+		return Promise.<SimpleResult>pure(
+				badRequest(views.html.system.error.render(request, Http.Status.BAD_REQUEST))
+		);
 	}
 
     @Override
     public Action<?> onRequest(Http.Request request, Method method) {
         return new Action.Simple() {
+        	
             @Override
-			public Result call(Http.Context context) throws Throwable {
+			public Promise<SimpleResult> call(Http.Context context) throws Throwable {
                 Http.Response response = context.response();
                 enableCors(response);
                 return delegate.call(context);
@@ -86,7 +95,6 @@ public class BaseGlobal extends GlobalSettings {
 	}
 
     protected User createAdminUser() {
-
         String defaultUsername = getConfigurationParameter("demagog.defaultUser");
         if (defaultUsername == null) {
             throw new IllegalStateException("System property demagog.defaultUser must be set.");

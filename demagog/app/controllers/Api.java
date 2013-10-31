@@ -1,17 +1,11 @@
 package controllers;
 
-import java.util.Date;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.code.morphia.Key;
+
 import models.Quote;
-import models.Quote.QuoteState;
-
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
-
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -20,7 +14,6 @@ import play.mvc.Http;
 import play.mvc.Result;
 import utils.ReCaptchaService;
 import utils.RequestUtils;
-import views.html.quote_new;
 
 public class Api extends Controller {
 
@@ -48,7 +41,7 @@ public class Api extends Controller {
 
         JsonNode jsonNode = request().body().asJson();
 
-        Form<Quote> quoteForm = form(Quote.class).bindFromRequest("quoteText", "url", "addedFromBookmarklet", "recaptchaChallenge", "recaptchaResponse");
+        Form<Quote> quoteForm = Form.form(Quote.class).bindFromRequest("quoteText", "url", "addedFromBookmarklet", "recaptchaChallenge", "recaptchaResponse");
 
         String recaptchaResponse = jsonNode.get("recaptchaResponse").asText();
         String recaptchaChallenge = jsonNode.get("recaptchaChallenge").asText();
@@ -92,7 +85,7 @@ public class Api extends Controller {
 
 
 
-            Key savedQuoteKey = quote.save(); //TODO: what happend when save failed ? (btw activate safe save!)
+            Key<Quote> savedQuoteKey = quote.save(); //TODO: what happend when save failed ? (btw activate safe save!)
 
             ObjectNode json = Json.newObject();
 

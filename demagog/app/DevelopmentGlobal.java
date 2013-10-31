@@ -4,8 +4,9 @@ import models.Quote;
 import models.Quote.QuoteState;
 import models.User;
 import play.Application;
+import play.libs.F.Promise;
 import play.mvc.Http.RequestHeader;
-import play.mvc.Result;
+import play.mvc.SimpleResult;
 
 /**
  * Development specific settings
@@ -23,19 +24,19 @@ public class DevelopmentGlobal extends BaseGlobal {
 	}
 
 	@Override
-	public Result onError(RequestHeader request, Throwable t) {
+	public Promise<SimpleResult> onError(RequestHeader request, Throwable t) {
 		// to get default play behaviour
 		return null;
 	}
 
 	@Override
-	public Result onHandlerNotFound(RequestHeader request) {
+	public Promise<SimpleResult> onHandlerNotFound(RequestHeader request) {
 		// to get default play behaviour
 		return null;
 	} 
 
 	@Override
-	public Result onBadRequest(RequestHeader request, String error) {
+	public Promise<SimpleResult> onBadRequest(RequestHeader request, String error) {
 		// to get default play behaviour
 		return null;
 	} 

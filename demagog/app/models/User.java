@@ -1,6 +1,5 @@
 package models;
 
-import com.mongodb.WriteConcern;
 import org.bson.types.ObjectId;
 
 import utils.DBHolder;

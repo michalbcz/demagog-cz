@@ -1,4 +1,4 @@
-@(quote : Quote)
+@(quote : Quote, menuItems : List[utils.MenuUtils.IMenuItem])
 @import play.api.Configuration
 @import tags._
 
@@ -8,7 +8,7 @@
     }
 }
 
-@main("Nový citát") {
+@main("Nový citát", menuItems) {
 	<h3>Zadávání výroků pro ověření můžete provést pomocí těchto nástrojů:</h3>
 
 	<h2>1. Bookmarklet</h2>
