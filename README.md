@@ -59,7 +59,7 @@ https://github.com/blog/1386-closing-issues-via-commit-messages.
 + git flow release finish (this cause merge your develop to master ie. production 
 branch)
 + git checkout master (switch to master)
-+ git pull (send it to remote)
++ git push (send it to remote)
         
 
 #### Deploy to Heroku
