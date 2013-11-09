@@ -11,11 +11,26 @@ console.warn = console.warn || function() {};
 console.debug = console.debug || console.info; // in later IE there is console but without debug method, so fallback to info
 
 /* functions */
-function filterByAuthorSelectOnChange() {
-    var _gaq = _gaq || [];
-    _gaq.push(['_trackEvent', 'Others', 'Quote List Filter Used']);
+function filterByAuthorSelectOnChange(event) {
+    var _gaq = window._gaq || [];
+    _gaq.push(['_trackEvent', 'Others', 'Quote List Filter Used', ]);
 
     $('#filterByAuthor').submit();
+}
+
+function trackClickOnUserVoice() {
+    /* need to wait to be sure that elements created by  UserVoice widget are on the page so we can
+    * hook events on it - see source of _trackClickOnUserVoice for actual event binding */
+    setTimeout(_trackClickOnUserVoice, 500);
+
+}
+
+function _trackClickOnUserVoice() {
+    /* we assume that UserVoice widget will use always id 'uvTab' .. I know it's fragile but hey.. */
+    $("#uvTab").click(function() {
+        var _gaq = window._gaq || [];
+        _gaq.push(["_trackEvent", "Social", "UserVoice Clicked"]);
+    });
 }
 
 /* jQuery stuff */

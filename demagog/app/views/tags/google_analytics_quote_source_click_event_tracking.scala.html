@@ -3,7 +3,7 @@
 jQuery(document).ready(function($) {
     $('a.quoteSourceLink' ).click(function() {
         var targetUrlAsText = $(this).first().attr('href')
-        var _gaq = _gaq || [];
+        var _gaq = window._gaq || [];
         _gaq.push(['_trackEvent', 'External Links', 'Quote - Click On Source Of Quote', 'Url: ' + targetUrlAsText]);
 
         var targetUrl = new URI(targetUrlAsText);

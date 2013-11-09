@@ -3,6 +3,7 @@
     (function(){
         var uv=document.createElement('script');
         uv.type='text/javascript';
+        uv.onload = trackClickOnUserVoice;
         uv.async=true;
         uv.src='//widget.uservoice.com/zhJyl9kxbUMtiJqJkM6w.js';
         var s=document.getElementsByTagName('script')[0];

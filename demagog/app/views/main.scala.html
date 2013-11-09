@@ -89,7 +89,7 @@
         <script type="text/javascript">
             /* Google Analytics - tracking ajax errors */
             $( document ).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
-                var _gaq = _gaq || [];
+                var _gaq = window._gaq || [];
                 _gaq.push(["_trackEvent", "Client Side Errors", "jQuery Ajax Error", thrownError]);
             });
 
@@ -112,7 +112,7 @@
                         line = "?";
                     }
 
-                    var _gaq = _gaq || [];
+                    var _gaq = window._gaq || [];
                     _gaq.push(["_trackEvent", "Client Side Errors", message, (url + " (" + line + ")"), 0, true]);
 
                 }
@@ -123,35 +123,27 @@
         <script type="text/javascript">
             /* Google Analytics tracking of clicks on links leading to external sources */
             jQuery(document).ready(function($) {
-                $('a' ).click(function() {
+                $('a').click(function() {
                     var targetUrlAsText = $(this).first().attr('href');
-                    var targetUrl = new URI(targetUrlAsText);
 
-                    var linkLeadsToExternalWebSite = targetUrl.hostname !== window.location.hostname;
-                    var isHttpProtocol = (targetUrl.protocol === 'http' || targetUrl.protocol === 'https');
-                    if (isHttpProtocol && linkLeadsToExternalWebSite) {
-                        var _gaq = _gaq || [];
-                        _gaq.push(['_trackEvent', 'External Links', 'Click (all clicks on external links)', 'Url: ' + targetUrlAsText]);
-                        _gaq.push(['_trackEvent', 'External Links', 'Click - ' + targetUrl.domain(), 'Url: ' + targetUrlAsText]);
+                    if (targetUrlAsText !== "") {
+                        var targetUrl = new URI(targetUrlAsText);
+
+                        var linkLeadsToExternalWebSite = targetUrl.hostname() !== window.location.hostname;
+                        var isHttpProtocol = (targetUrl.protocol() === 'http' || targetUrl.protocol() === 'https');
+                        if (isHttpProtocol && linkLeadsToExternalWebSite) {
+                            var _gaq = window._gaq || [];
+                            _gaq.push(['_trackEvent', 'External Links', 'Click (all clicks on external links)', 'Url: ' + targetUrlAsText]);
+                            _gaq.push(['_trackEvent', 'External Links', 'Click - ' + targetUrl.domain(), 'Url: ' + targetUrlAsText]);
+                        }
                     }
                 });
             });
         </script>
 
         <!-- Uservoice.com Widget -->
-        @tags.uservoice()
+        @tags.uservoice()                                     _
         <!-- Uservoice.com Widget - END -->
-
-        <script type="text/javascript">
-            jQuery(document ).ready(function($) {
-                /* we assume that UserVoice widget will use always id 'uvTab' .. I know it's fragile but hey.. */
-                $("#uvTab" ).click(function() {
-                    var _gaq = _gaq || [];
-                    _gaq.push(["_trackEvent", "Social", "UserVoice Clicked"]);
-                });
-            });
-
-        </script>
 
     </body>
 </html>
