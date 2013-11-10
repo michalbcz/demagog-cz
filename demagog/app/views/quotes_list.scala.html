@@ -2,6 +2,7 @@
 
 @import models.Quote.QuoteState
 @import utils.LabelProvider
+@import org.apache.commons.collections.CollectionUtils
 @import org.apache.commons.lang3.StringUtils
 @import tags._
 
@@ -24,23 +25,25 @@
     			<p class="last">Nenechte si od politiků lhát! Váš demagog.cz</p>
     		</div>
     	</div>
-		<div class="filter-container">
-			<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
-				<label for="filterByAuthorSelect">Filtrovat podle autora:</label>
-				<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:filterByAuthorSelectOnChange(); void(0);">
-					@for(authorName <- filterAuthorNames) {
-						@if(selectedFilterAuthorName.equals(authorName)) {
-							<option value="@{authorName}" selected>@{authorName}</option>
-						} else {
-							<option value="@{authorName}">@{authorName}</option>
+    	@if(CollectionUtils.isNotEmpty(filterAuthorNames) && filterAuthorNames.size() > 2) {
+			<div class="filter-container">
+				<form id="filterByAuthor" action="@{controllers.routes.Application.showQuotes(content)}" method="POST">
+					<label for="filterByAuthorSelect">Filtrovat podle autora:</label>
+					<select id="filterByAuthorSelect" name="author" size="1" onchange="javascript:filterByAuthorSelectOnChange(); void(0);">
+						@for(authorName <- filterAuthorNames) {
+							@if(authorName.equals(selectedFilterAuthorName)) {
+								<option value="@{authorName}" selected>@{authorName}</option>
+							} else {
+								<option value="@{authorName}">@{authorName}</option>
+							}
 						}
-					}
-				</select>
-			</form>
-		</div>
+					</select>
+				</form>
+			</div>
+		}
 	}
 	
-	<div class="quotes-container">
+	<div class="quotes-container clearfix">
 	@for(quote <- quotes) {
 		<div class="ui-panel quote">			
 			@if(admin) {
@@ -59,7 +62,12 @@
 	
 	<script type="text/javascript">
 		$(function () {
-			$("#filterByAuthorSelect").selectbox();
+			$("#filterByAuthorSelect").chosen({
+				allow_single_deselect: true,
+				disable_search_threshold: 5,
+				placeholder_text_single: "Vyberte autora",
+				no_results_text: "Autor nebyl nalezen"
+			});
 		});
 	</script>
 	
