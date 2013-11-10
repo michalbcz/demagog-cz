@@ -542,10 +542,9 @@ input[type=checkbox], input[type=radio] {
 }
   
 input[type=text], input[type=password], textarea {
-    border: 1px solid #555555;
-    border-radius: 4px;
-    padding: 4px 4px;
-	font-family: "Opane Sans", Arial, sans-serif ;
+    border: 1px solid #D9D9D9;
+    padding: 5px 5px;
+	font-family: "Open Sans", Arial, sans-serif ;
     font-size: 1em;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -553,7 +552,8 @@ input[type=text], input[type=password], textarea {
 }
 
 #recaptcha_area input[type=text] {
-	padding: 4px 4px !important;
+	border: 1px solid #D9D9D9 !important;
+	padding: 5px 5px !important;
 	font-size: 10pt !important;
 }
 
@@ -562,8 +562,20 @@ textarea {
     text-align: justify;
 }
 
-input[type=text]:FOCUS, input[type=password]:FOCUS, textarea:FOCUS {
-	box-shadow: 0 0 4px 1px #9C9C9C;
+input[type=text]:HOVER, 
+input[type=password]:HOVER, 
+textarea:HOVER, 
+#recaptcha_area input[type=text]:HOVER {
+	border: 1px solid #ABABAB !important;
+}
+	
+input[type=text]:FOCUS, 
+input[type=password]:FOCUS, 
+textarea:FOCUS, 
+#recaptcha_area input[type=text]:FOCUS {
+	border: 1px solid #5A634B !important;
+	-webkit-transition: border 500ms ease-out;
+	transition: border 500ms ease-out;
 }
 
 #logo-sublogo {

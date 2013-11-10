@@ -125,7 +125,7 @@
                         voteCounts = voteCounts + 1
                         $voteCounts.text(voteCounts.toString(10));
 
-                        var _gaq = _gaq || [];
+                        var _gaq = window._gaq || [];
                         _gaq.push(['_trackEvent', 'Votes', 'Vote Quote Up', 'Quote: ' + quoteId]);
 
                     },
@@ -133,7 +133,7 @@
                         console.error("up vote failed with an error :", errorThrown);
                         $disabledUpVoteButton.replaceWith($formsUpVoteButton);
 
-                        var _gaq = _gaq || [];
+                        var _gaq = window._gaq || [];
                         _gaq.push(['_trackEvent', 'Votes', 'Vote Quote Up - Error Occured', 'Quote: ' + quoteId + ', Error: ' + errorThrown]);
                     }
                 });
