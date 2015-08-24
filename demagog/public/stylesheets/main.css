@@ -151,16 +151,9 @@ a:hover {
 }
 
 .filter-container {
-	margin-bottom: 0.5em;
-	color: white;
-	text-align: right;
-	line-height: 30px;
-}
-
-.filter-container .sbHolder {
+	margin-bottom: 15px;
 	float: right;
-	text-align: left;
-	margin-left: 0.5em;
+	color: black;
 }
 
 .filter-container label {
@@ -609,6 +602,15 @@ textarea:FOCUS,
 
 .clearfix {
 	clear: both;
+}
+
+/* jquery chosen */
+.chosen-container {
+  	min-width: 240px;
+}
+
+.chosen-container-single .chosen-single {
+  	border-radius: 0px;
 }
 
 /* support for alerts copy pasted from bootstrap - see http://twitter.github.com/bootstrap/components.html#alerts */
