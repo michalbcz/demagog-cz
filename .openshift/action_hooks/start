@@ -26,7 +26,10 @@ chmod +x ${APP_PATH}
 APP_COMMAND="${APP_PATH} $PLAY_PARAMS "\
 "-Dhttp.port=${OPENSHIFT_DIY_PORT} "\
 "-Dhttp.address=${OPENSHIFT_DIY_IP} "\
-"-Dconfig.resource=openshift.conf"
+"-Dconfig.resource=openshift.conf"\
+"-Ddemagog.defaultUser=\"demagog\""\
+"-Ddemagog.defaultPassword=\"password\"
+
 echo "${APP_COMMAND}"
 
 echo $APP_COMMAND &>> $LOG_FILE
