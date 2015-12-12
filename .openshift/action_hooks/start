@@ -10,6 +10,9 @@ if [[ ! $? -eq 0 ]]; then
 	exit $?
 fi
 
+export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0
+export PATH=$JAVA_HOME/bin:$PATH
+
 LOG_FILE="${OPENSHIFT_DIY_LOG_DIR}play.log"
 APP_PATH="${OPENSHIFT_REPO_DIR}demagog/target/universal/stage/bin/demagog"
 
@@ -18,7 +21,6 @@ chmod +x ${APP_PATH}
 APP_COMMAND="${APP_PATH} $PLAY_PARAMS "\
 "-Dhttp.port=${OPENSHIFT_DIY_PORT} "\
 "-Dhttp.address=${OPENSHIFT_DIY_IP} "\
-"-Dmongodb.url=mongodb://$OPENSHIFT_MONGODB_DB_HOST:$OPENSHIFT_MONGODB_DB_PORT/ "\
 "-Dconfig.resource=openshift.conf "\
 "-Ddemagog.defaultUser=demagog "\
 "-Ddemagog.defaultPassword=password "\
