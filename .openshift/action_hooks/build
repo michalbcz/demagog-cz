@@ -3,6 +3,6 @@
 # available.  Otherwise it will execute while your application is stopped
 # before the deploy step.  This script gets executed directly, so it
 # could be python, php, ruby, etc.
-echo "ln -s ${OPENSHIFT_REPO_DIR}demagog/public ${STAGING}demagog/public"
-STAGING="${OPENSHIFT_REPO_DIR}demagog/target/universal/stage/"
-ln -s ${OPENSHIFT_REPO_DIR}demagog/public ${STAGING}demagog/public
+#echo "ln -s ${OPENSHIFT_REPO_DIR}demagog/public ${STAGING}demagog/public"
+#STAGING="${OPENSHIFT_REPO_DIR}demagog/target/universal/stage/"
+#ln -s ${OPENSHIFT_REPO_DIR}demagog/public ${STAGING}demagog/public
