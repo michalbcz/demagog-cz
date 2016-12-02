@@ -14,8 +14,7 @@ echo "[info] init new deploy repo"
 md ..\demagog-openshift-deploy
 pushd ..\demagog-openshift-deploy
 git init .
-git remote add openshift ssh://566c2e6589f5cffb1900004b@overto-demagogcz.rhcloud.com/~/git/overto.git/
-
+git remote add openshift ssh://5841e1cd0c1e663587000021@overto-demagogcz.rhcloud.com/~/git/overto.git/
 popd
 
 echo "[info] copying new deploy repo content"
@@ -25,8 +24,8 @@ xcopy demagog\*.* ..\demagog-openshift-deploy\demagog /H /S /E /K /Q
 xcopy .openshift\*.* ..\demagog-openshift-deploy\.openshift /H /S /E /K /Q
 
 echo "[info] remove .gitignores"
-del /s .gitignore
 cd ..\demagog-openshift-deploy
+del /s .gitignore
 
 echo "[info] running: git add . -A"
 git add . -A
