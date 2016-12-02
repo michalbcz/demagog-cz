@@ -22,8 +22,10 @@ APP_COMMAND="${APP_PATH} $PLAY_PARAMS "\
 "-Dhttp.port=${OPENSHIFT_DIY_PORT} "\
 "-Dhttp.address=${OPENSHIFT_DIY_IP} "\
 "-Dconfig.resource=openshift.conf "\
-"-Ddemagog.defaultUser=demagog "\
-"-Ddemagog.defaultPassword=password "\
+"-Ddemagog.defaultUser=${DEMAGOG_ADMIN_USER} "\
+"-Ddemagog.defaultPassword=${DEMAGOG_ADMIN_PASSWORD} "\
+"-Ddemagog.recaptcha.publicKey=${DEMAGOG_RECAPTCHA_PUBLIC_KEY} "\
+"-Ddemagog.recaptcha.privateKey=${DEMAGOG_RECAPTCHA_PRIVATE_KEY} "
 
 echo "${APP_COMMAND}"
 
