@@ -4,7 +4,7 @@ Demagog.cz Quotes Collecting And Voting Platform
 Project aims to help demagog.cz (czech alternative of http://www.factcheck.org/)
 to find out what kind of facts their users would like to check - "truth or not?".
 
-We started this during [Random Hack Of Kidness Hackhaton](http://www.rhok.org/) in Prague on 2012 ([#rhokprague](http://twitter.com/search?q=%23rhokprague) with theme to support projects from [#restartcesko](http://twitter.com/search?q=%23restartcesko) competition.
+We started this during [Random Hack Of Kidness Hackhaton](http://www.rhok.org/) in Prague in 2012 ([#rhokprague](http://twitter.com/search?q=%23rhokprague) with theme to support projects from [#restartcesko](http://twitter.com/search?q=%23restartcesko) competition.
 [Demagog.cz](http://www.demagog.cz) **wins 3rd place** with this project.
 
 It's a web platform which has this user flow :
